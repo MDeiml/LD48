@@ -1,15 +1,14 @@
 import {Sprite} from "./Sprite.js"
 import {mat4, vec2, vec3, quat} from "./gl-matrix-min.js"
 import {PositionalAudio, walk_wood} from "./audio.js"
-import {updateRegistry, inventory} from "./state.js"
-import {getItemSprite, getItemMenuSprite} from "./item.js"
-import {Menu} from "./menu.js"
+import {updateRegistry} from "./state.js"
 
 //Preset Rotations of the object.
-export let Orientation = {
-    DEFAULT: 0,
-    MIRRORED: 1,
-    ROTATED_45: 2
+export let Transformation = {
+    TOP_LEFT: 0,
+    TOP_RIGHT: 1, //rotate +90 deg
+    BOTTOM_LEFT: 2, //rotate 180 deg
+    BOTTOM_RIGHT: 3 //rotate -90 deg
 }
 
 //Abstraction from Sprite to abstract from Transformation to the position and size of the object
@@ -33,11 +32,30 @@ export let GameObject = function(spritePath, position, size, type, scale = vec2.
 GameObject.prototype.calculateTransform = function() {
     let transform = mat4.create();
     
+    let rotation = null;
+    switch (this.orientation)
+    {
+        case Transformation.TOP_LEFT:
+            rotation = quat.create()
+            break;
+        case Transformation.TOP_RIGHT:
+            rotation = quat.fromEuler(quat.create(), 0, 0, 90)
+            break;
+        case Transformation.BOTTOM_LEFT:
+            rotation = quat.fromEuler(quat.create(), 0, 0, 180)
+            break;
+        case Transformation.BOTTOM_RIGHT:
+            rotation = quat.fromEuler(quat.create(), 0, 0, 270)
+            break;
+        default:
+            rotation = quat.create()
+    }
+    
     mat4.fromRotationTranslationScale(
         transform,
-        this.orientation == Orientation.ROTATED_45 ? quat.fromEuler(quat.create(), 0, 0, 45) : quat.create(),
+        rotation,
         vec3.fromValues(this.position[0] + this.offset[0], this.position[1] + this.offset[1], 0),
-        vec3.fromValues(this.halfSize[0] * (this.orientation == Orientation.MIRRORED ? -1 : 1) * this.scale[0], this.halfSize[1] * this.scale[1], 1));
+        vec3.fromValues(this.halfSize[0] * (this.orientation == Transformation.BOTTOM_LEFT ? -1 : 1) * this.scale[0], this.halfSize[1] * this.scale[1], 1));
     return transform;
 }
 //update scale
@@ -68,8 +86,7 @@ GameObject.prototype.canInteract = function(obj) {return false;}
 GameObject.prototype.onCollide = function(intersection, other) {}
 GameObject.prototype.isPlayer = function(){return false;}
 
-
-export let MobileGameObject = function(spritePath, position, size, type, scale = vec2.fromValues(1, 1), offset = vec2.fromValues(0, 0), orientation = Orientation.DEFAULT) {
+export let MobileGameObject = function(spritePath, position, size, type, scale = vec2.fromValues(1, 1), offset = vec2.fromValues(0, 0), orientation = Transformation.TOP_LEFT) {
     GameObject.call(this, spritePath, position, size, type, scale, offset, orientation);
     
     this.velocity = vec2.fromValues(0, 0);
@@ -98,7 +115,7 @@ MobileGameObject.prototype.forceTeleport = function(pos) {
 }
 
 
-export let CollidableGameObject = function(spritePath, position, size, scale = vec2.fromValues(1, 1), offset = vec2.fromValues(0, 0), orientation = Orientation.DEFAULT) {
+export let CollidableGameObject = function(spritePath, position, size, scale = vec2.fromValues(1, 1), offset = vec2.fromValues(0, 0), orientation = Transformation.TOP_LEFT) {
     GameObject.call(this, spritePath, position, size, "collidable", scale, offset, orientation);
 }
 CollidableGameObject.prototype = Object.create(GameObject.prototype);
@@ -108,9 +125,9 @@ Object.defineProperty(CollidableGameObject.prototype, 'constructor', {
     writable: true });
 CollidableGameObject.prototype.onCollide = function(intersection, other) {
     other.position[1] -= intersection[1];
-    if (intersection[1] == 0 || this.orientation != Orientation.ROTATED_45) {
-        other.position[0] -= intersection[0];
-    }
+    //if (intersection[1] == 0 || this.orientation != Orientation.ROTATED_45) {
+    //    other.position[0] -= intersection[0];
+    //}
     if (intersection[0] != 0) {
         other.velocity[0] = 0;
     }
@@ -121,7 +138,7 @@ CollidableGameObject.prototype.onCollide = function(intersection, other) {
 }
 
 
-export let ForceTeleporter = function(spritePath, position, size, scale = vec2.fromValues(1, 1), offset = vec2.fromValues(0, 0), orientation = Orientation.DEFAULT) {
+export let ForceTeleporter = function(spritePath, position, size, scale = vec2.fromValues(1, 1), offset = vec2.fromValues(0, 0), orientation = Transformation.TOP_LEFT) {
     GameObject.call(this, spritePath, position, size, "fire", scale, offset, orientation);
 }
 ForceTeleporter.prototype = Object.create(GameObject.prototype);
@@ -134,7 +151,7 @@ ForceTeleporter.prototype.onCollide = function(intersection, other) {
 }
 
 
-export let VerticalCollidableGameObject = function(spritePath, position, size, scale = vec2.fromValues(1, 1), offset = vec2.fromValues(0, 0), orientation = Orientation.DEFAULT) {
+export let VerticalCollidableGameObject = function(spritePath, position, size, scale = vec2.fromValues(1, 1), offset = vec2.fromValues(0, 0), orientation = Transformation.TOP_LEFT) {
     GameObject.call(this, spritePath, position, size, "xcollidable", scale, offset, orientation);
 }
 VerticalCollidableGameObject.prototype = Object.create(GameObject.prototype);
@@ -148,20 +165,4 @@ VerticalCollidableGameObject.prototype.onCollide = function(intersection, other)
         player.velocity[1] = 0;
         player.onGround = true;
     }
-}
-
-export let Interactable = function(spritePath, position, size, scale = vec2.fromValues(1, 1), offset = vec2.fromValues(0, 0), orientation = Orientation.DEFAULT) {
-    GameObject.call(this, spritePath, position, size, "interactable", scale, offset, orientation);
-}
-
-export let Teleporter = function(spritePath, position, size, scale = vec2.fromValues(1, 1), offset = vec2.fromValues(0, 0), orientation = Orientation.DEFAULT) {
-    Interactable.call(this, spritePath, position, size, "teleporter", scale, offset, orientation);
-}
-Teleporter.prototype = Object.create(Interactable.prototype);
-Object.defineProperty(Teleporter.prototype, 'constructor', {
-    value: Teleporter,
-    enumerable: false, // so that it does not appear in 'for in' loop
-    writable: true });
-Teleporter.prototype.onInteract = function(obj) {
-    obj.teleport = vec2.fromValues(this.to["x"], this.to["y"])
 }

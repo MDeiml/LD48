@@ -1,21 +1,19 @@
 import { init as initGraphics, update as updateGraphics, projection, updateView } from "./render.js"
 import {mat4, vec3, vec2} from "./gl-matrix-min.js"
-import { init as initInput, update as updateInput, toggleInventory, menuUp, menuDown, menuLeft, menuRight, pickingUp} from "./input.js"
+import { init as initInput, update as updateInput, toggleInventory, menuUp, menuDown, menuLeft, menuRight} from "./input.js"
 import {Sprite} from "./Sprite.js";
 import {updateAudio, initAudio, music, walk_wood} from "./audio.js"
-import {updateRegistry, player, setPlayer} from "./state.js"
+import {updateRegistry, player, setPlayer, level} from "./state.js"
 import {generateLevel} from "./generation.js"
 import {Player} from "./player.js"
+import {computeSquareMap} from "./walking_squares.js"
+import {init as initResource} from "./resource.js"
 
 //timekeeper
 var lastTick = null;
 var unprocessed = 0;
 
 const FRAME_TIME = 1000/60;
-let MIN_FIRE_SCALE = 1.0
-let MAX_FIRE_SCALE = 3.0
-let fireCntr = 0
-let firePos = 0
 let dir = true
 
 function main() {
@@ -23,20 +21,14 @@ function main() {
     initInput();
     initAudio();
 
-    // initResource(function() {
+    initResource(function() {
+        let map_data = generateLevel();
+        computeSquareMap(map_data);
+        setPlayer(new Player());
+        window.running = true;
 
-    //     setPlayer(new Player());
-
-    //     loadLevel(1) //TODO maybe remove. maybe replace with menu
-
-    //     window.running = true;
-    //     requestAnimationFrame(update);
-    // });
-
-    generateLevel();
-    setPlayer(new Player());
-    window.running = true;
-    requestAnimationFrame(update);
+        requestAnimationFrame(update);
+    });
 }
 
 function update(now) {
@@ -59,6 +51,26 @@ function update(now) {
         shouldRender = true;
         updateInput(); //pull keypresses
 		updateRegistry.update(); //update all that needs to be updated
+
+
+        if (menuUp()) {
+            player.position[1] += 0.2
+            console.log(player.position)
+        }
+        if (menuDown()) {
+            player.position[1] -= 0.2
+            console.log(player.position)
+        }
+        if (menuLeft()) {
+            player.position[0] -= 0.2
+            console.log(player.position)
+        }
+        if (menuLeft()) {
+            player.position[0] += 0.2
+            console.log(player.position)
+        }
+        updateView()
+
         updateAudio(player.position);
     }
 
