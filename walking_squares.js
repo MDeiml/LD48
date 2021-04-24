@@ -60,9 +60,31 @@ export function computeSquareMap(scanlineArr) {
                     } else if (bl == 1) {
                         transform = Transformation.BOTTOM_LEFT
                         shape = COLLISION_SHAPES.bl
+                        let n = Math.random() * 2;
+                        for (let i = 0; i < n; i++) {
+                            let size = Math.random() * 0.4 + 0.8;
+                            let x = Math.random() * 0.5;
+                            level.addObject(new GameObject(
+                                Math.random() > 0.5 ? "./Assets/animationen/alge1.png" : "./Assets/animationen/alge2.png",
+                                vec2.fromValues(w * GRID_SIZE - side_offset + (x - 0.5) * GRID_SIZE, -(h * GRID_SIZE + depth_offset) + size / 2 - x * GRID_SIZE),
+                                vec2.fromValues(size, size),
+                                "plant"
+                            ));
+                        }
                     } else if (br == 1) {
-                        transform = Transformation.BOTTOM_RIGHT
-                        shape = COLLISION_SHAPES.br
+                        transform = Transformation.BOTTOM_RIGHT;
+                        shape = COLLISION_SHAPES.br;
+                        let n = Math.random() * 2;
+                        for (let i = 0; i < n; i++) {
+                            let size = Math.random() * 0.4 + 0.8;
+                            let x = Math.random() * 0.5;
+                            level.addObject(new GameObject(
+                                Math.random() > 0.5 ? "./Assets/animationen/alge1.png" : "./Assets/animationen/alge2.png",
+                                vec2.fromValues(w * GRID_SIZE - side_offset + x * GRID_SIZE, -(h * GRID_SIZE + depth_offset) + size / 2 - (0.5 - x) * GRID_SIZE),
+                                vec2.fromValues(size, size),
+                                "plant"
+                            ));
+                        }
                     }
 
                     level.addObject(new CollidableGameObject(
@@ -150,9 +172,31 @@ export function computeSquareMap(scanlineArr) {
                     if (tl == 0) {
                         transform = Transformation.TOP_LEFT
                         shape = COLLISION_SHAPES.tl;
+                        let n = Math.random() * 2;
+                        for (let i = 0; i < n; i++) {
+                            let size = Math.random() * 0.4 + 0.8;
+                            let x = Math.random() * 0.5;
+                            level.addObject(new GameObject(
+                                Math.random() > 0.5 ? "./Assets/animationen/alge1.png" : "./Assets/animationen/alge2.png",
+                                vec2.fromValues(w * GRID_SIZE - side_offset + (x - 0.5) * GRID_SIZE, -(h * GRID_SIZE + depth_offset) + size / 2 + x * GRID_SIZE),
+                                vec2.fromValues(size, size),
+                                "plant"
+                            ));
+                        }
                     } else if (tr == 0) {
                         transform = Transformation.TOP_RIGHT
                         shape = COLLISION_SHAPES.tr;
+                        let n = Math.random() * 2;
+                        for (let i = 0; i < n; i++) {
+                            let size = Math.random() * 0.4 + 0.8;
+                            let x = Math.random() * 0.5;
+                            level.addObject(new GameObject(
+                                Math.random() > 0.5 ? "./Assets/animationen/alge1.png" : "./Assets/animationen/alge2.png",
+                                vec2.fromValues(w * GRID_SIZE - side_offset + x * GRID_SIZE, -(h * GRID_SIZE + depth_offset) + size / 2 - (x - 0.5) * GRID_SIZE),
+                                vec2.fromValues(size, size),
+                                "plant"
+                            ));
+                        }
                     } else if (bl == 0) {
                         transform = Transformation.BOTTOM_LEFT
                         shape = COLLISION_SHAPES.bl;
