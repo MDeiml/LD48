@@ -11,6 +11,7 @@ import {init as initResource} from "./resource.js"
 import {GameObject} from "./GameObject.js"
 import {updatePhysics} from "./physics.js"
 import {updateBubbles} from "./bubble.js"
+import {set_seed} from "./util.js"
 
 //timekeeper
 var lastTick = null;
@@ -20,6 +21,7 @@ const FRAME_TIME = 1000/60;
 let dir = true
 
 function main() {
+    set_seed(Math.floor(Math.random() * 256))
     initGraphics(document.getElementById('glCanvas'));
     initInput();
     initAudio();
