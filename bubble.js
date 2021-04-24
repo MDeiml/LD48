@@ -4,14 +4,14 @@ import {vec2} from "./gl-matrix-min.js";
 
 const BUBBLE_VELOCITY = 1;
 const PLAYER_BUBBLE_SPAWN_PER_SECOND = 1;
-const MAX_BUBBLES = 10;
+const MAX_BUBBLES = 20;
 const NUM_RANDOM_SHIT = 100;
 const RANDOM_SHIT_RADIUS = 10;
 
 export function updateBubbles(delta) {
     if (Math.random() < delta * PLAYER_BUBBLE_SPAWN_PER_SECOND) {
         let size = 0.3 + Math.random() * 0.3
-        let bubble = new MobileGameObject("./Assets/bubble.png", vec2.clone(player.position), vec2.fromValues(size, size), "bubble");
+        let bubble = new MobileGameObject("./Assets/bubble.png", vec2.scaleAndAdd(vec2.create(), player.position, player.lookDirection, -0.4), vec2.fromValues(0.1, 0.1), "bubble");
         level.addObject(bubble);
         bubble.velocity[1] = BUBBLE_VELOCITY;
         bubble.velocity[0] = Math.random() * 0.2 - 0.1;
