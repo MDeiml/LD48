@@ -115,10 +115,11 @@ function drawLightShader() {
         console.log("test");
         sprite.draw(shaders["lightShader"]);
     }
-	gl.uniform1f(shaders["lightShader"].getUniform('ambientLight'), 0.4 - 0.399 * Math.min(1, 1 * -player.position[1] / MAP_HEIGHT / GRID_SIZE));
+	gl.uniform1f(shaders["lightShader"].getUniform('ambientLight'), 0.8 - 0.799 * Math.min(1, 1 * -player.position[1] / MAP_HEIGHT / GRID_SIZE));
     for (let sprite of level.objects["background"]) {
         sprite.draw(shaders["lightShader"]);
     }
+	gl.uniform1f(shaders["lightShader"].getUniform('ambientLight'), 0.8 - 0.5 * Math.min(1, 1 * -player.position[1] / MAP_HEIGHT / GRID_SIZE));
     for (let sprite of level.objects["bubbles"]) {
         sprite.draw(shaders["lightShader"]);
     }
