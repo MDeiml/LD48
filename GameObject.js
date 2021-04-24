@@ -31,7 +31,7 @@ export let GameObject = function(spritePath, position, size, type, scale = vec2.
 //compute new transformation for the sprite
 GameObject.prototype.calculateTransform = function() {
     let transform = mat4.create();
-    
+
     let rotation = null;
     switch (this.orientation)
     {
@@ -50,7 +50,7 @@ GameObject.prototype.calculateTransform = function() {
         default:
             rotation = quat.create()
     }
-    
+
     mat4.fromRotationTranslationScale(
         transform,
         rotation,
@@ -62,12 +62,12 @@ GameObject.prototype.calculateTransform = function() {
 GameObject.prototype.setSize = function(size) {
 	let lastHalfY = this.halfSize[1]
     vec2.scale(this.halfSize, size, 0.5);
-	
+
 	//vec2.div(this.scale, this.baseScale, size)
-	
+
     this.position[1] -= (lastHalfY - this.halfSize[1]) * this.baseScale[1]
 	//this.offset[1] += (lastHalfY - this.halfSize[1]) * this.baseScale[1]
-	
+
 	if (this.sprite !== null)
 		this.sprite.setTransformation(this.calculateTransform());
 }
@@ -88,7 +88,7 @@ GameObject.prototype.isPlayer = function(){return false;}
 
 export let MobileGameObject = function(spritePath, position, size, type, scale = vec2.fromValues(1, 1), offset = vec2.fromValues(0, 0), orientation = Transformation.TOP_LEFT) {
     GameObject.call(this, spritePath, position, size, type, scale, offset, orientation);
-    
+
     this.velocity = vec2.fromValues(0, 0);
     this.onGround = false;
     this.canInteract = false;
@@ -115,8 +115,9 @@ MobileGameObject.prototype.forceTeleport = function(pos) {
 }
 
 
-export let CollidableGameObject = function(spritePath, position, size, scale = vec2.fromValues(1, 1), offset = vec2.fromValues(0, 0), orientation = Transformation.TOP_LEFT) {
+export let CollidableGameObject = function(spritePath, position, size, shape, scale = vec2.fromValues(1, 1), offset = vec2.fromValues(0, 0), orientation = Transformation.TOP_LEFT) {
     GameObject.call(this, spritePath, position, size, "collidable", scale, offset, orientation);
+    this.shape = shape;
 }
 CollidableGameObject.prototype = Object.create(GameObject.prototype);
 Object.defineProperty(CollidableGameObject.prototype, 'constructor', {
