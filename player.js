@@ -8,11 +8,11 @@ import {PositionalAudio, walk_wood} from "./audio.js"
 const PLAYER_SPEED = 2.5;
 const JUMP_SPEED = 13; // 6.75
 const FRAME_TIME = 1000/60;
-
+var FrameCounter = 0;
 export let Player = function() {
-    MobileGameObject.call(this, "./Assets/background.jpg", vec2.fromValues( 0, 0), vec2.fromValues(1, 1), "player", vec2.fromValues(1, 1), vec2.fromValues(0, 0));
+    MobileGameObject.call(this, "./Assets/animationen/taucher-4-frame.png", vec2.fromValues( 0, 0), vec2.fromValues(1, 1), "player", vec2.fromValues(1, 1), vec2.fromValues(0, 0));
 
-    // this.sprite.texture.frames = 5;
+    this.sprite.texture.frames = 4;
 
     updateRegistry.registerUpdate("player_input", this.handleInput.bind(this));
 }
@@ -41,9 +41,17 @@ Player.prototype.handleInput = function() {
         vel[1] -= PLAYER_SPEED;
     }
     vec2.copy(this.velocity, vel);
+	
+	this.updatePlayerAnimation();
 }
 
+
 Player.prototype.updatePlayerAnimation = function() {
+	FrameCounter++;
+	if (FrameCounter >=20){
+	this.sprite.texture.nextFrame();
+	FrameCounter = 0;
+	}
 }
 
 
