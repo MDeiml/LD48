@@ -38,31 +38,30 @@ export function computeSquareMap(map_data) {
 
     // TODO: besserer start knoten
     let current = 0 + MAP_WIDTH * MAP_HEIGHT - 1;
+    let x = current % MAP_WIDTH;
+    let y = Math.floor(current / MAP_WIDTH);
+    let lastRopePoint = vec2.fromValues(x * GRID_SIZE - 0.5 * GRID_SIZE - side_offset, -(y * GRID_SIZE - 0.5 * GRID_SIZE + depth_offset));
     while (prev[current]) {
         let x = current % MAP_WIDTH;
         let y = Math.floor(current / MAP_WIDTH);
         let nextX = prev[current] % MAP_WIDTH;
         let nextY = Math.floor(prev[current] / MAP_WIDTH);
-        let orientation;
-        if (nextY < y) {
-            orientation = Transformation.TOP_LEFT;
-        } else if (nextY > y) {
-            orientation = Transformation.BOTTOM_RIGHT;
-        } else if (nextX > x) {
-            orientation = Transformation.BOTTOM_LEFT;
-        } else if (nextX < x) {
-            orientation = Transformation.TOP_RIGHT;
-        }
         const N = 2 * GRID_SIZE;
         for (let i = 0; i < N; i++) {
+            let nextRopePoint = vec2.fromValues((x + (nextX - x) * ((i + 0.5) / N)) * GRID_SIZE - 0.5 * GRID_SIZE - side_offset, -((y + (nextY - y) * ((i + 0.5) / N)) * GRID_SIZE - 0.5 * GRID_SIZE + depth_offset));
+            let ropeDir = vec2.sub(vec2.create(), nextRopePoint, lastRopePoint);
+            let angle = -Math.atan2(ropeDir[0], ropeDir[1]) / Math.PI * 180;
+            vec2.add(lastRopePoint, nextRopePoint, lastRopePoint);
+            vec2.scale(lastRopePoint, 0.5);
+            lastRopePoint = nextRopePoint;
             level.addObject(new GameObject(
                 "./Assets/rope_g.png",
-                vec2.fromValues((x + (nextX - x) * ((i + 0.5) / N)) * GRID_SIZE - side_offset, -((y + (nextY - y) * ((i + 0.5) / N)) * GRID_SIZE + depth_offset)),
-                vec2.fromValues(0.3, 1),
+                lastRopePoint,
+                vec2.fromValues(0.3, 1.05 * vec2.length(ropeDir)),
                 "rope",
                 vec2.fromValues(1, 1),
                 vec2.fromValues(0, 0),
-                orientation
+                angle
             ));
         }
         current = prev[current];
