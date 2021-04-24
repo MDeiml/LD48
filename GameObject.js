@@ -138,3 +138,29 @@ VerticalCollidableGameObject.prototype.onCollide = function(intersection, other)
         player.onGround = true;
     }
 }
+
+export let AnimatedGameObject = function(spritePath, position, size, type, frames = 1, updateStep = 20, scale = vec2.fromValues(1, 1), offset = vec2.fromValues(0, 0), orientation = Transformation.TOP_LEFT) {
+    GameObject.call(this, spritePath, position, size, type, scale, offset, orientation);
+    
+    this.sprite.texture.frames = frames;
+    this.sprite.texture.currFrame = Math.floor(Math.random() * frames);
+    
+    this.cntr = Math.floor(Math.random() * 20);
+    this.updateStep = updateStep;
+    this.updateName = "GameObj_anim" + Math.random()
+    updateRegistry.registerUpdate(this.updateName, function() {
+        this.cntr = this.cntr + 1;
+        if (this.cntr >= this.updateStep){
+            this.sprite.texture.nextFrame();
+            this.cntr = this.cntr - this.updateStep;
+            this.cntr = this.cntr % this.updateStep;
+        }
+    }.bind(this))
+    
+}
+AnimatedGameObject.prototype = Object.create(GameObject.prototype);
+Object.defineProperty(AnimatedGameObject.prototype, 'constructor', {
+    value: AnimatedGameObject,
+    enumerable: false, // so that it does not appear in 'for in' loop
+    writable: true });
+
