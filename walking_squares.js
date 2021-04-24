@@ -41,11 +41,20 @@ export function computeSquareMap(scanlineArr) {
                 case 2:       //wall or corridor
                     if ((tl == br) && (tr == bl)) { //corridor
                         if (Math.random() > 0.5)
-                            level.objects.push(new CollidableGameObject("Segments/0101_e.png", vec2.fromValues(w - side_offset, -(h + depth_offset)), vec2.fromValues(1, 1), vec2.fromValues(1, 1), vec2.fromValues(0, 0), transform))
+                            level.objects.push(new CollidableGameObject("Segments/0101_e.png", vec2.fromValues(w - side_offset, -(h + depth_offset)), vec2.fromValues(1, 1), vec2.fromValues(1, 1), vec2.fromValues(0, 0), tl == 1 ? Transformation.TOP_RIGHT : Transformation.TOP_LEFT))
                         else
-                            level.objects.push(new CollidableGameObject("Segments/1010_f.png", vec2.fromValues(w - side_offset, -(h + depth_offset)), vec2.fromValues(1, 1), vec2.fromValues(1, 1), vec2.fromValues(0, 0), transform))
+                            level.objects.push(new CollidableGameObject("Segments/1010_f.png", vec2.fromValues(w - side_offset, -(h + depth_offset)), vec2.fromValues(1, 1), vec2.fromValues(1, 1), vec2.fromValues(0, 0), tl == 0 ? Transformation.TOP_RIGHT : Transformation.TOP_LEFT))
                     }
                     else {
+                        if (tl == 1 && tr == 1)
+                            transform = Transformation.TOP_LEFT
+                        else if (tr == 1 && br == 1)
+                            transform = Transformation.TOP_RIGHT
+                        else if (br == 1 && bl == 1)
+                            transform = Transformation.BOTTOM_RIGHT
+                        else if (bl == 1 && tl == 1)
+                            transform = Transformation.BOTTOM_LEFT
+                        
                         level.objects.push(new CollidableGameObject("Segments/0011.png", vec2.fromValues(w - side_offset, -(h + depth_offset)), vec2.fromValues(1, 1), vec2.fromValues(1, 1), vec2.fromValues(0, 0), transform))
                     }
                     break;

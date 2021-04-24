@@ -39,13 +39,13 @@ GameObject.prototype.calculateTransform = function() {
             rotation = quat.create()
             break;
         case Transformation.TOP_RIGHT:
-            rotation = quat.fromEuler(quat.create(), 0, 0, 90)
+            rotation = quat.fromEuler(quat.create(), 0, 0, 270)
             break;
         case Transformation.BOTTOM_LEFT:
-            rotation = quat.fromEuler(quat.create(), 0, 0, 180)
+            rotation = quat.fromEuler(quat.create(), 0, 0, 90)
             break;
         case Transformation.BOTTOM_RIGHT:
-            rotation = quat.fromEuler(quat.create(), 0, 0, 270)
+            rotation = quat.fromEuler(quat.create(), 0, 0, 180)
             break;
         default:
             rotation = quat.create()
@@ -55,7 +55,7 @@ GameObject.prototype.calculateTransform = function() {
         transform,
         rotation,
         vec3.fromValues(this.position[0] + this.offset[0], this.position[1] + this.offset[1], 0),
-        vec3.fromValues(this.halfSize[0] * (this.orientation == Transformation.BOTTOM_LEFT ? -1 : 1) * this.scale[0], this.halfSize[1] * this.scale[1], 1));
+        vec3.fromValues(this.halfSize[0] * this.scale[0], this.halfSize[1] * this.scale[1], 1));
     return transform;
 }
 //update scale

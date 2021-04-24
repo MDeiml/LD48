@@ -55,19 +55,15 @@ function update(now) {
         
         if (menuUp()) {
             player.position[1] += 0.2
-            console.log(player.position)
         }
         if (menuDown()) {
             player.position[1] -= 0.2
-            console.log(player.position)
         }
         if (menuLeft()) {
             player.position[0] -= 0.2
-            console.log(player.position)
         }
         if (menuLeft()) {
             player.position[0] += 0.2
-            console.log(player.position)
         }
         updateView()
         
