@@ -6,9 +6,9 @@ import {updateRegistry} from "./state.js"
 //Preset Rotations of the object.
 export let Transformation = {
     TOP_LEFT: 0,
-    TOP_RIGHT: 1, //rotate +90 deg
-    BOTTOM_LEFT: 2, //rotate 180 deg
-    BOTTOM_RIGHT: 3 //rotate -90 deg
+    TOP_RIGHT: 270, //rotate +90 deg
+    BOTTOM_LEFT: 90, //rotate 180 deg
+    BOTTOM_RIGHT: 180 //rotate -90 deg
 }
 
 //Abstraction from Sprite to abstract from Transformation to the position and size of the object
@@ -32,24 +32,7 @@ export let GameObject = function(spritePath, position, size, type, scale = vec2.
 GameObject.prototype.calculateTransform = function() {
     let transform = mat4.create();
 
-    let rotation = null;
-    switch (this.orientation)
-    {
-        case Transformation.TOP_LEFT:
-            rotation = quat.create()
-            break;
-        case Transformation.TOP_RIGHT:
-            rotation = quat.fromEuler(quat.create(), 0, 0, 270)
-            break;
-        case Transformation.BOTTOM_LEFT:
-            rotation = quat.fromEuler(quat.create(), 0, 0, 90)
-            break;
-        case Transformation.BOTTOM_RIGHT:
-            rotation = quat.fromEuler(quat.create(), 0, 0, 180)
-            break;
-        default:
-            rotation = quat.create()
-    }
+    let rotation = quat.fromEuler(quat.create(), 0, 0, this.orientation);
 
     mat4.fromRotationTranslationScale(
         transform,
