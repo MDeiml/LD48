@@ -25,11 +25,24 @@ export function computeSquareMap(scanlineArr) {
     let depth_offset = GRID_SIZE;
 
     for (let h = 0; h < MAP_HEIGHT - 1; h++) {
-        for (let w = 0; w < MAP_WIDTH - 1; w++) {
-            let tl = scanlineArr[w + h * MAP_WIDTH] ? 1 : 0;
-            let tr = scanlineArr[w + 1 + h * MAP_WIDTH] ? 1 : 0;
-            let bl = scanlineArr[w + (h + 1) * MAP_WIDTH] ? 1 : 0;
-            let br = scanlineArr[w + 1 + (h + 1) * MAP_WIDTH] ? 1 : 0;
+        for (let w = -1; w < MAP_WIDTH; w++) {
+            let tl = 1;
+            let bl = 1;
+            
+            let tr = 1;
+            let br = 1;
+            
+            if (w >= 0)
+            {
+                tl = scanlineArr[w + h * MAP_WIDTH] ? 1 : 0;
+                bl = scanlineArr[w + (h + 1) * MAP_WIDTH] ? 1 : 0;
+            }
+            
+            if (w < MAP_WIDTH - 1)
+            {
+                tr = scanlineArr[w + 1 + h * MAP_WIDTH] ? 1 : 0;
+                br = scanlineArr[w + 1 + (h + 1) * MAP_WIDTH] ? 1 : 0;
+            }
 
             let type = tl + tr + bl + br;
             let transform = null;

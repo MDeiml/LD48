@@ -47,16 +47,9 @@ export function generateLevel() {
     }
 
     for (let i = 0; i < pixels.length; i++) {
-        if (Math.random() > i / pixels.length) {
+        if (Math.random() > i * 2 / pixels.length) {
             pixels[i] = false;
         }
-    }
-    
-    for(let i = (MAP_HEIGHT * MAP_WIDTH) - 1; i >= MAP_WIDTH;)
-    {
-        pixels[i + 1] = true;
-        pixels[i] = true;
-        i = i - MAP_WIDTH;
     }
     
     return pixels;
