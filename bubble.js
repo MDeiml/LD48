@@ -4,14 +4,26 @@ import {vec2} from "./gl-matrix-min.js";
 
 const BUBBLE_VELOCITY = 1;
 const PLAYER_BUBBLE_SPAWN_PER_SECOND = 1;
-const MAX_BUBBLES = 20;
+const MAX_BUBBLES = 60;
 const NUM_RANDOM_SHIT = 100;
 const RANDOM_SHIT_RADIUS = 10;
 
+var var_MAX_BUBBLES = 1* MAX_BUBBLES;
+var var_PLAYER_BUBBLE_SPAWN_PER_SECOND = PLAYER_BUBBLE_SPAWN_PER_SECOND;
+var var_Death_delta_Time = 0;
+
 export function updateBubbles(delta) {
-    if (Math.random() < delta * PLAYER_BUBBLE_SPAWN_PER_SECOND) {
-        let size = 0.3 + Math.random() * 0.3
-        let bubble = new MobileGameObject("./Assets/bubble.png", vec2.scaleAndAdd(vec2.create(), player.position, player.lookDirection, -0.4), vec2.fromValues(0.1, 0.1), "bubble");
+	if (player.breath == 0){
+		var_PLAYER_BUBBLE_SPAWN_PER_SECOND = 0;
+		if (var_Death_delta_Time <= 1 ){
+			var_PLAYER_BUBBLE_SPAWN_PER_SECOND = 60;
+			var_Death_delta_Time += delta;
+		}
+				
+	}
+    if (Math.random() < delta * var_PLAYER_BUBBLE_SPAWN_PER_SECOND) {
+        let size = 0.05 + Math.random() * 0.05
+        let bubble = new MobileGameObject("./Assets/bubble.png", vec2.scaleAndAdd(vec2.create(), player.position, player.lookDirection, -0.4), vec2.fromValues(size, size), "bubble");
         level.addObject(bubble);
         bubble.velocity[1] = BUBBLE_VELOCITY;
         bubble.velocity[0] = Math.random() * 0.2 - 0.1;
