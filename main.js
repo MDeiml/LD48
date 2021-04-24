@@ -29,6 +29,15 @@ function main() {
 
     initResource(function() {
         level.addObject(new GameObject("Assets/background.jpg", vec2.fromValues(-0.5 * GRID_SIZE, -MAP_HEIGHT * GRID_SIZE / 2), vec2.fromValues( MAP_WIDTH * GRID_SIZE, MAP_HEIGHT * GRID_SIZE), "background" ))
+        for (let i = 0; i < MAP_WIDTH; i++) {
+            let h = GRID_SIZE * 920 / 1323;
+            level.addObject(new GameObject(
+                i == Math.floor(MAP_WIDTH / 2) ? "Assets/hintergrund_boot_leer.png" : "Assets/hintergrund.png",
+                vec2.fromValues((i - MAP_WIDTH / 2) * GRID_SIZE, h/2),
+                vec2.fromValues(GRID_SIZE, h),
+                "background_surface"
+            ));
+        }
         let map_data = generateLevel();
         computeSquareMap(map_data);
         setPlayer(new Player());
