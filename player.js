@@ -31,11 +31,11 @@ Player.prototype.handleInput = function() {
     let ropeDir = vec2.sub(vec2.create(), this.position, this.lastRopePoint);
     let ropeDirLength = vec2.length(ropeDir);
     if (ropeDirLength > 1) {
-        let angle = vec2.angle(ropeDir, vec2.fromValues(1, 0));
+        let angle = -Math.atan2(ropeDir[0], ropeDir[1]) / Math.PI * 180;
         let nextRopePoint = vec2.scaleAndAdd(ropeDir, this.lastRopePoint, ropeDir, 1 / ropeDirLength);
-        let ropeMid = vec2.add(this.lastRopePoint, nextRopePoint, nextRopePoint);
+        let ropeMid = vec2.add(this.lastRopePoint, this.lastRopePoint, nextRopePoint);
         vec2.scale(ropeMid, ropeMid, 0.5);
-        level.addObject(new GameObject("./Assets/rope.png", ropeMid, vec2.fromValues(1, 1), "rope"));
+        level.addObject(new GameObject("./Assets/rope.png", ropeMid, vec2.fromValues(1, 1), "rope", vec2.fromValues(1, 1), vec2.fromValues(0, 0), angle));
         this.lastRopePoint = nextRopePoint;
     }
 
