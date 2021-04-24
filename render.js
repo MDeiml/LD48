@@ -93,22 +93,25 @@ function drawBaseShader() {
 
 	gl.uniformMatrix4fv(shaders["defaultShader"].getUniform('VP'), false, pvMatrix);
 
-	for (let sprite of level.objects)
-	{
-		sprite.draw(shaders["defaultShader"]);
-	}
+    for (let type in level.objects) {
+        for (let sprite of level.objects[type])
+        {
+            sprite.draw(shaders["defaultShader"]);
+        }
+    }
 }
 
 function drawLightShader() {
 	shaders["lightShader"].bind();
-    
+
 	gl.uniform1f(shaders["lightShader"].getUniform('lightCount'), level.lightCnt)
 	gl.uniform1fv(shaders["lightShader"].getUniform('lights'), level.lights)
 	gl.uniformMatrix4fv(shaders["lightShader"].getUniform('VP'), false, pvMatrix);
 
-	for (let sprite of level.objects)
-	{
-		sprite.draw(shaders["lightShader"]);
+    for (let type in level.objects) {
+        for (let sprite of level.objects[type]) {
+            sprite.draw(shaders["lightShader"]);
+        }
 	}
 
     //player.draw(shaders["lightShader"]);

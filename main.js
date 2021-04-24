@@ -24,14 +24,14 @@ function main() {
     initAudio();
 
     initResource(function() {
-        level.objects.push(new GameObject("Assets/background.jpg", vec2.fromValues(-0.5 * GRID_SIZE, -MAP_HEIGHT * GRID_SIZE / 2), vec2.fromValues( (MAP_WIDTH - 1) * GRID_SIZE, MAP_HEIGHT * GRID_SIZE), "background" ))
+        level.addObject(new GameObject("Assets/background.jpg", vec2.fromValues(-0.5 * GRID_SIZE, -MAP_HEIGHT * GRID_SIZE / 2), vec2.fromValues( (MAP_WIDTH - 1) * GRID_SIZE, MAP_HEIGHT * GRID_SIZE), "background" ))
         let map_data = generateLevel();
         computeSquareMap(map_data);
         setPlayer(new Player());
         window.running = true;
         requestAnimationFrame(update);
     });
-    
+
 }
 
 function update(now) {

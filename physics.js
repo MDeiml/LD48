@@ -3,21 +3,19 @@ import {MobileGameObject, CollidableGameObject} from "./GameObject.js";
 import {vec2} from "./gl-matrix-min.js";
 
 export function updatePhysics(delta) {
-    for (let obj of level.objects) {
-        if (obj.type == "player") {
-            let pos = vec2.clone(obj.velocity);
-            vec2.scale(pos, pos, delta);
-            vec2.add(pos, pos, obj.position);
-            for (let other of level.objects) {
-                if (other.type == "collidable" && other.shape.length == 2) {
-                    let intersection = intersectLineCircle(other.shape[0], other.shape[1], vec2.sub(vec2.create(), pos, other.position), 0.5)
-                    if (intersection) {
-                        vec2.add(pos, pos, intersection);
-                    }
+    for (let obj of level.objects["player"]) {
+        let pos = vec2.clone(obj.velocity);
+        vec2.scale(pos, pos, delta);
+        vec2.add(pos, pos, obj.position);
+        for (let other of level.objects["collidable"]) {
+            for (let i = 0; i < other.shape.length; i+=2) {
+                let intersection = intersectLineCircle(other.shape[i], other.shape[i + 1], vec2.sub(vec2.create(), pos, other.position), 0.5)
+                if (intersection) {
+                    vec2.add(pos, pos, intersection);
                 }
             }
-            obj.setPosition(pos);
         }
+        obj.setPosition(pos);
     }
 }
 

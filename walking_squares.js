@@ -42,7 +42,7 @@ export function computeSquareMap(scanlineArr) {
                         shape = [vec2.fromValues(0, -0.5 * GRID_SIZE), vec2.fromValues(0.5 * GRID_SIZE, 0)]
                     }
 
-                    level.objects.push(new CollidableGameObject(
+                    level.addObject(new CollidableGameObject(
                         "Segments/0010.png",
                         vec2.fromValues(w * GRID_SIZE - side_offset, -(h * GRID_SIZE + depth_offset)),
                         vec2.fromValues(GRID_SIZE, GRID_SIZE),
@@ -56,7 +56,7 @@ export function computeSquareMap(scanlineArr) {
                     if ((tl == br) && (tr == bl)) { //corridor
                         // TODO: Fix collision
                         if (Math.random() > 0.5) {
-                            level.objects.push(new CollidableGameObject(
+                            level.addObject(new CollidableGameObject(
                                 "Segments/0101_e.png",
                                 vec2.fromValues(w * GRID_SIZE - side_offset, -(h * GRID_SIZE + depth_offset)),
                                 vec2.fromValues(GRID_SIZE, GRID_SIZE),
@@ -66,7 +66,7 @@ export function computeSquareMap(scanlineArr) {
                                 tl == 1 ? Transformation.TOP_RIGHT : Transformation.TOP_LEFT
                             ));
                         } else {
-                            level.objects.push(new CollidableGameObject(
+                            level.addObject(new CollidableGameObject(
                                 "Segments/1010_f.png",
                                 vec2.fromValues(w * GRID_SIZE - side_offset, -(h * GRID_SIZE + depth_offset)),
                                 vec2.fromValues(GRID_SIZE, GRID_SIZE),
@@ -92,7 +92,7 @@ export function computeSquareMap(scanlineArr) {
                             shape = [vec2.fromValues(0, -0.5 * GRID_SIZE), vec2.fromValues(0, 0.5 * GRID_SIZE)];
                         }
 
-                        level.objects.push(new CollidableGameObject(
+                        level.addObject(new CollidableGameObject(
                             "Segments/0011.png",
                             vec2.fromValues(w * GRID_SIZE - side_offset, -(h * GRID_SIZE + depth_offset)),
                             vec2.fromValues(GRID_SIZE, GRID_SIZE),
@@ -118,7 +118,7 @@ export function computeSquareMap(scanlineArr) {
                         shape = [vec2.fromValues(0, -0.5 * GRID_SIZE), vec2.fromValues(0.5 * GRID_SIZE, 0)]
                     }
 
-                    level.objects.push(new CollidableGameObject(
+                    level.addObject(new CollidableGameObject(
                         "Segments/0111.png",
                         vec2.fromValues(w * GRID_SIZE - side_offset, -(h * GRID_SIZE + depth_offset)),
                         vec2.fromValues(GRID_SIZE, GRID_SIZE),
@@ -129,7 +129,7 @@ export function computeSquareMap(scanlineArr) {
                     ));
                     break;
                 case 4:       //solid wall
-                    level.objects.push(new CollidableGameObject(
+                    level.addObject(new CollidableGameObject(
                         "Segments/1111.png",
                         vec2.fromValues(w * GRID_SIZE - side_offset, -(h * GRID_SIZE + depth_offset)),
                         vec2.fromValues(GRID_SIZE, GRID_SIZE),
