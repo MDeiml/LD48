@@ -45,7 +45,6 @@ function initShaders() {
 	shaders["defaultShader"] = new Shader("shader", "shader")
 	shaders["lightShader"] = new Shader("shader", "light")
 	shaders["blurShader"] = new Shader("shader", "blur")
-	shaders["bgShader"] = new Shader("shader", "bg-light")
 
 	shaders["defaultShader"].bind();
     let defaultPositionAttribute = gl.getAttribLocation(shaders["defaultShader"].get(), 'position');
@@ -83,8 +82,8 @@ export function update() {
 		updateViewMat = false;
 	}
 
-    // drawLightShader();
-    drawBaseShader();
+    //drawBaseShader();
+    drawLightShader();
 }
 
 //RENDER MODES
@@ -94,22 +93,12 @@ function drawBaseShader() {
 
 	gl.uniformMatrix4fv(shaders["defaultShader"].getUniform('VP'), false, pvMatrix);
 
-	for (let sprite of level.objects)
-	{
-		//if (sprite.type === "background")
-		//{
-			//shaders["bgShader"].bind();
-			//gl.uniform3fv(shaders["bgShader"].getUniform('backgroundFilter'), level.bgFilter);
-			//gl.uniformMatrix4fv(shaders["bgShader"].getUniform('VP'), false, pvMatrix);
-
-			//sprite.draw(shaders["bgShader"]);
-
-			//shaders["defaultShader"].bind();
-			//gl.uniformMatrix4fv(shaders["defaultShader"].getUniform('VP'), false, pvMatrix);
-		//}
-		//else
-			sprite.draw(shaders["defaultShader"]);
-	}
+    for (let type in level.objects) {
+        for (let sprite of level.objects[type])
+        {
+            sprite.draw(shaders["defaultShader"]);
+        }
+    }
 }
 
 function drawLightShader() {
@@ -119,34 +108,20 @@ function drawLightShader() {
 	gl.uniform1fv(shaders["lightShader"].getUniform('lights'), level.lights)
 	gl.uniformMatrix4fv(shaders["lightShader"].getUniform('VP'), false, pvMatrix);
 
-	for (let sprite of level.objects)
-	{
-		if (sprite.type === "background")
-		{
-			shaders["bgShader"].bind();
-			gl.uniformMatrix4fv(shaders["bgShader"].getUniform('VP'), false, pvMatrix);
-			gl.uniform1f(shaders["bgShader"].getUniform('lightCount'), level.lightCnt)
-			gl.uniform1fv(shaders["bgShader"].getUniform('lights'), level.lights)
-			gl.uniform3fv(shaders["bgShader"].getUniform('backgroundFilter'), level.bgFilter);
-			sprite.draw(shaders["bgShader"]);
-
-			shaders["lightShader"].bind();
-			gl.uniformMatrix4fv(shaders["lightShader"].getUniform('VP'), false, pvMatrix);
-		}
-		else if (sprite.type == "door" && sprite.state) {
-			let t = (sprite.state == "opening" ? 0.3 - sprite.timer : (sprite.state == "closing" ? sprite.timer : 0.3)) / 0.3;
-			mat4.fromRotationTranslationScale(sprite.door.transform, quat.create(), vec3.fromValues(sprite.position[0] + t * DOOR_WIDTH, sprite.position[1], 0), vec3.fromValues(-t * DOOR_WIDTH, sprite.halfSize[1], 1));
-			sprite.door.draw(shaders["lightShader"]);
-		}
-		else
-			sprite.draw(shaders["lightShader"]);
-
+    for (let sprite of level.objects["background"]) {
+        sprite.draw(shaders["lightShader"]);
+    }
+    for (let type in level.objects) {
+        if (type == "background") continue;
+        for (let sprite of level.objects[type]) {
+            sprite.draw(shaders["lightShader"]);
+        }
 	}
 
-    player.draw(shaders["lightShader"]);
-	if (player.canInteract) {
-		shaders["defaultShader"].bind();
-		gl.uniformMatrix4fv(shaders["defaultShader"].getUniform('VP'), false, pvMatrix);
-		player.eyeSprite.draw(shaders["defaultShader"]);
-	}
+    //player.draw(shaders["lightShader"]);
+	//if (player.canInteract) {
+	//	shaders["defaultShader"].bind();
+	//	gl.uniformMatrix4fv(shaders["defaultShader"].getUniform('VP'), false, pvMatrix);
+	//	player.eyeSprite.draw(shaders["defaultShader"]);
+	//}
 }

@@ -8,12 +8,17 @@ export function setGl(context) {
 export let player = null;
 export function setPlayer(obj) {
     player = obj;
-    level.objects.push(player);
+    level.addObject(player);
 }
 
 export let level = {
-    objects: [],
+    objects: {
+        "bubble": [],
+        "collidable": [],
+        "player": []
+    },
 	lights: new Array(180), //TODO move
+    lightCnt: 1,
 	updateLight: function(lightID, color, pos, dir, cutoff, intensity) {
 		let startPos = lightID * 9;
 
@@ -30,7 +35,17 @@ export let level = {
 		this.lights[startPos + 7] = cutoff
 
 		this.lights[startPos + 8] = intensity
-	}
+	},
+    addObject: function(obj) {
+        let type = obj.type;
+        if (!type) {
+            type = "default";
+        }
+        if (this.objects[type] === undefined) {
+            this.objects[type] = [];
+        }
+        this.objects[type].push(obj);
+    }
 
 };
 

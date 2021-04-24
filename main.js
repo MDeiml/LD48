@@ -10,6 +10,7 @@ import {computeSquareMap, GRID_SIZE} from "./walking_squares.js"
 import {init as initResource} from "./resource.js"
 import {GameObject} from "./GameObject.js"
 import {updatePhysics} from "./physics.js"
+import {updateBubbles} from "./bubble.js"
 
 //timekeeper
 var lastTick = null;
@@ -22,15 +23,17 @@ function main() {
     initGraphics(document.getElementById('glCanvas'));
     initInput();
     initAudio();
+    updateRegistry.registerUpdate("bubbles", updateBubbles);
 
     initResource(function() {
-        level.objects.push(new GameObject("Assets/background.jpg", vec2.fromValues(-0.5 * GRID_SIZE, -MAP_HEIGHT * GRID_SIZE / 2), vec2.fromValues( (MAP_WIDTH - 1) * GRID_SIZE, MAP_HEIGHT * GRID_SIZE), "background" ))
+        level.addObject(new GameObject("Assets/background.jpg", vec2.fromValues(-0.5 * GRID_SIZE, -MAP_HEIGHT * GRID_SIZE / 2), vec2.fromValues( (MAP_WIDTH - 1) * GRID_SIZE, MAP_HEIGHT * GRID_SIZE), "background" ))
         let map_data = generateLevel();
         computeSquareMap(map_data);
         setPlayer(new Player());
         window.running = true;
         requestAnimationFrame(update);
     });
+
 }
 
 function update(now) {
@@ -48,16 +51,19 @@ function update(now) {
     }
 
     let shouldRender = false;
+    let cnt = 0;
     while (unprocessed >= FRAME_TIME) { //time for a new frame
         unprocessed -= FRAME_TIME;
         shouldRender = true;
         updateInput(); //pull keypresses
-		updateRegistry.update(); //update all that needs to be updated
+		updateRegistry.update(FRAME_TIME / 1000); //update all that needs to be updated
         updatePhysics(FRAME_TIME / 1000);
 
         updateView();
         updateAudio(player.position);
+        cnt++;
     }
+    console.log(cnt);
 
     // don't render if there was no update
     if (shouldRender) {

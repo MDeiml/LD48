@@ -52,7 +52,7 @@ export function computeSquareMap(scanlineArr) {
                         shape = COLLISION_SHAPES.br
                     }
 
-                    level.objects.push(new CollidableGameObject(
+                    level.addObject(new CollidableGameObject(
                         "Segments/0010.png",
                         vec2.fromValues(w * GRID_SIZE - side_offset, -(h * GRID_SIZE + depth_offset)),
                         vec2.fromValues(GRID_SIZE, GRID_SIZE),
@@ -71,7 +71,7 @@ export function computeSquareMap(scanlineArr) {
                             } else {
                                 shape = COLLISION_SHAPES.corrR
                             }
-                            level.objects.push(new CollidableGameObject(
+                            level.addObject(new CollidableGameObject(
                                 "Segments/0101_e.png",
                                 vec2.fromValues(w * GRID_SIZE - side_offset, -(h * GRID_SIZE + depth_offset)),
                                 vec2.fromValues(GRID_SIZE, GRID_SIZE),
@@ -86,7 +86,7 @@ export function computeSquareMap(scanlineArr) {
                             } else {
                                 shape = COLLISION_SHAPES.corrL
                             }
-                            level.objects.push(new CollidableGameObject(
+                            level.addObject(new CollidableGameObject(
                                 "Segments/1010_f.png",
                                 vec2.fromValues(w * GRID_SIZE - side_offset, -(h * GRID_SIZE + depth_offset)),
                                 vec2.fromValues(GRID_SIZE, GRID_SIZE),
@@ -112,7 +112,7 @@ export function computeSquareMap(scanlineArr) {
                             shape = COLLISION_SHAPES.vert;
                         }
 
-                        level.objects.push(new CollidableGameObject(
+                        level.addObject(new CollidableGameObject(
                             "Segments/0011.png",
                             vec2.fromValues(w * GRID_SIZE - side_offset, -(h * GRID_SIZE + depth_offset)),
                             vec2.fromValues(GRID_SIZE, GRID_SIZE),
@@ -138,7 +138,7 @@ export function computeSquareMap(scanlineArr) {
                         shape = COLLISION_SHAPES.br;
                     }
 
-                    level.objects.push(new CollidableGameObject(
+                    level.addObject(new CollidableGameObject(
                         "Segments/0111.png",
                         vec2.fromValues(w * GRID_SIZE - side_offset, -(h * GRID_SIZE + depth_offset)),
                         vec2.fromValues(GRID_SIZE, GRID_SIZE),
@@ -149,7 +149,7 @@ export function computeSquareMap(scanlineArr) {
                     ));
                     break;
                 case 4:       //solid wall
-                    level.objects.push(new CollidableGameObject(
+                    level.addObject(new CollidableGameObject(
                         "Segments/1111.png",
                         vec2.fromValues(w * GRID_SIZE - side_offset, -(h * GRID_SIZE + depth_offset)),
                         vec2.fromValues(GRID_SIZE, GRID_SIZE),

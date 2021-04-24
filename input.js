@@ -52,6 +52,14 @@ export function swimmingDown() {
 	return key("KeyS") || key("ArrowDown");
 }
 
+export function swimmingAccelerate() {
+	return key("ShiftLeft") || key("ShiftRight");
+}
+	
+export function swimmingDecelerate() {
+	return key("ControlLeft") || key("ControlRight");
+}
+
 export function menuLeft() {
 	return keyDown("KeyA") || keyDown("ArrowLeft");
 }
@@ -67,4 +75,3 @@ export function menuUp() {
 export function menuDown() {
 	return keyDown("KeyS") || keyDown("ArrowDown");
 }
-
