@@ -68,7 +68,6 @@ GameObject.prototype.canInteract = function(obj) {return false;}
 GameObject.prototype.onCollide = function(intersection, other) {}
 GameObject.prototype.isPlayer = function(){return false;}
 
-
 export let MobileGameObject = function(spritePath, position, size, type, scale = vec2.fromValues(1, 1), offset = vec2.fromValues(0, 0), orientation = Orientation.DEFAULT) {
     GameObject.call(this, spritePath, position, size, type, scale, offset, orientation);
     

@@ -35,8 +35,6 @@ function keyDown(code) {
     return code in currentKeys && !(code in lastKeys);
 }
 
-
-
 //CONTROLS STARTING HERE
 export function walkingLeft() {
 	return key("KeyA") || key("ArrowLeft");
