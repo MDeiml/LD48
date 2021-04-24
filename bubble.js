@@ -5,7 +5,7 @@ import {vec2} from "./gl-matrix-min.js";
 const BUBBLE_VELOCITY = 1;
 const PLAYER_BUBBLE_SPAWN_PER_SECOND = 1;
 const MAX_BUBBLES = 10;
-const NUM_RANDOM_SHIT = 30;
+const NUM_RANDOM_SHIT = 100;
 const RANDOM_SHIT_RADIUS = 10;
 
 export function updateBubbles(delta) {
@@ -51,10 +51,11 @@ export function updateBubbles(delta) {
     while (level.objects["random_shit"].length < NUM_RANDOM_SHIT) {
         let pos = vec2.random(vec2.create(), RANDOM_SHIT_RADIUS);
         vec2.add(pos, pos, player.position);
-        let size = Math.random() * 0.2 + 0.1;
+        let isAnimal = Math.random() < 0.1;
+        let size = isAnimal ? (Math.random() * 0.3 + 0.1) : (Math.random() * 0.05 + 0.1);
         let obj = new GameObject("./Assets/bubble-alt.png", pos, vec2.fromValues(size, size), "random_shit");
         obj.velocity = vec2.random(vec2.create(), 0.1);
-        obj.timerPeriod = Math.random() > 0.2 ? 0 : Math.random() * 0.4 + 1.2;
+        obj.timerPeriod = isAnimal ? Math.random() * 0.4 + 1.2 : 0;
         obj.timer = Math.random() * obj.timerPeriod;
         level.addObject(obj);
     }
