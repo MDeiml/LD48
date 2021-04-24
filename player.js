@@ -19,9 +19,9 @@ export let Player = function() {
     updateRegistry.registerUpdate("player_input", this.handleInput.bind(this));
     updateRegistry.registerUpdate("player_anim", this.updatePlayerAnimation.bind(this));
     updateRegistry.registerUpdate("player_breath", this.updateBreathing.bind(this));
-    
-    
-    
+
+
+
     this.breath = MAX_BREATH;
     this.effect_strength = 0;
     this.rate = 0
@@ -45,7 +45,7 @@ Player.prototype.handleInput = function(delta) {
         vec2.copy(this.velocity, vec2.fromValues(0, 0));
         return
     }
-    
+
     let ropeDir = vec2.sub(vec2.create(), this.position, this.lastRopePoint);
     let ropeDirLength = vec2.length(ropeDir);
     if (ropeDirLength > 1) {
@@ -64,11 +64,10 @@ Player.prototype.handleInput = function(delta) {
         this.rope.orientation = angle;
         this.rope.setPosition(ropeMid);
     }
-    
+
     let vel = vec2.fromValues(0, 0);
     //handle player Speed
     let speed = swimmingAccelerate() ? PLAYER_SPEED * 2 : PLAYER_SPEED;
-    console.log(swimmingAccelerate());
 
     //handle movement
     if (swimmingLeft()) {
@@ -116,10 +115,10 @@ Player.prototype.handleInput = function(delta) {
 }
 
 Player.prototype.updateBreathing = function() {
-    
+
     if (this.breath == 0)
         return
-    
+
     if (this.position[1] > 0) //above water
     {
         this.breath = this.breath + 1
@@ -128,9 +127,9 @@ Player.prototype.updateBreathing = function() {
         this.breath = this.breath - (1/120)
     }
     this.breath = Math.min(Math.max(this.breath, 0), MAX_BREATH);
-    
+
     this.effect_strength = 1 - (this.breath / 100);
-    
+
     if (this.breath == 0)
     {
         //handle death
@@ -141,7 +140,11 @@ Player.prototype.updateBreathing = function() {
 Player.prototype.updatePlayerAnimation = function() {
     if (this.breath == 0)
         return
-	FrameCounter++;
+    if (swimmingDown() || swimmingUp() || swimmingRight() || swimmingLeft()) {
+        FrameCounter++;
+    } else {
+        this.sprite.texture.setFrame(1);
+    }
 	if (FrameCounter >=20){
         this.sprite.texture.nextFrame();
         FrameCounter = 0;
