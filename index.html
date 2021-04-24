@@ -1,0 +1,218 @@
+<!-- index.html --><!DOCTYPE html>
+<html>
+	<head>
+		<title>LD47</title>
+		<!-- Disables mobile touch delay-->
+		<meta name="viewport" content="width=device-width, user-scalable=no">
+		<script type="module" src="../main.js"></script>
+		<script id="shader-vs" type="x-shader/x-vertex">
+			attribute vec3 position;
+			attribute vec2 texCoord;
+
+			varying mediump vec2 vTexCoord;
+			varying mediump vec3 worldPos;
+
+			uniform mat4 M;
+			uniform mat4 VP;
+			uniform vec2 frame_data;
+
+			void main(void) {
+				vTexCoord = vec2((texCoord.x * (1.0/frame_data.y)) + (frame_data.x/frame_data.y), texCoord.y);
+				worldPos = (M * vec4(position, 1.0)).xyz;
+				gl_Position = VP * vec4(worldPos, 1.0);
+			}
+		</script>
+		<script id="shader-fs" type="x-shader/x-fragment">
+			precision mediump float;
+			
+			varying mediump vec2 vTexCoord;
+			varying mediump vec3 worldPos;
+
+			uniform sampler2D texture;
+			uniform vec2 texRes;
+
+			void main(void) {
+				gl_FragColor = texture2D(texture, vTexCoord);
+			}
+		</script>
+		<script id="light-fs" type="x-shader/x-fragment">
+			precision mediump float;
+			
+			varying mediump vec2 vTexCoord;
+			varying mediump vec3 worldPos;
+
+			uniform sampler2D texture;
+			uniform vec2 texRes;
+			
+			uniform float lights[180];
+			uniform float lightCount;
+			
+			void main(void) {
+				
+				vec4 texCol = texture2D(texture, vTexCoord);
+				vec3 resCol = vec3(0.0, 0.0, 0.0);
+				
+				vec3 gamma = vec3(1.0/2.2);
+				
+				for (int i = 0; i < 20; i++)
+				{
+					if (i >= int(lightCount))
+						break;
+					
+					
+					vec3 color = vec3(lights[i * 9], lights[i * 9 + 1], lights[i * 9 + 2]);
+					vec2 pos = vec2(lights[i * 9 + 3], lights[i * 9 + 4]);
+					vec2 dir = vec2(lights[i * 9 + 5], lights[i * 9 + 6]);
+					float cutoff = lights[i * 9 + 7];
+					float intensity = lights[i * 9 + 8];
+					
+					
+					
+					vec2 ray = pos - worldPos.xy;
+					float distanceToLight = length(ray);
+					ray = normalize(ray);
+					
+					
+					float angle = dot(ray, dir);
+					
+					if (angle < cutoff || distanceToLight < 0.15)
+					{
+						continue;
+					}
+					
+					float attenuation = 1.0 / (1.0 + pow(distanceToLight, 2.0));
+					
+					//linear color (color before gamma correction)
+					
+					float lightIntensity = clamp((attenuation*intensity + 0.00125) * ((angle - cutoff)/(1.0-cutoff)), 0.0, 1.0);
+					
+					vec3 linearColor = texCol.xyz * color * lightIntensity;
+					
+					//final color (after gamma correction)
+					resCol += clamp(linearColor, 0.0, 1.0);
+					//resCol += texCol.xyz * (attenuation*color.x + 0.1);
+					//resCol += vec3(1.0, 0.0, 0.0);
+				}
+                resCol += texCol.xyz * 0.4;
+				
+				gl_FragColor = vec4(resCol, texCol.w);
+			}
+		</script>
+		<script id="blur-fs" type="x-shader/x-fragment">
+			precision mediump float;
+			
+			varying mediump vec2 vTexCoord;
+			varying mediump vec3 worldPos;
+
+			uniform sampler2D texture;
+			uniform vec2 texRes;
+			
+			vec4 getTexFromOffset(float x, float y) {
+				return texture2D(texture, vec2( vTexCoord.x + (x * 2.0)/texRes.x, vTexCoord.y + (y * 2.0)/texRes.y));
+			}
+			
+			uniform float gaussian[225];
+			
+			void main(void) {
+				
+				vec4 color = vec4(0, 0, 0, 0);
+				
+				for (int i = -8; i <= 8; i++)
+				{
+					for (int j = -8; j <= 8; j++)
+					{
+						float i1 = float(i);
+						float j1 = float(j);
+						color += getTexFromOffset(i1, j1) * gaussian[(i + 8) * 15 + j + 8];
+					}
+				}
+				
+				gl_FragColor = color;
+			}
+		</script>
+		<script id="bg-light-fs" type="x-shader/x-fragment">
+			precision mediump float;
+			
+			varying mediump vec2 vTexCoord;
+			varying mediump vec3 worldPos;
+
+			uniform sampler2D texture;
+			uniform vec2 texRes;
+			
+			uniform float lights[180];
+			uniform float lightCount;
+			
+			uniform vec3 backgroundFilter;
+			
+			vec4 getTexFromOffset(float x, float y) {
+				return texture2D(texture, vec2( vTexCoord.x + x/texRes.x, vTexCoord.y + y/texRes.y));
+			}
+			
+			void main(void) {
+				vec4 texCol = texture2D(texture, vTexCoord);
+				vec3 resCol = vec3(0.0, 0.0, 0.0);
+				
+				vec3 gamma = vec3(1.0/2.2);
+				
+				for (int i = 0; i < 20; i++)
+				{
+					if (i >= int(lightCount))
+						break;
+					
+					vec3 color = vec3(lights[i * 9], lights[i * 9 + 1], lights[i * 9 + 2]);
+					vec2 pos = vec2(lights[i * 9 + 3], lights[i * 9 + 4]);
+					vec2 dir = vec2(lights[i * 9 + 5], lights[i * 9 + 6]);
+					float cutoff = lights[i * 9 + 7];
+					float intensity = lights[i * 9 + 8];
+					
+					
+					
+					vec2 ray = pos - worldPos.xy;
+					float distanceToLight = length(ray);
+					ray = normalize(ray);
+					
+					
+					float angle = dot(ray, dir);
+					
+					if (angle < cutoff || distanceToLight < 0.15)
+					{
+						continue;
+					}
+					
+					float attenuation = 1.0 / (1.0 + pow(distanceToLight, 2.0));
+					
+					//linear color (color before gamma correction)
+					
+					float lightIntensity = clamp((attenuation*intensity + 0.00125) * ((angle - cutoff)/(1.0-cutoff)), 0.0, 1.0);
+					
+					vec3 linearColor = texCol.xyz * color * lightIntensity;
+					
+					//final color (after gamma correction)
+					resCol += clamp(linearColor, 0.0, 1.0);
+				}
+                resCol += texCol.xyz * 0.1;
+				
+				vec3 color = 0.2 * backgroundFilter + 0.8 * resCol;
+				gl_FragColor = vec4(color, 1.0);
+			}
+		</script>
+		<style>
+			* {
+				margin: 0;
+				padding: 0;
+			}
+			body, html { height: 100% }
+			canvas {
+				position: absolute;
+				width: 100%;
+				height: 100%;
+			}
+		</style>
+		<link rel="shortcut icon" href="https://raw.githubusercontent.com/MDeiml/LD47/master/favicon.ico" type="image/x-icon">
+		<link rel="icon" href="https://raw.githubusercontent.com/MDeiml/LD47/master/favicon.ico" type="image/x-icon">
+	</head>
+
+	<body>
+		<canvas id="glCanvas" width="800" height="600"></canvas>
+	</body>
+</html>
