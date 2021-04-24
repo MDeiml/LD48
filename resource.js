@@ -1,4 +1,4 @@
-import {Texture2D} from "../Sprite.js"
+import {Texture2D} from "./Sprite.js"
 
 // ls -1 assets/* | xargs printf "%s",\n
 let preload_textures = [
