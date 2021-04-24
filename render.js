@@ -45,7 +45,6 @@ function initShaders() {
 	shaders["defaultShader"] = new Shader("shader", "shader")
 	shaders["lightShader"] = new Shader("shader", "light")
 	shaders["blurShader"] = new Shader("shader", "blur")
-	shaders["bgShader"] = new Shader("shader", "bg-light")
 
 	shaders["defaultShader"].bind();
     let defaultPositionAttribute = gl.getAttribLocation(shaders["defaultShader"].get(), 'position');
@@ -96,19 +95,7 @@ function drawBaseShader() {
 
 	for (let sprite of level.objects)
 	{
-		//if (sprite.type === "background")
-		//{
-			//shaders["bgShader"].bind();
-			//gl.uniform3fv(shaders["bgShader"].getUniform('backgroundFilter'), level.bgFilter);
-			//gl.uniformMatrix4fv(shaders["bgShader"].getUniform('VP'), false, pvMatrix);
-
-			//sprite.draw(shaders["bgShader"]);
-
-			//shaders["defaultShader"].bind();
-			//gl.uniformMatrix4fv(shaders["defaultShader"].getUniform('VP'), false, pvMatrix);
-		//}
-		//else
-			sprite.draw(shaders["defaultShader"]);
+		sprite.draw(shaders["defaultShader"]);
 	}
 }
 
@@ -121,20 +108,7 @@ function drawLightShader() {
 
 	for (let sprite of level.objects)
 	{
-		if (sprite.type === "background")
-		{
-            shaders["bgShader"].bind();
-			gl.uniformMatrix4fv(shaders["bgShader"].getUniform('VP'), false, pvMatrix);
-			gl.uniform1f(shaders["bgShader"].getUniform('lightCount'), level.lightCnt)
-			gl.uniform1fv(shaders["bgShader"].getUniform('lights'), level.lights)
-			gl.uniform3fv(shaders["bgShader"].getUniform('backgroundFilter'), vec3.fromValues( 0.5, 0.5, 1));
-			sprite.draw(shaders["bgShader"]);
-
-			shaders["lightShader"].bind();
-			gl.uniformMatrix4fv(shaders["lightShader"].getUniform('VP'), false, pvMatrix);
-		}
-		else
-			sprite.draw(shaders["lightShader"]);
+		sprite.draw(shaders["lightShader"]);
 
 	}
 
