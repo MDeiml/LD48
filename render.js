@@ -84,8 +84,8 @@ export function update() {
 		updateViewMat = false;
 	}
 
-    // drawLightShader();
     drawBaseShader();
+    drawLightShader();
 }
 
 //RENDER MODES
@@ -146,10 +146,10 @@ function drawLightShader() {
 
 	}
 
-    player.draw(shaders["lightShader"]);
-	if (player.canInteract) {
-		shaders["defaultShader"].bind();
-		gl.uniformMatrix4fv(shaders["defaultShader"].getUniform('VP'), false, pvMatrix);
-		player.eyeSprite.draw(shaders["defaultShader"]);
-	}
+    //player.draw(shaders["lightShader"]);
+	//if (player.canInteract) {
+	//	shaders["defaultShader"].bind();
+	//	gl.uniformMatrix4fv(shaders["defaultShader"].getUniform('VP'), false, pvMatrix);
+	//	player.eyeSprite.draw(shaders["defaultShader"]);
+	//}
 }
