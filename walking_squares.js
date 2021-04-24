@@ -1,4 +1,4 @@
-import {CollidableGameObject, GameObject, Transformation} from "./GameObject.js"
+import {CollidableGameObject, AnimatedGameObject, GameObject, Transformation} from "./GameObject.js"
 import {level} from "./state.js"
 import {MAP_WIDTH, MAP_HEIGHT} from "./generation.js"
 import {vec2} from "./gl-matrix-min.js"
@@ -64,11 +64,13 @@ export function computeSquareMap(scanlineArr) {
                         for (let i = 0; i < n; i++) {
                             let size = Math.random() * 0.4 + 0.8;
                             let x = Math.random() * 0.5;
-                            level.addObject(new GameObject(
-                                Math.random() > 0.5 ? "./Assets/animationen/alge1.png" : "./Assets/animationen/alge2.png",
+                            level.addObject(new AnimatedGameObject(
+                                "./Assets/animationen/alge_anim.png",
                                 vec2.fromValues(w * GRID_SIZE - side_offset + (x - 0.5) * GRID_SIZE, -(h * GRID_SIZE + depth_offset) + size / 2 - x * GRID_SIZE),
                                 vec2.fromValues(size, size),
-                                "plant"
+                                "plant",
+                                2,
+                                15 + Math.floor(Math.random(15))
                             ));
                         }
                     } else if (br == 1) {
@@ -78,11 +80,13 @@ export function computeSquareMap(scanlineArr) {
                         for (let i = 0; i < n; i++) {
                             let size = Math.random() * 0.4 + 0.8;
                             let x = Math.random() * 0.5;
-                            level.addObject(new GameObject(
-                                Math.random() > 0.5 ? "./Assets/animationen/alge1.png" : "./Assets/animationen/alge2.png",
+                            level.addObject(new AnimatedGameObject(
+                                "./Assets/animationen/alge_anim.png",
                                 vec2.fromValues(w * GRID_SIZE - side_offset + x * GRID_SIZE, -(h * GRID_SIZE + depth_offset) + size / 2 - (0.5 - x) * GRID_SIZE),
                                 vec2.fromValues(size, size),
-                                "plant"
+                                "plant",
+                                2,
+                                15 + Math.floor(Math.random(15))
                             ));
                         }
                     }
