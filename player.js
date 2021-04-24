@@ -18,6 +18,8 @@ export let Player = function() {
     updateRegistry.registerUpdate("player_anim", this.updatePlayerAnimation.bind(this));
 
     this.lastRopePoint = vec2.clone(this.position);
+    this.rope = new GameObject("./Assets/rope.png", this.position, vec2.fromValues(1, 1), "rope");
+    level.addObject(this.rope);
 }
 Player.prototype = Object.create(MobileGameObject.prototype);
 Object.defineProperty(Player.prototype, 'constructor', {
@@ -37,6 +39,14 @@ Player.prototype.handleInput = function() {
         vec2.scale(ropeMid, ropeMid, 0.5);
         level.addObject(new GameObject("./Assets/rope.png", ropeMid, vec2.fromValues(1, 1), "rope", vec2.fromValues(1, 1), vec2.fromValues(0, 0), angle));
         this.lastRopePoint = nextRopePoint;
+    } else {
+        let angle = -Math.atan2(ropeDir[0], ropeDir[1]) / Math.PI * 180;
+        let nextRopePoint = vec2.add(ropeDir, this.lastRopePoint, ropeDir);
+        let ropeMid = vec2.add(vec2.create(), this.lastRopePoint, nextRopePoint);
+        vec2.scale(ropeMid, ropeMid, 0.5);
+        this.rope.halfSize[1] = ropeDirLength / 2;
+        this.rope.orientation = angle;
+        this.rope.setPosition(ropeMid);
     }
 
     let vel = vec2.fromValues(0, 0);
