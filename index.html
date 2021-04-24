@@ -1,7 +1,7 @@
 <!-- index.html --><!DOCTYPE html>
 <html>
 	<head>
-		<title>LD47</title>
+		<title>LD48</title>
 		<!-- Disables mobile touch delay-->
 		<meta name="viewport" content="width=device-width, user-scalable=no">
 		<script type="module" src="./main.js"></script>
@@ -46,6 +46,7 @@
 			
 			uniform float lights[180];
 			uniform float lightCount;
+            uniform float ambientLight;
 			
 			void main(void) {
 				
@@ -96,7 +97,7 @@
 					//resCol += texCol.xyz * (attenuation*color.x + 0.1);
 					//resCol += vec3(1.0, 0.0, 0.0);
 				}
-                resCol += texCol.xyz * 0.3;
+                resCol += texCol.xyz * ambientLight;
 				
 				gl_FragColor = vec4(resCol, texCol.w);
 			}
