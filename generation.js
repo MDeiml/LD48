@@ -13,6 +13,7 @@ export function generateLevel() {
 
     let current = 0;
     let queue = {};
+    let prev = {};
     while (true) {
         pixels[current] = false;
         let neighbours = [];
@@ -36,6 +37,7 @@ export function generateLevel() {
                 break;
             next = +keys[Math.floor(random() * keys.length)];
             pixels[(next + queue[next]) / 2] = false;
+            prev[next] = queue[next];
         } else {
             let rand = Math.floor(random() * neighbours.length)
             next = neighbours[rand];
@@ -43,6 +45,7 @@ export function generateLevel() {
             for (let i = 0; i < neighbours.length; i++) {
                 queue[neighbours[i]] = current;
             }
+            prev[next] = current;
         }
         delete queue[next];
         current = next;
@@ -53,6 +56,6 @@ export function generateLevel() {
             pixels[i] = false;
         }
     }
-    
-    return pixels;
+
+    return [pixels, prev];
 }
