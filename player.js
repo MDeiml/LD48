@@ -19,6 +19,7 @@ export let Player = function() {
 
     this.lastRopePoint = vec2.clone(this.position);
     this.rope = new GameObject("./Assets/rope.png", this.position, vec2.fromValues(1, 1), "rope");
+    this.lookDirection = vec2.fromValues(-1, 0);
     level.addObject(this.rope);
 }
 Player.prototype = Object.create(MobileGameObject.prototype);
@@ -29,7 +30,7 @@ Object.defineProperty(Player.prototype, 'constructor', {
 
 Player.prototype.isPlayer = function(){return true;}
 // Player.prototype.setInteraction = function(isactive) {this.canInteract = isactive }
-Player.prototype.handleInput = function() {
+Player.prototype.handleInput = function(delta) {
     let ropeDir = vec2.sub(vec2.create(), this.position, this.lastRopePoint);
     let ropeDirLength = vec2.length(ropeDir);
     if (ropeDirLength > 1) {
@@ -58,7 +59,6 @@ Player.prototype.handleInput = function() {
         PLAYER_SPEED = 2.5;
     }
 
-    vec2.copy(this.velocity, vel);
     //handle movement
     if (swimmingLeft()) {
         vel[0] -= PLAYER_SPEED;
@@ -73,10 +73,23 @@ Player.prototype.handleInput = function() {
         vel[1] -= PLAYER_SPEED;
     }
 
-    vec2.copy(this.velocity, vel);
+    if (vel[0] == 0 && vel[1] == 0) {
+        vec2.scale(this.velocity, this.velocity, Math.pow(0.1, delta));
+    }
+
+    vec2.scaleAndAdd(this.velocity, this.velocity, vel, delta * 2);
+    let velLength = vec2.length(this.velocity);
+    if (velLength > PLAYER_SPEED) {
+        vec2.scale(this.velocity, this.velocity, PLAYER_SPEED / velLength);
+        velLength = PLAYER_SPEED;
+    }
+    if (velLength > 0.01) {
+        this.orientation = 90-Math.atan2(this.velocity[0], this.velocity[1]) / Math.PI * 180;
+        vec2.scale(this.lookDirection, this.velocity, -1 / velLength);
+    }
     //stupid pointlight
     level.updateLight(0, [0.3, 0.8, 0.5], [this.position[0], this.position[1]],[0, 1], -1.0, 1);
-    level.updateLight(1, [0.6, 0.3, 0.3], [this.position[0], this.position[1]],[0, 1], 0.7, 3);
+    level.updateLight(1, [0.6, 0.3, 0.3], vec2.scaleAndAdd(vec2.create(), this.position, this.lookDirection, -0.4), this.lookDirection, 0.7, 3);
 }
 
 
