@@ -12,7 +12,7 @@ export let Transformation = {
 }
 
 //Abstraction from Sprite to abstract from Transformation to the position and size of the object
-export let GameObject = function(spritePath, position, size, type, scale = vec2.fromValues(1, 1), offset = vec2.fromValues(0, 0), orientation = Orientation.DEFAULT) {
+export let GameObject = function(spritePath, position, size, type, scale = vec2.fromValues(1, 1), offset = vec2.fromValues(0, 0), orientation = Transformation.TOP_LEFT) {
     this.position = position;
     this.halfSize = vec2.create();
     this.type = type;
