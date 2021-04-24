@@ -1,4 +1,4 @@
-import {random} from "util.js"
+import {random} from "./util.js"
 
 const GEN_WIDTH = 8;
 const GEN_HEIGHT = 32;
