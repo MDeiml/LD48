@@ -6,7 +6,7 @@ import {updateAudio, initAudio, music, walk_wood} from "./audio.js"
 import {updateRegistry, player, setPlayer, level} from "./state.js"
 import {generateLevel, MAP_WIDTH, MAP_HEIGHT} from "./generation.js"
 import {Player} from "./player.js"
-import {computeSquareMap} from "./walking_squares.js"
+import {computeSquareMap, GRID_SIZE} from "./walking_squares.js"
 import {init as initResource} from "./resource.js"
 import {GameObject} from "./GameObject.js"
 import {updatePhysics} from "./physics.js"
@@ -24,7 +24,7 @@ function main() {
     initAudio();
 
     initResource(function() {
-        level.objects.push(new GameObject("Assets/background.jpg", vec2.fromValues(-0.5, -MAP_HEIGHT / 2), vec2.fromValues( MAP_WIDTH - 1, MAP_HEIGHT), "background" ))
+        level.objects.push(new GameObject("Assets/background.jpg", vec2.fromValues(-0.5 * GRID_SIZE, -MAP_HEIGHT * GRID_SIZE / 2), vec2.fromValues( (MAP_WIDTH - 1) * GRID_SIZE, MAP_HEIGHT * GRID_SIZE), "background" ))
         let map_data = generateLevel();
         computeSquareMap(map_data);
         setPlayer(new Player());
