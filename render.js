@@ -119,6 +119,9 @@ function drawLightShader() {
     for (let sprite of level.objects["background"]) {
         sprite.draw(shaders["lightShader"]);
     }
+    for (let sprite of level.objects["bubbles"]) {
+        sprite.draw(shaders["lightShader"]);
+    }
 	gl.uniform1f(shaders["lightShader"].getUniform('ambientLight'), 0.3 - 0.299 * Math.min(1, 3 * -player.position[1] / MAP_HEIGHT / GRID_SIZE))
     for (let sprite of level.objects["random_shit"]) {
         if (vec2.squaredDistance(sprite.position, player.position) > 15 * 15) continue;

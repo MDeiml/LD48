@@ -6,7 +6,7 @@ import {level} from "./state.js"
 let Bubble = function(parent) {
     CollidableGameObject.call(this, "./Assets/luftblase_koralle.png", vec2.fromValues(0, 0), vec2.fromValues(2, 2), []);
     this.sprite.parent = parent;
-    this.type = "background";
+    this.type = "bubbles";
 }
 Bubble.prototype = Object.create(CollidableGameObject.prototype);
 Object.defineProperty(Bubble.prototype, 'constructor', {
