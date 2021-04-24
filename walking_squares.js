@@ -1,5 +1,6 @@
 import {CollidableGameObject} from "./GameObject.js"
 import {level} from "./state.js"
+import {MAP_WIDTH, MAP_HEIGHT} from "./generation.js"
 
 function initTileAssets() {
     //TODO init array for tiles. Could be optimized out
@@ -8,28 +9,28 @@ function initTileAssets() {
 export let Transformation = {
     TOP_LEFT: 0,
     TOP_RIGHT: 1, //rotate +90 deg
-    BOTTOM_LEFT: 2 //rotate 180 deg
-    BOTTOM_RIGHT: 1, //rotate -90 deg
+    BOTTOM_LEFT: 2, //rotate 180 deg
+    BOTTOM_RIGHT: 1 //rotate -90 deg
 }
 
-function computeSquareMap(scanlineArr, width, height) {
+export function computeSquareMap(scanlineArr, MAP_WIDTH, MAP_HEIGHT) {
     
-    let side_offset = floor(width / 2) //offset cube objects so that they start at the middle
+    let side_offset = Math.floor(MAP_WIDTH / 2) //offset cube objects so that they start at the middle
     let depth_offset = 1
     
-    for (let h = 0; h < height - 1; h++) {
-        for (let w = 0; w < width - 1; w++) {
-            let tl = scanlineArr[w + h * width] ? 1 : 0;
-            let tr = scanlineArr[w + 1 + h * width] ? 1 : 0;
-            let bl = scanlineArr[w + (h + 1) * width] ? 1 : 0;
-            let br = scanlineArr[w + 1 + (h + 1) * width] ? 1 : 0;
+    for (let h = 0; h < MAP_HEIGHT - 1; h++) {
+        for (let w = 0; w < MAP_WIDTH - 1; w++) {
+            let tl = scanlineArr[w + h * MAP_WIDTH] ? 1 : 0;
+            let tr = scanlineArr[w + 1 + h * MAP_WIDTH] ? 1 : 0;
+            let bl = scanlineArr[w + (h + 1) * MAP_WIDTH] ? 1 : 0;
+            let br = scanlineArr[w + 1 + (h + 1) * MAP_WIDTH] ? 1 : 0;
             
             let type = tl + tr + bl + br;
+            let transform = null;
             switch(type) {
                 case 0:       //open space
                     break;
                 case 1:       //corner
-                    let transform = null;
                     if (tl == 1)
                         transform = Transformation.TOP_LEFT
                     else if (tr == 1)
@@ -50,7 +51,6 @@ function computeSquareMap(scanlineArr, width, height) {
                     }
                     break;
                 case 3:       //inverted corner
-                    let transform = null;
                     if (tl == 0)
                         transform = Transformation.TOP_LEFT
                     else if (tr == 0)

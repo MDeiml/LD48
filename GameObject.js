@@ -1,9 +1,7 @@
 import {Sprite} from "./Sprite.js"
 import {mat4, vec2, vec3, quat} from "./gl-matrix-min.js"
 import {PositionalAudio, walk_wood} from "./audio.js"
-import {updateRegistry, inventory} from "./state.js"
-import {getItemSprite, getItemMenuSprite} from "./item.js"
-import {Menu} from "./menu.js"
+import {updateRegistry} from "./state.js"
 
 //Preset Rotations of the object.
 export let Orientation = {
@@ -147,20 +145,4 @@ VerticalCollidableGameObject.prototype.onCollide = function(intersection, other)
         player.velocity[1] = 0;
         player.onGround = true;
     }
-}
-
-export let Interactable = function(spritePath, position, size, scale = vec2.fromValues(1, 1), offset = vec2.fromValues(0, 0), orientation = Orientation.DEFAULT) {
-    GameObject.call(this, spritePath, position, size, "interactable", scale, offset, orientation);
-}
-
-export let Teleporter = function(spritePath, position, size, scale = vec2.fromValues(1, 1), offset = vec2.fromValues(0, 0), orientation = Orientation.DEFAULT) {
-    Interactable.call(this, spritePath, position, size, "teleporter", scale, offset, orientation);
-}
-Teleporter.prototype = Object.create(Interactable.prototype);
-Object.defineProperty(Teleporter.prototype, 'constructor', {
-    value: Teleporter,
-    enumerable: false, // so that it does not appear in 'for in' loop
-    writable: true });
-Teleporter.prototype.onInteract = function(obj) {
-    obj.teleport = vec2.fromValues(this.to["x"], this.to["y"])
 }

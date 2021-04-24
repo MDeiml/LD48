@@ -5,16 +5,14 @@ import {Sprite} from "./Sprite.js";
 import {updateAudio, initAudio, music, walk_wood} from "./audio.js"
 import {updateRegistry, player, setPlayer} from "./state.js"
 import {generateLevel} from "./generation.js"
+import {computeSquareMap} from "./walking_squares.js"
+import {init as initResource} from "./resource.js"
 
 //timekeeper
 var lastTick = null;
 var unprocessed = 0;
 
 const FRAME_TIME = 1000/60;
-let MIN_FIRE_SCALE = 1.0
-let MAX_FIRE_SCALE = 3.0
-let fireCntr = 0
-let firePos = 0
 let dir = true
 
 function main() {
@@ -22,20 +20,14 @@ function main() {
     initInput();
     initAudio();
 
-    // initResource(function() {
+    initResource(function() {
+        let map_data = generateLevel();
+        computeSquareMap(map_data);
+        setPlayer({ position: vec2.fromValues(0, 0) });
+        window.running = true;
+        requestAnimationFrame(update);
+    });
 
-    //     setPlayer(new Player());
-
-    //     loadLevel(1) //TODO maybe remove. maybe replace with menu
-
-    //     window.running = true;
-    //     requestAnimationFrame(update);
-    // });
-
-    generateLevel();
-    setPlayer({ position: vec2.fromValues(0, 0) });
-    window.running = true;
-    requestAnimationFrame(update);
 }
 
 function update(now) {
