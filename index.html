@@ -144,10 +144,6 @@
 			
 			uniform vec3 backgroundFilter;
 			
-			vec4 getTexFromOffset(float x, float y) {
-				return texture2D(texture, vec2( vTexCoord.x + x/texRes.x, vTexCoord.y + y/texRes.y));
-			}
-			
 			void main(void) {
 				vec4 texCol = texture2D(texture, vTexCoord);
 				vec3 resCol = vec3(0.0, 0.0, 0.0);
@@ -190,7 +186,7 @@
 					//final color (after gamma correction)
 					resCol += clamp(linearColor, 0.0, 1.0);
 				}
-                resCol += texCol.xyz * 0.1;
+                resCol += texCol.xyz * (0.5/(vTexCoord.y));
 				
 				vec3 color = 0.2 * backgroundFilter + 0.8 * resCol;
 				gl_FragColor = vec4(color, 1.0);

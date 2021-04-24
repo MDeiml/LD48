@@ -123,20 +123,15 @@ function drawLightShader() {
 	{
 		if (sprite.type === "background")
 		{
-			shaders["bgShader"].bind();
+            shaders["bgShader"].bind();
 			gl.uniformMatrix4fv(shaders["bgShader"].getUniform('VP'), false, pvMatrix);
 			gl.uniform1f(shaders["bgShader"].getUniform('lightCount'), level.lightCnt)
 			gl.uniform1fv(shaders["bgShader"].getUniform('lights'), level.lights)
-			gl.uniform3fv(shaders["bgShader"].getUniform('backgroundFilter'), level.bgFilter);
+			gl.uniform3fv(shaders["bgShader"].getUniform('backgroundFilter'), vec3.fromValues( 0.5, 0.5, 1));
 			sprite.draw(shaders["bgShader"]);
 
 			shaders["lightShader"].bind();
 			gl.uniformMatrix4fv(shaders["lightShader"].getUniform('VP'), false, pvMatrix);
-		}
-		else if (sprite.type == "door" && sprite.state) {
-			let t = (sprite.state == "opening" ? 0.3 - sprite.timer : (sprite.state == "closing" ? sprite.timer : 0.3)) / 0.3;
-			mat4.fromRotationTranslationScale(sprite.door.transform, quat.create(), vec3.fromValues(sprite.position[0] + t * DOOR_WIDTH, sprite.position[1], 0), vec3.fromValues(-t * DOOR_WIDTH, sprite.halfSize[1], 1));
-			sprite.door.draw(shaders["lightShader"]);
 		}
 		else
 			sprite.draw(shaders["lightShader"]);
