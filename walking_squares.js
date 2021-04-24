@@ -19,6 +19,17 @@ const COLLISION_SHAPES = {
     corrR : [[vec2.fromValues(0, 0.5 * GRID_SIZE), vec2.fromValues(0.5 * GRID_SIZE, 0)], [vec2.fromValues(-0.5 * GRID_SIZE, 0), vec2.fromValues(0, -0.5 * GRID_SIZE)]],
 }
 
+function spawnAlgaeAt(pos, size) {
+    level.addObject(new AnimatedGameObject(
+        "./Assets/animationen/alge_anim.png",
+        pos,
+        vec2.fromValues(size, size),
+        "plant",
+        2,
+        25 + Math.floor(Math.random(15))
+    ));
+}
+
 export function computeSquareMap(scanlineArr) {
 
     let side_offset = Math.floor(MAP_WIDTH / 2) * GRID_SIZE; //offset cube objects so that they start at the middle
@@ -64,14 +75,7 @@ export function computeSquareMap(scanlineArr) {
                         for (let i = 0; i < n; i++) {
                             let size = Math.random() * 0.4 + 0.8;
                             let x = Math.random() * 0.5;
-                            level.addObject(new AnimatedGameObject(
-                                "./Assets/animationen/alge_anim.png",
-                                vec2.fromValues(w * GRID_SIZE - side_offset + (x - 0.5) * GRID_SIZE, -(h * GRID_SIZE + depth_offset) + size / 2 - x * GRID_SIZE),
-                                vec2.fromValues(size, size),
-                                "plant",
-                                2,
-                                15 + Math.floor(Math.random(15))
-                            ));
+                            spawnAlgaeAt(vec2.fromValues(w * GRID_SIZE - side_offset + (x - 0.5) * GRID_SIZE, -(h * GRID_SIZE + depth_offset) + size / 2 - x * GRID_SIZE), size);
                         }
                     } else if (br == 1) {
                         transform = Transformation.BOTTOM_RIGHT;
@@ -80,14 +84,7 @@ export function computeSquareMap(scanlineArr) {
                         for (let i = 0; i < n; i++) {
                             let size = Math.random() * 0.4 + 0.8;
                             let x = Math.random() * 0.5;
-                            level.addObject(new AnimatedGameObject(
-                                "./Assets/animationen/alge_anim.png",
-                                vec2.fromValues(w * GRID_SIZE - side_offset + x * GRID_SIZE, -(h * GRID_SIZE + depth_offset) + size / 2 - (0.5 - x) * GRID_SIZE),
-                                vec2.fromValues(size, size),
-                                "plant",
-                                2,
-                                15 + Math.floor(Math.random(15))
-                            ));
+                            spawnAlgaeAt(vec2.fromValues(w * GRID_SIZE - side_offset + x * GRID_SIZE, -(h * GRID_SIZE + depth_offset) + size / 2 - (0.5 - x) * GRID_SIZE), size);
                         }
                     }
 
@@ -149,12 +146,7 @@ export function computeSquareMap(scanlineArr) {
                             let n = Math.random() * 3;
                             for (let i = 0; i < n; i++) {
                                 let size = Math.random() * 0.4 + 0.8;
-                                level.addObject(new GameObject(
-                                    Math.random() > 0.5 ? "./Assets/animationen/alge1.png" : "./Assets/animationen/alge2.png",
-                                    vec2.fromValues(w * GRID_SIZE - side_offset + (Math.random() - 0.5) * GRID_SIZE, -(h * GRID_SIZE + depth_offset) + size / 2),
-                                    vec2.fromValues(size, size),
-                                    "plant"
-                                ));
+                                spawnAlgaeAt(vec2.fromValues(w * GRID_SIZE - side_offset + (Math.random() - 0.5) * GRID_SIZE, -(h * GRID_SIZE + depth_offset) + size / 2), size);
                             }
                         } else if (bl == 1 && tl == 1) {
                             transform = Transformation.BOTTOM_LEFT;
@@ -180,12 +172,7 @@ export function computeSquareMap(scanlineArr) {
                         for (let i = 0; i < n; i++) {
                             let size = Math.random() * 0.4 + 0.8;
                             let x = Math.random() * 0.5;
-                            level.addObject(new GameObject(
-                                Math.random() > 0.5 ? "./Assets/animationen/alge1.png" : "./Assets/animationen/alge2.png",
-                                vec2.fromValues(w * GRID_SIZE - side_offset + (x - 0.5) * GRID_SIZE, -(h * GRID_SIZE + depth_offset) + size / 2 + x * GRID_SIZE),
-                                vec2.fromValues(size, size),
-                                "plant"
-                            ));
+                            spawnAlgaeAt(vec2.fromValues(w * GRID_SIZE - side_offset + (x - 0.5) * GRID_SIZE, -(h * GRID_SIZE + depth_offset) + size / 2 + x * GRID_SIZE), size);
                         }
                     } else if (tr == 0) {
                         transform = Transformation.TOP_RIGHT
@@ -194,12 +181,7 @@ export function computeSquareMap(scanlineArr) {
                         for (let i = 0; i < n; i++) {
                             let size = Math.random() * 0.4 + 0.8;
                             let x = Math.random() * 0.5;
-                            level.addObject(new GameObject(
-                                Math.random() > 0.5 ? "./Assets/animationen/alge1.png" : "./Assets/animationen/alge2.png",
-                                vec2.fromValues(w * GRID_SIZE - side_offset + x * GRID_SIZE, -(h * GRID_SIZE + depth_offset) + size / 2 - (x - 0.5) * GRID_SIZE),
-                                vec2.fromValues(size, size),
-                                "plant"
-                            ));
+                            spawnAlgaeAt(vec2.fromValues(w * GRID_SIZE - side_offset + x * GRID_SIZE, -(h * GRID_SIZE + depth_offset) + size / 2 - (x - 0.5) * GRID_SIZE), size);
                         }
                     } else if (bl == 0) {
                         transform = Transformation.BOTTOM_LEFT

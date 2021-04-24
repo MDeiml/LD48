@@ -3,6 +3,8 @@ import * as Sprite from "./Sprite.js"
 import {Projection, View} from "./Transform.js"
 import {mat4, vec2, vec3, quat} from "./gl-matrix-min.js"
 import {gl, setGl, level, player} from "./state.js"
+import {MAP_HEIGHT} from "./generation.js";
+import {GRID_SIZE} from "./walking_squares.js";
 
 let shaders = {};
 
@@ -102,15 +104,17 @@ function drawBaseShader() {
 }
 
 function drawLightShader() {
-	shaders["lightShader"].bind();
 
+	shaders["lightShader"].bind();
 	gl.uniform1f(shaders["lightShader"].getUniform('lightCount'), level.lightCnt)
 	gl.uniform1fv(shaders["lightShader"].getUniform('lights'), level.lights)
 	gl.uniformMatrix4fv(shaders["lightShader"].getUniform('VP'), false, pvMatrix);
 
+	gl.uniform1f(shaders["lightShader"].getUniform('ambientLight'), 0.3 - 0.1 * Math.min(1, 3 * -player.position[1] / MAP_HEIGHT / GRID_SIZE));
     for (let sprite of level.objects["background"]) {
         sprite.draw(shaders["lightShader"]);
     }
+	gl.uniform1f(shaders["lightShader"].getUniform('ambientLight'), 0.3 - 0.299 * Math.min(1, 3 * -player.position[1] / MAP_HEIGHT / GRID_SIZE))
     for (let sprite of level.objects["random_shit"]) {
         sprite.draw(shaders["lightShader"]);
     }
