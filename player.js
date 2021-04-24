@@ -9,6 +9,8 @@ var PLAYER_SPEED = 2.5;
 const JUMP_SPEED = 13; // 6.75
 const FRAME_TIME = 1000/60;
 var FrameCounter = 0;
+const MAX_BREATH = 100;
+
 export let Player = function() {
     MobileGameObject.call(this, "./Assets/animationen/taucher-animation.png", vec2.fromValues( 0, 0), vec2.fromValues(1, 1), "player", vec2.fromValues(1, 1), vec2.fromValues(0, 0));
 
@@ -16,7 +18,11 @@ export let Player = function() {
 
     updateRegistry.registerUpdate("player_input", this.handleInput.bind(this));
     updateRegistry.registerUpdate("player_anim", this.updatePlayerAnimation.bind(this));
+    updateRegistry.registerUpdate("player_breath", this.updateBreathing.bind(this));
     
+    
+    
+    this.breath = MAX_BREATH
 }
 Player.prototype = Object.create(MobileGameObject.prototype);
 Object.defineProperty(Player.prototype, 'constructor', {
@@ -27,6 +33,11 @@ Object.defineProperty(Player.prototype, 'constructor', {
 Player.prototype.isPlayer = function(){return true;}
 // Player.prototype.setInteraction = function(isactive) {this.canInteract = isactive }
 Player.prototype.handleInput = function() {
+    if (this.breath == 0) {
+        vec2.copy(this.velocity, vec2.fromValues(0, 0));
+        return
+    }
+    
     let vel = vec2.fromValues(0, 0);
 	//handle player Speed
 	if (swimmingAccelerate()) {
@@ -55,12 +66,33 @@ Player.prototype.handleInput = function() {
     level.updateLight(0, [0.6, 0.3, 0.3], [this.position[0], this.position[1]],[0, 1], 0.7, 1);
 }
 
+Player.prototype.updateBreathing = function() {
+    
+    if (this.breath == 0)
+        return
+    
+    if (this.position[1] > 0) //above water
+    {
+        this.breath = this.breath + 1
+    }
+    else {
+        this.breath = this.breath - (1/60)
+    }
+    this.breath = Math.min(Math.max(this.breath, 0), MAX_BREATH);
+    if (this.breath == 0)
+    {
+        //handle death
+        console.log("YOU DIED.")
+    }
+}
 
 Player.prototype.updatePlayerAnimation = function() {
+    if (this.breath == 0)
+        return
 	FrameCounter++;
 	if (FrameCounter >=20){
-	this.sprite.texture.nextFrame();
-	FrameCounter = 0;
+        this.sprite.texture.nextFrame();
+        FrameCounter = 0;
 	}
 }
 
