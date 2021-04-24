@@ -10,7 +10,7 @@ export function readElements(id) {
 		}
 		child = child.nextSibling;
 	}
-	
+
 	return source
 }
 
@@ -70,7 +70,9 @@ export function random() {
     random_state.S[random_state.j] = tmp % 256
     let m = (random_state.S[random_state.j] + random_state.S[random_state.k]) % 256
     let n = (random_state.S[random_state.i] + random_state.S[random_state.j]) % 256
-    
-    return (random_state.S[m] << 24 | random_state.S[n] << 16 | random_state.S[m ^ random_state.j] << 8 | random_state.S[n ^ random_state.k]) / Math.pow(2.0, 32.0)
-    
+
+    let res = (random_state.S[m] << 24 | random_state.S[n] << 16 | random_state.S[m ^ random_state.j] << 8 | random_state.S[n ^ random_state.k]) / Math.pow(2.0, 32.0)
+    res += 0.5;
+
+    return res;
 }

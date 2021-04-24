@@ -19,10 +19,35 @@ const COLLISION_SHAPES = {
     corrR : [[vec2.fromValues(0, 0.5 * GRID_SIZE), vec2.fromValues(0.5 * GRID_SIZE, 0)], [vec2.fromValues(-0.5 * GRID_SIZE, 0), vec2.fromValues(0, -0.5 * GRID_SIZE)]],
 }
 
-export function computeSquareMap(scanlineArr) {
+export function computeSquareMap(map_data) {
+    let scanlineArr = map_data[0];
+    let prev = map_data[1];
 
     let side_offset = Math.floor(MAP_WIDTH / 2) * GRID_SIZE; //offset cube objects so that they start at the middle
     let depth_offset = GRID_SIZE;
+
+    // TODO: besserer start knoten
+    let current = 0 + MAP_WIDTH * MAP_HEIGHT - 1;
+    while (prev[current]) {
+        let x = current % MAP_WIDTH;
+        let y = Math.floor(current / MAP_WIDTH);
+        level.addObject(new GameObject(
+            "./Assets/rope.png",
+            vec2.fromValues(x * GRID_SIZE - side_offset, -(y * GRID_SIZE + depth_offset)),
+            vec2.fromValues(1, 1),
+            "rope"
+        ));
+        x = ((current + prev[current]) / 2) % MAP_WIDTH;
+        y = Math.floor(((current + prev[current]) / 2) / MAP_WIDTH);
+        level.addObject(new GameObject(
+            "./Assets/rope.png",
+            vec2.fromValues(x * GRID_SIZE - side_offset, -(y * GRID_SIZE + depth_offset)),
+            vec2.fromValues(1, 1),
+            "rope"
+        ));
+        console.log(x + ", " + y);
+        current = prev[current];
+    }
 
     for (let h = 0; h < MAP_HEIGHT - 1; h++) {
         for (let w = -1; w < MAP_WIDTH; w++) {
