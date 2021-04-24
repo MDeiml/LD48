@@ -108,8 +108,6 @@ function drawLightShader() {
 	shaders["lightShader"].bind();
 	gl.uniform1f(shaders["lightShader"].getUniform('lightCount'), level.lightCnt)
 	gl.uniform1fv(shaders["lightShader"].getUniform('lights'), level.lights)
-    console.log(player.position[1]);
-    console.log(MAP_HEIGHT * GRID_SIZE);
 	gl.uniformMatrix4fv(shaders["lightShader"].getUniform('VP'), false, pvMatrix);
 
 	gl.uniform1f(shaders["lightShader"].getUniform('ambientLight'), 0.3);
