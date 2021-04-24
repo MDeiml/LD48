@@ -10,7 +10,7 @@ const JUMP_SPEED = 13; // 6.75
 const FRAME_TIME = 1000/60;
 var FrameCounter = 0;
 export let Player = function() {
-    MobileGameObject.call(this, "./Assets/animationen/taucher-4-frame.png", vec2.fromValues( 0, 0), vec2.fromValues(1, 1), "player", vec2.fromValues(1, 1), vec2.fromValues(0, 0));
+    MobileGameObject.call(this, "./Assets/animationen/taucher-animation.png", vec2.fromValues( 0, 0), vec2.fromValues(1, 1), "player", vec2.fromValues(1, 1), vec2.fromValues(0, 0));
 
     this.sprite.texture.frames = 4;
 
