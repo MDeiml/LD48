@@ -16,8 +16,9 @@ function handlePhysics(delta, obj) {
     vec2.scale(pos, pos, delta);
     vec2.add(pos, pos, obj.position);
     for (let other of level.objects["collidable"]) {
-        for (let i = 0; i < other.shape.length; i+=2) {
-            let intersection = intersectLineCircle(other.shape[i], other.shape[i + 1], vec2.sub(vec2.create(), pos, other.position), obj.halfSize[0])
+        for (let line of other.shape)
+        {
+            let intersection = intersectLineCircle(line[0], line[1], vec2.sub(vec2.create(), pos, other.position), 0.5)
             if (intersection) {
                 vec2.add(pos, pos, intersection);
             }

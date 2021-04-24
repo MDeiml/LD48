@@ -8,6 +8,16 @@ function initTileAssets() {
 }
 
 export const GRID_SIZE = 3;
+const COLLISION_SHAPES = {
+    tl : [[vec2.fromValues(-0.5 * GRID_SIZE, 0), vec2.fromValues(0, 0.5 * GRID_SIZE)]],
+    tr : [[vec2.fromValues(0, 0.5 * GRID_SIZE), vec2.fromValues(0.5 * GRID_SIZE, 0)]],
+    bl : [[vec2.fromValues(-0.5 * GRID_SIZE, 0), vec2.fromValues(0, -0.5 * GRID_SIZE)]],
+    br : [[vec2.fromValues(0, -0.5 * GRID_SIZE), vec2.fromValues(0.5 * GRID_SIZE, 0)]],
+    vert : [[vec2.fromValues(0, -0.5 * GRID_SIZE), vec2.fromValues(0, 0.5 * GRID_SIZE)]],
+    hor : [[vec2.fromValues(-0.5 * GRID_SIZE, 0), vec2.fromValues(0.5 * GRID_SIZE, 0)]],
+    corrL : [[vec2.fromValues(-0.5 * GRID_SIZE, 0), vec2.fromValues(0, 0.5 * GRID_SIZE)], [vec2.fromValues(0, -0.5 * GRID_SIZE), vec2.fromValues(0.5 * GRID_SIZE, 0)]],
+    corrR : [[vec2.fromValues(0, 0.5 * GRID_SIZE), vec2.fromValues(0.5 * GRID_SIZE, 0)], [vec2.fromValues(-0.5 * GRID_SIZE, 0), vec2.fromValues(0, -0.5 * GRID_SIZE)]],
+}
 
 export function computeSquareMap(scanlineArr) {
 
@@ -30,16 +40,16 @@ export function computeSquareMap(scanlineArr) {
                 case 1:       //corner
                     if (tl == 1) {
                         transform = Transformation.TOP_LEFT
-                        shape = [vec2.fromValues(-0.5 * GRID_SIZE, 0), vec2.fromValues(0, 0.5 * GRID_SIZE)]
+                        shape = COLLISION_SHAPES.tl
                     } else if (tr == 1) {
                         transform = Transformation.TOP_RIGHT
-                        shape = [vec2.fromValues(0, 0.5 * GRID_SIZE), vec2.fromValues(0.5 * GRID_SIZE, 0)]
+                        shape = COLLISION_SHAPES.tr
                     } else if (bl == 1) {
                         transform = Transformation.BOTTOM_LEFT
-                        shape = [vec2.fromValues(-0.5 * GRID_SIZE, 0), vec2.fromValues(0, -0.5 * GRID_SIZE)]
+                        shape = COLLISION_SHAPES.bl
                     } else if (br == 1) {
                         transform = Transformation.BOTTOM_RIGHT
-                        shape = [vec2.fromValues(0, -0.5 * GRID_SIZE), vec2.fromValues(0.5 * GRID_SIZE, 0)]
+                        shape = COLLISION_SHAPES.br
                     }
 
                     level.addObject(new CollidableGameObject(
@@ -54,23 +64,33 @@ export function computeSquareMap(scanlineArr) {
                     break;
                 case 2:       //wall or corridor
                     if ((tl == br) && (tr == bl)) { //corridor
-                        // TODO: Fix collision
+                        shape = []
                         if (Math.random() > 0.5) {
+                            if (tl == 1) {
+                                shape = COLLISION_SHAPES.corrL
+                            } else {
+                                shape = COLLISION_SHAPES.corrR
+                            }
                             level.addObject(new CollidableGameObject(
                                 "Segments/0101_e.png",
                                 vec2.fromValues(w * GRID_SIZE - side_offset, -(h * GRID_SIZE + depth_offset)),
                                 vec2.fromValues(GRID_SIZE, GRID_SIZE),
-                                [],
+                                shape,
                                 vec2.fromValues(1, 1),
                                 vec2.fromValues(0, 0),
                                 tl == 1 ? Transformation.TOP_RIGHT : Transformation.TOP_LEFT
                             ));
                         } else {
+                            if (tl == 1) {
+                                shape = COLLISION_SHAPES.corrR
+                            } else {
+                                shape = COLLISION_SHAPES.corrL
+                            }
                             level.addObject(new CollidableGameObject(
                                 "Segments/1010_f.png",
                                 vec2.fromValues(w * GRID_SIZE - side_offset, -(h * GRID_SIZE + depth_offset)),
                                 vec2.fromValues(GRID_SIZE, GRID_SIZE),
-                                [],
+                                shape,
                                 vec2.fromValues(1, 1),
                                 vec2.fromValues(0, 0),
                                 tl == 0 ? Transformation.TOP_RIGHT : Transformation.TOP_LEFT
@@ -80,16 +100,16 @@ export function computeSquareMap(scanlineArr) {
                     else {
                         if (tl == 1 && tr == 1) {
                             transform = Transformation.TOP_LEFT;
-                            shape = [vec2.fromValues(-0.5 * GRID_SIZE, 0), vec2.fromValues(0.5 * GRID_SIZE, 0)];
+                            shape = COLLISION_SHAPES.hor;
                         } else if (tr == 1 && br == 1) {
                             transform = Transformation.TOP_RIGHT;
-                            shape = [vec2.fromValues(0, -0.5 * GRID_SIZE), vec2.fromValues(0, 0.5 * GRID_SIZE)];
+                            shape = COLLISION_SHAPES.vert;
                         } else if (br == 1 && bl == 1) {
                             transform = Transformation.BOTTOM_RIGHT;
-                            shape = [vec2.fromValues(-0.5 * GRID_SIZE, 0), vec2.fromValues(0.5 * GRID_SIZE, 0)];
+                            shape = COLLISION_SHAPES.hor;
                         } else if (bl == 1 && tl == 1) {
                             transform = Transformation.BOTTOM_LEFT;
-                            shape = [vec2.fromValues(0, -0.5 * GRID_SIZE), vec2.fromValues(0, 0.5 * GRID_SIZE)];
+                            shape = COLLISION_SHAPES.vert;
                         }
 
                         level.addObject(new CollidableGameObject(
@@ -106,16 +126,16 @@ export function computeSquareMap(scanlineArr) {
                 case 3:       //inverted corner
                     if (tl == 0) {
                         transform = Transformation.TOP_LEFT
-                        shape = [vec2.fromValues(-0.5 * GRID_SIZE, 0), vec2.fromValues(0, 0.5 * GRID_SIZE)]
+                        shape = COLLISION_SHAPES.tl;
                     } else if (tr == 0) {
                         transform = Transformation.TOP_RIGHT
-                        shape = [vec2.fromValues(0, 0.5 * GRID_SIZE), vec2.fromValues(0.5 * GRID_SIZE, 0)]
+                        shape = COLLISION_SHAPES.tr;
                     } else if (bl == 0) {
                         transform = Transformation.BOTTOM_LEFT
-                        shape = [vec2.fromValues(-0.5 * GRID_SIZE, 0), vec2.fromValues(0, -0.5 * GRID_SIZE)]
+                        shape = COLLISION_SHAPES.bl;
                     } else if (br == 0) {
                         transform = Transformation.BOTTOM_RIGHT
-                        shape = [vec2.fromValues(0, -0.5 * GRID_SIZE), vec2.fromValues(0.5 * GRID_SIZE, 0)]
+                        shape = COLLISION_SHAPES.br;
                     }
 
                     level.addObject(new CollidableGameObject(
