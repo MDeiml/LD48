@@ -1,4 +1,4 @@
-import {CollidableGameObject, Transformation} from "./GameObject.js"
+import {CollidableGameObject, GameObject, Transformation} from "./GameObject.js"
 import {level} from "./state.js"
 import {MAP_WIDTH, MAP_HEIGHT} from "./generation.js"
 import {vec2} from "./gl-matrix-min.js"
@@ -28,16 +28,16 @@ export function computeSquareMap(scanlineArr) {
         for (let w = -1; w < MAP_WIDTH; w++) {
             let tl = 1;
             let bl = 1;
-            
+
             let tr = 1;
             let br = 1;
-            
+
             if (w >= 0)
             {
                 tl = scanlineArr[w + h * MAP_WIDTH] ? 1 : 0;
                 bl = scanlineArr[w + (h + 1) * MAP_WIDTH] ? 1 : 0;
             }
-            
+
             if (w < MAP_WIDTH - 1)
             {
                 tr = scanlineArr[w + 1 + h * MAP_WIDTH] ? 1 : 0;
@@ -120,6 +120,16 @@ export function computeSquareMap(scanlineArr) {
                         } else if (br == 1 && bl == 1) {
                             transform = Transformation.BOTTOM_RIGHT;
                             shape = COLLISION_SHAPES.hor;
+                            let n = Math.random() * 3;
+                            for (let i = 0; i < n; i++) {
+                                let size = Math.random() * 0.4 + 0.8;
+                                level.addObject(new GameObject(
+                                    Math.random() > 0.5 ? "./Assets/animationen/alge1.png" : "./Assets/animationen/alge2.png",
+                                    vec2.fromValues(w * GRID_SIZE - side_offset + (Math.random() - 0.5) * GRID_SIZE, -(h * GRID_SIZE + depth_offset) + size / 2),
+                                    vec2.fromValues(size, size),
+                                    "plant"
+                                ));
+                            }
                         } else if (bl == 1 && tl == 1) {
                             transform = Transformation.BOTTOM_LEFT;
                             shape = COLLISION_SHAPES.vert;
