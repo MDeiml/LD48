@@ -4,10 +4,11 @@ import { init as initInput, update as updateInput} from "./input.js"
 import {Sprite} from "./Sprite.js";
 import {updateAudio, initAudio, music, walk_wood} from "./audio.js"
 import {updateRegistry, player, setPlayer, level} from "./state.js"
-import {generateLevel} from "./generation.js"
+import {generateLevel, MAP_WIDTH, MAP_HEIGHT} from "./generation.js"
 import {Player} from "./player.js"
 import {computeSquareMap} from "./walking_squares.js"
 import {init as initResource} from "./resource.js"
+import {GameObject} from "./GameObject.js"
 import {updatePhysics} from "./physics.js"
 
 //timekeeper
@@ -23,11 +24,11 @@ function main() {
     initAudio();
 
     initResource(function() {
+        level.objects.push(new GameObject("Assets/background.jpg", vec2.fromValues(-0.5, -MAP_HEIGHT / 2), vec2.fromValues( MAP_WIDTH - 1, MAP_HEIGHT), "background" ))
         let map_data = generateLevel();
         computeSquareMap(map_data);
         setPlayer(new Player());
         window.running = true;
-
         requestAnimationFrame(update);
     });
 }
@@ -55,7 +56,6 @@ function update(now) {
         updatePhysics(FRAME_TIME / 1000);
 
         updateView();
-
         updateAudio(player.position);
     }
 
