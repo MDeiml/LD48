@@ -6,9 +6,9 @@ import {updateRegistry} from "./state.js"
 //Preset Rotations of the object.
 export let Transformation = {
     TOP_LEFT: 0,
-    TOP_RIGHT: 1, //rotate +90 deg
-    BOTTOM_LEFT: 2, //rotate 180 deg
-    BOTTOM_RIGHT: 3 //rotate -90 deg
+    TOP_RIGHT: 270, //rotate +90 deg
+    BOTTOM_LEFT: 90, //rotate 180 deg
+    BOTTOM_RIGHT: 180 //rotate -90 deg
 }
 
 //Abstraction from Sprite to abstract from Transformation to the position and size of the object
@@ -20,6 +20,7 @@ export let GameObject = function(spritePath, position, size, type, scale = vec2.
 	this.baseScale = vec2.clone(scale);
 	this.offset = offset;
 	this.orientation = orientation;
+    this.flip = false;
     vec2.scale(this.halfSize, size, 0.5); //use center as reference point for position
 
 	if (spritePath === null) {
@@ -32,24 +33,7 @@ export let GameObject = function(spritePath, position, size, type, scale = vec2.
 GameObject.prototype.calculateTransform = function() {
     let transform = mat4.create();
 
-    let rotation = null;
-    switch (this.orientation)
-    {
-        case Transformation.TOP_LEFT:
-            rotation = quat.create()
-            break;
-        case Transformation.TOP_RIGHT:
-            rotation = quat.fromEuler(quat.create(), 0, 0, 270)
-            break;
-        case Transformation.BOTTOM_LEFT:
-            rotation = quat.fromEuler(quat.create(), 0, 0, 90)
-            break;
-        case Transformation.BOTTOM_RIGHT:
-            rotation = quat.fromEuler(quat.create(), 0, 0, 180)
-            break;
-        default:
-            rotation = quat.create()
-    }
+    let rotation = quat.fromEuler(quat.create(), 0, this.flip ? 180 : 0, this.orientation);
 
     mat4.fromRotationTranslationScale(
         transform,
@@ -90,8 +74,6 @@ export let MobileGameObject = function(spritePath, position, size, type, scale =
     GameObject.call(this, spritePath, position, size, type, scale, offset, orientation);
 
     this.velocity = vec2.fromValues(0, 0);
-    this.onGround = false;
-    this.canInteract = false;
 }
 MobileGameObject.prototype = Object.create(GameObject.prototype);
 Object.defineProperty(MobileGameObject.prototype, 'constructor', {
@@ -125,17 +107,6 @@ Object.defineProperty(CollidableGameObject.prototype, 'constructor', {
     enumerable: false, // so that it does not appear in 'for in' loop
     writable: true });
 CollidableGameObject.prototype.onCollide = function(intersection, other) {
-    other.position[1] -= intersection[1];
-    //if (intersection[1] == 0 || this.orientation != Orientation.ROTATED_45) {
-    //    other.position[0] -= intersection[0];
-    //}
-    if (intersection[0] != 0) {
-        other.velocity[0] = 0;
-    }
-    if (intersection[1] != 0){
-        other.velocity[1] = 0;
-        if (intersection[1] < 0) other.onGround = true;
-    }
 }
 
 

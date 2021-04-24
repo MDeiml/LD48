@@ -4,7 +4,7 @@
 		<title>LD47</title>
 		<!-- Disables mobile touch delay-->
 		<meta name="viewport" content="width=device-width, user-scalable=no">
-		<script type="module" src="../main.js"></script>
+		<script type="module" src="./main.js"></script>
 		<script id="shader-vs" type="x-shader/x-vertex">
 			attribute vec3 position;
 			attribute vec2 texCoord;
@@ -60,7 +60,7 @@
 						break;
 					vec3 color = vec3(lights[i * 9], lights[i * 9 + 1], lights[i * 9 + 2]);
 					vec2 pos = vec2(lights[i * 9 + 3], lights[i * 9 + 4]);
-					vec2 dir = vec2(lights[i * 9 + 5], lights[i * 9 + 6]);
+					vec2 dir = normalize(vec2(lights[i * 9 + 5], lights[i * 9 + 6]));
 					float cutoff = lights[i * 9 + 7];
 					float intensity = lights[i * 9 + 8];
 					
@@ -71,7 +71,7 @@
 					
 					float angle = dot(ray, dir);
 					
-					if (angle < cutoff || distanceToLight < 0.15)
+					if (angle < cutoff)
 					{
 						continue;
 					}
@@ -80,16 +80,23 @@
 					
 					//linear color (color before gamma correction)
 					
-					float lightIntensity = clamp(attenuation*intensity + 0.00125 * ((angle - cutoff)/(1.0-cutoff)), 0.0, 1.0);
+					float lightIntensity = 1.0;
+                    if (cutoff > 0.0) {
+                        lightIntensity = (attenuation + 0.00125) * intensity * ((angle - cutoff)/(1.0-cutoff));
+                    }
+                    else {
+                        lightIntensity = attenuation * intensity + 0.00125;
+                    }
+                        
                     
-					vec3 linearColor = texCol.xyz * color * intensity;//lightIntensity;
+					vec3 linearColor = texCol.xyz * color * lightIntensity;
 					
 					//final color (after gamma correction)
 					resCol += clamp(linearColor, 0.0, 1.0);
 					//resCol += texCol.xyz * (attenuation*color.x + 0.1);
 					//resCol += vec3(1.0, 0.0, 0.0);
 				}
-                resCol += texCol.xyz * 0.4;
+                resCol += texCol.xyz * 0.3;
 				
 				gl_FragColor = vec4(resCol, texCol.w);
 			}

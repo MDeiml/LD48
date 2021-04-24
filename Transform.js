@@ -10,7 +10,7 @@ export let Projection = function(aspectRatio)
 Projection.prototype.updateAspect = function(aspectRatio) {
 	this.mat = mat4.create();
 	mat4.ortho(this.mat, -aspectRatio, aspectRatio, -1, 1, -1, 1);
-	let zoom = 0.15;
+	let zoom = 0.25;
 	mat4.scale(this.mat, this.mat, vec3.fromValues(zoom, zoom, zoom)); //linear zoom.
 	mat4.mul(this.mat, this.mat,
 		mat4.fromValues(1, 0, 0, 0,

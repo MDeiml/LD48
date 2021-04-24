@@ -75,4 +75,3 @@ export function menuUp() {
 export function menuDown() {
 	return keyDown("KeyS") || keyDown("ArrowDown");
 }
-
