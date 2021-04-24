@@ -4,9 +4,10 @@ import { init as initInput, update as updateInput, toggleInventory, menuUp, menu
 import {Sprite} from "./Sprite.js";
 import {updateAudio, initAudio, music, walk_wood} from "./audio.js"
 import {updateRegistry, player, setPlayer, level} from "./state.js"
-import {generateLevel} from "./generation.js"
+import {generateLevel, MAP_WIDTH, MAP_HEIGHT} from "./generation.js"
 import {computeSquareMap} from "./walking_squares.js"
 import {init as initResource} from "./resource.js"
+import {GameObject} from "./GameObject.js"
 
 //timekeeper
 var lastTick = null;
@@ -19,12 +20,14 @@ function main() {
     initGraphics(document.getElementById('glCanvas'));
     initInput();
     initAudio();
-
+    
     initResource(function() {
+        level.objects.push(new GameObject("Assets/background.jpg", vec2.fromValues(-0.5, -MAP_HEIGHT / 2), vec2.fromValues( MAP_WIDTH - 1, MAP_HEIGHT), "background" ))
         let map_data = generateLevel();
         computeSquareMap(map_data);
         setPlayer({ position: vec2.fromValues(0, 0) });
         window.running = true;
+        
         
         requestAnimationFrame(update);
     });
