@@ -30,7 +30,15 @@ export function updateBubbles(delta) {
     }
 
     for (let obj of level.objects["random_shit"]) {
-        obj.setPosition(vec2.scaleAndAdd(obj.position, obj.position, obj.velocity, delta));
+        let factor = 1;
+        if (obj.timerPeriod != 0) {
+            factor = 4 * Math.max(0, Math.sin(obj.timer / obj.timerPeriod * Math.PI)) + 1;
+            obj.timer += delta;
+            if (obj.timer > obj.timerPeriod) {
+                obj.timer -= obj.timerPeriod;
+            }
+        }
+        obj.setPosition(vec2.scaleAndAdd(obj.position, obj.position, obj.velocity, delta * factor));
     }
     for (let i = 0; i < level.objects["random_shit"].length; i++) {
         let obj = level.objects["random_shit"][i];
@@ -46,6 +54,8 @@ export function updateBubbles(delta) {
         let size = Math.random() * 0.2 + 0.1;
         let obj = new GameObject("./Assets/bubble-alt.png", pos, vec2.fromValues(size, size), "random_shit");
         obj.velocity = vec2.random(vec2.create(), 0.1);
+        obj.timerPeriod = Math.random() > 0.2 ? 0 : Math.random() * 0.4 + 1.2;
+        obj.timer = Math.random() * obj.timerPeriod;
         level.addObject(obj);
     }
 }
