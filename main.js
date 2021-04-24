@@ -1,6 +1,6 @@
 import { init as initGraphics, update as updateGraphics, projection, updateView } from "./render.js"
 import {mat4, vec3, vec2} from "./gl-matrix-min.js"
-import { init as initInput, update as updateInput, toggleInventory, menuUp, menuDown, menuLeft, menuRight} from "./input.js"
+import { init as initInput, update as updateInput} from "./input.js"
 import {Sprite} from "./Sprite.js";
 import {updateAudio, initAudio, music, walk_wood} from "./audio.js"
 import {updateRegistry, player, setPlayer, level} from "./state.js"
@@ -8,6 +8,7 @@ import {generateLevel} from "./generation.js"
 import {Player} from "./player.js"
 import {computeSquareMap} from "./walking_squares.js"
 import {init as initResource} from "./resource.js"
+import {updatePhysics} from "./physics.js"
 
 //timekeeper
 var lastTick = null;
@@ -51,25 +52,9 @@ function update(now) {
         shouldRender = true;
         updateInput(); //pull keypresses
 		updateRegistry.update(); //update all that needs to be updated
+        updatePhysics(FRAME_TIME / 1000);
 
-
-        if (menuUp()) {
-            player.position[1] += 0.2
-            console.log(player.position)
-        }
-        if (menuDown()) {
-            player.position[1] -= 0.2
-            console.log(player.position)
-        }
-        if (menuLeft()) {
-            player.position[0] -= 0.2
-            console.log(player.position)
-        }
-        if (menuLeft()) {
-            player.position[0] += 0.2
-            console.log(player.position)
-        }
-        updateView()
+        updateView();
 
         updateAudio(player.position);
     }

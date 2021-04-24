@@ -8,6 +8,7 @@ export function setGl(context) {
 export let player = null;
 export function setPlayer(obj) {
     player = obj;
+    level.objects.push(player);
 }
 
 export let level = {

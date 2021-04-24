@@ -58,7 +58,6 @@ function initShaders() {
 
 export function updateView() {
     let pos = vec2.clone(player.position);
-    pos[0] = Math.max(0, pos[0]);
     camera.setPos(pos);
     camera.setUpsideDown(level.upsideDown);
     updateViewMat = true;
@@ -111,8 +110,6 @@ function drawBaseShader() {
 		else
 			sprite.draw(shaders["defaultShader"]);
 	}
-
-	// player.draw(shaders["defaultShader"]);
 }
 
 function drawLightShader() {
