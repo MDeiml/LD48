@@ -1,12 +1,11 @@
 import {MobileGameObject, GameObject} from "./GameObject.js"
 import {Sprite} from "./Sprite.js"
 import {mat4, vec2, vec3, quat} from "./gl-matrix-min.js"
-import {swimmingLeft, swimmingRight, swimmingUp, swimmingDown, swimmingAccelerate, swimmingDecelerate} from "./input.js"
+import {swimmingLeft, swimmingRight, swimmingUp, swimmingDown, swimmingAccelerate} from "./input.js"
 import {level, updateRegistry} from "./state.js"
 import {PositionalAudio, walk_wood} from "./audio.js"
 
-var PLAYER_SPEED = 2.5;
-const JUMP_SPEED = 13; // 6.75
+const PLAYER_SPEED = 2.5;
 const FRAME_TIME = 1000/60;
 var FrameCounter = 0;
 export let Player = function() {
@@ -52,25 +51,21 @@ Player.prototype.handleInput = function(delta) {
 
     let vel = vec2.fromValues(0, 0);
     //handle player Speed
-    if (swimmingAccelerate()) {
-        PLAYER_SPEED = PLAYER_SPEED *1.02;
-    }
-    if (swimmingDecelerate()) {
-        PLAYER_SPEED = 2.5;
-    }
+    let speed = swimmingAccelerate() ? PLAYER_SPEED * 2 : PLAYER_SPEED;
+    console.log(swimmingAccelerate());
 
     //handle movement
     if (swimmingLeft()) {
-        vel[0] -= PLAYER_SPEED;
+        vel[0] -= speed;
     }
     if (swimmingRight()) {
-        vel[0] += PLAYER_SPEED;
+        vel[0] += speed;
     }
     if (swimmingUp()) {
-        vel[1] += PLAYER_SPEED;
+        vel[1] += speed;
     }
     if (swimmingDown()) {
-        vel[1] -= PLAYER_SPEED;
+        vel[1] -= speed;
     }
 
     if (vel[0] == 0 && vel[1] == 0) {
@@ -79,9 +74,9 @@ Player.prototype.handleInput = function(delta) {
 
     vec2.scaleAndAdd(this.velocity, this.velocity, vel, delta * 2);
     let velLength = vec2.length(this.velocity);
-    if (velLength > PLAYER_SPEED) {
-        vec2.scale(this.velocity, this.velocity, PLAYER_SPEED / velLength);
-        velLength = PLAYER_SPEED;
+    if (velLength > speed) {
+        vec2.scale(this.velocity, this.velocity, speed / velLength);
+        velLength = speed;
     }
     if (velLength > 0.01) {
         this.orientation = 90-Math.atan2(this.velocity[0], this.velocity[1]) / Math.PI * 180;
