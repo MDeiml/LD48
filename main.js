@@ -51,6 +51,7 @@ function update(now) {
     }
 
     let shouldRender = false;
+    let cnt = 0;
     while (unprocessed >= FRAME_TIME) { //time for a new frame
         unprocessed -= FRAME_TIME;
         shouldRender = true;
@@ -60,7 +61,9 @@ function update(now) {
 
         updateView();
         updateAudio(player.position);
+        cnt++;
     }
+    console.log(cnt);
 
     // don't render if there was no update
     if (shouldRender) {
