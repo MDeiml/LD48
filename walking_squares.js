@@ -46,35 +46,46 @@ export function computeSquareMap(scanlineArr) {
                     break;
                 case 2:       //wall or corridor
                     if ((tl == br) && (tr == bl)) { //corridor
+                        // TODO: Fix collision
                         if (Math.random() > 0.5)
                             level.objects.push(new CollidableGameObject("Segments/0101_e.png", vec2.fromValues(w - side_offset, -(h + depth_offset)), vec2.fromValues(1, 1), [], vec2.fromValues(1, 1), vec2.fromValues(0, 0), tl == 1 ? Transformation.TOP_RIGHT : Transformation.TOP_LEFT))
                         else
                             level.objects.push(new CollidableGameObject("Segments/1010_f.png", vec2.fromValues(w - side_offset, -(h + depth_offset)), vec2.fromValues(1, 1), [], vec2.fromValues(1, 1), vec2.fromValues(0, 0), tl == 0 ? Transformation.TOP_RIGHT : Transformation.TOP_LEFT))
                     }
                     else {
-                        if (tl == 1 && tr == 1)
-                            transform = Transformation.TOP_LEFT
-                        else if (tr == 1 && br == 1)
-                            transform = Transformation.TOP_RIGHT
-                        else if (br == 1 && bl == 1)
-                            transform = Transformation.BOTTOM_RIGHT
-                        else if (bl == 1 && tl == 1)
-                            transform = Transformation.BOTTOM_LEFT
+                        if (tl == 1 && tr == 1) {
+                            transform = Transformation.TOP_LEFT;
+                            shape = [vec2.fromValues(-0.5, 0), vec2.fromValues(0.5, 0)];
+                        } else if (tr == 1 && br == 1) {
+                            transform = Transformation.TOP_RIGHT;
+                            shape = [vec2.fromValues(0, -0.5), vec2.fromValues(0, 0.5)];
+                        } else if (br == 1 && bl == 1) {
+                            transform = Transformation.BOTTOM_RIGHT;
+                            shape = [vec2.fromValues(-0.5, 0), vec2.fromValues(0.5, 0)];
+                        } else if (bl == 1 && tl == 1) {
+                            transform = Transformation.BOTTOM_LEFT;
+                            shape = [vec2.fromValues(0, -0.5), vec2.fromValues(0, 0.5)];
+                        }
 
-                        level.objects.push(new CollidableGameObject("Segments/0011.png", vec2.fromValues(w - side_offset, -(h + depth_offset)), vec2.fromValues(1, 1), [], vec2.fromValues(1, 1), vec2.fromValues(0, 0), transform))
+                        level.objects.push(new CollidableGameObject("Segments/0011.png", vec2.fromValues(w - side_offset, -(h + depth_offset)), vec2.fromValues(1, 1), shape, vec2.fromValues(1, 1), vec2.fromValues(0, 0), transform))
                     }
                     break;
                 case 3:       //inverted corner
-                    if (tl == 0)
+                    if (tl == 0) {
                         transform = Transformation.TOP_LEFT
-                    else if (tr == 0)
+                        shape = [vec2.fromValues(-0.5, 0), vec2.fromValues(0, 0.5)]
+                    } else if (tr == 0) {
                         transform = Transformation.TOP_RIGHT
-                    else if (bl == 0)
+                        shape = [vec2.fromValues(0, 0.5), vec2.fromValues(0.5, 0)]
+                    } else if (bl == 0) {
                         transform = Transformation.BOTTOM_LEFT
-                    else if (br == 0)
+                        shape = [vec2.fromValues(-0.5, 0), vec2.fromValues(0, -0.5)]
+                    } else if (br == 0) {
                         transform = Transformation.BOTTOM_RIGHT
+                        shape = [vec2.fromValues(0, -0.5), vec2.fromValues(0.5, 0)]
+                    }
 
-                    level.objects.push(new CollidableGameObject("Segments/0111.png", vec2.fromValues(w - side_offset, -(h + depth_offset)), vec2.fromValues(1, 1), [], vec2.fromValues(1, 1), vec2.fromValues(0, 0), transform))
+                    level.objects.push(new CollidableGameObject("Segments/0111.png", vec2.fromValues(w - side_offset, -(h + depth_offset)), vec2.fromValues(1, 1), shape, vec2.fromValues(1, 1), vec2.fromValues(0, 0), transform))
                     break;
                 case 4:       //solid wall
                     level.objects.push(new CollidableGameObject("Segments/1111.png", vec2.fromValues(w - side_offset, -(h + depth_offset)), vec2.fromValues(1, 1), [], vec2.fromValues(1, 1), vec2.fromValues(0, 0), transform))
