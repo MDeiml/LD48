@@ -140,7 +140,11 @@ Player.prototype.updateBreathing = function() {
 Player.prototype.updatePlayerAnimation = function() {
     if (this.breath == 0)
         return
-	FrameCounter++;
+    if (swimmingDown() || swimmingUp() || swimmingRight() || swimmingLeft()) {
+        FrameCounter++;
+    } else {
+        this.sprite.texture.setFrame(1);
+    }
 	if (FrameCounter >=20){
         this.sprite.texture.nextFrame();
         FrameCounter = 0;
