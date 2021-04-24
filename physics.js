@@ -1,20 +1,27 @@
 import {level} from "./state.js";
-import {MobileGameObject} from "./GameObject.js";
+import {MobileGameObject, CollidableGameObject} from "./GameObject.js";
 import {vec2} from "./gl-matrix-min.js";
 
 export function updatePhysics(delta) {
     for (let obj of level.objects) {
-        if (obj instanceof MobileGameObject) {
+        if (obj.type == "player") {
             let pos = vec2.clone(obj.velocity);
             vec2.scale(pos, pos, delta);
             vec2.add(pos, pos, obj.position);
+            for (let other of level.objects) {
+                if (other.type == "collidable") {
+                    let intersection = intersectLineCircle(other.shape[0], other.shape[1], vec2.sub(vec2.create(), pos, other.position), 0.5)
+                    if (intersection) {
+                        vec2.add(pos, pos, intersection);
+                    }
+                }
+            }
             obj.setPosition(pos);
         }
     }
 }
 
-window.vec2 = vec2;
-window.intersectLineCircle = function intersectLineCircle(a, b, m, r) {
+function intersectLineCircle(a, b, m, r) {
     let dir = vec2.sub(vec2.create(), b, a);
     let squaredLength = vec2.squaredLength(dir);
     let f = vec2.sub(vec2.create(), m, a);

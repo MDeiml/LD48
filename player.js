@@ -10,7 +10,7 @@ const JUMP_SPEED = 13; // 6.75
 const FRAME_TIME = 1000/60;
 
 export let Player = function() {
-    MobileGameObject.call(this, "./Assets/Unterwasser Hintergrund.jpg", vec2.fromValues( 0, 0), vec2.fromValues(1, 3), "player", vec2.fromValues(3.5, 3.5 / 3), vec2.fromValues(0, -0.1));
+    MobileGameObject.call(this, "./Assets/background.jpg", vec2.fromValues( 0, 0), vec2.fromValues(1, 1), "player", vec2.fromValues(1, 1), vec2.fromValues(0, 0));
 
     // this.sprite.texture.frames = 5;
 
