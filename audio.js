@@ -38,11 +38,6 @@ PositionalAudio.prototype.move = function(trans) { vec2.add(this.pos, this.pos, 
 
 //create ambient audio
 export function initAudio() {
-    walk_wood = new Audio("assets/walk_wood.ogg");
-    walk_wood.loop = true;
-    music = new Audio("assets/music1.ogg");
-    music.volume = 0.2;
-    music.loop = true;
 }
 
 //update volume of all positional sounds.
