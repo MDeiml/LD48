@@ -82,7 +82,7 @@ export function update() {
 		updateViewMat = false;
 	}
 
-    drawBaseShader();
+    //drawBaseShader();
     drawLightShader();
 }
 
@@ -101,7 +101,7 @@ function drawBaseShader() {
 
 function drawLightShader() {
 	shaders["lightShader"].bind();
-
+    
 	gl.uniform1f(shaders["lightShader"].getUniform('lightCount'), level.lightCnt)
 	gl.uniform1fv(shaders["lightShader"].getUniform('lights'), level.lights)
 	gl.uniformMatrix4fv(shaders["lightShader"].getUniform('VP'), false, pvMatrix);
@@ -109,7 +109,6 @@ function drawLightShader() {
 	for (let sprite of level.objects)
 	{
 		sprite.draw(shaders["lightShader"]);
-
 	}
 
     //player.draw(shaders["lightShader"]);

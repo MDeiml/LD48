@@ -31,6 +31,7 @@ function main() {
         window.running = true;
         requestAnimationFrame(update);
     });
+    
 }
 
 function update(now) {
