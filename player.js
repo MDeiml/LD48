@@ -4,6 +4,7 @@ import {mat4, vec2, vec3, quat} from "./gl-matrix-min.js"
 import {swimmingLeft, swimmingRight, swimmingUp, swimmingDown, swimmingAccelerate, swimmingDecelerate} from "./input.js"
 import {level, updateRegistry} from "./state.js"
 import {PositionalAudio, walk_wood} from "./audio.js"
+import {heartbeat} from "./util.js"
 
 var PLAYER_SPEED = 2.5;
 const JUMP_SPEED = 13; // 6.75
@@ -18,19 +19,18 @@ export let Player = function() {
 
     updateRegistry.registerUpdate("player_input", this.handleInput.bind(this));
     updateRegistry.registerUpdate("player_anim", this.updatePlayerAnimation.bind(this));
-<<<<<<< HEAD
     updateRegistry.registerUpdate("player_breath", this.updateBreathing.bind(this));
     
     
     
-    this.breath = MAX_BREATH
-=======
+    this.breath = MAX_BREATH;
+    this.effect_strength = 0;
+    this.rate = 0
 
     this.lastRopePoint = vec2.clone(this.position);
     this.rope = new GameObject("./Assets/rope.png", this.position, vec2.fromValues(1, 1), "rope");
     this.lookDirection = vec2.fromValues(-1, 0);
     level.addObject(this.rope);
->>>>>>> origin/main
 }
 Player.prototype = Object.create(MobileGameObject.prototype);
 Object.defineProperty(Player.prototype, 'constructor', {
@@ -41,7 +41,7 @@ Object.defineProperty(Player.prototype, 'constructor', {
 Player.prototype.isPlayer = function(){return true;}
 // Player.prototype.setInteraction = function(isactive) {this.canInteract = isactive }
 
-Player.prototype.handleInput = function() {
+Player.prototype.handleInput = function(delta) {
     if (this.breath == 0) {
         vec2.copy(this.velocity, vec2.fromValues(0, 0));
         return
@@ -113,7 +113,10 @@ Player.prototype.handleInput = function() {
         vec2.scale(this.lookDirection, this.velocity, -1 / velLength);
     }
     //stupid pointlight
-    level.updateLight(0, [0.3, 0.8, 0.5], [this.position[0], this.position[1]],[0, 1], -1.0, 1);
+    this.rate += delta * 2
+    if (this.rate > 4)
+        this.rate -= 4
+    level.updateLight(0, [0.3, 0.8, 0.5], [this.position[0], this.position[1]],[0, 1], -1.0,  (2  - this.effect_strength * heartbeat(this.rate)) / 3);
     level.updateLight(1, [0.6, 0.3, 0.3], vec2.scaleAndAdd(vec2.create(), this.position, this.lookDirection, -0.4), this.lookDirection, 0.7, 3);
 }
 
@@ -127,9 +130,12 @@ Player.prototype.updateBreathing = function() {
         this.breath = this.breath + 1
     }
     else {
-        this.breath = this.breath - (1/60)
+        this.breath = this.breath - (1/120)
     }
     this.breath = Math.min(Math.max(this.breath, 0), MAX_BREATH);
+    
+    this.effect_strength = 1 - (this.breath / 100);
+    
     if (this.breath == 0)
     {
         //handle death
