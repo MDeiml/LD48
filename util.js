@@ -31,6 +31,11 @@ export function readJSON(file, callback) {
 	rawFile.send(null);
 }
 
+export function heartbeat(point) {
+    let x = point % 6;
+    return Math.max( -3 * Math.pow(x, 4.0) + 18.5 * Math.pow(x, 3.0) - 36 * Math.pow(x, 2.0) + 22.5 * x, 0) / 4.4;
+}
+
 let random_state = {
     S: [],
     i: 0,
