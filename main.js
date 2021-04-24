@@ -1,15 +1,9 @@
 import { init as initGraphics, update as updateGraphics, projection, updateView } from "./render.js"
 import {mat4, vec3, vec2} from "./gl-matrix-min.js"
-import {update as updatePhysics} from "./physics.js"
 import { init as initInput, update as updateInput, toggleInventory, menuUp, menuDown, menuLeft, menuRight, pickingUp} from "./input.js"
-import {gl, setPlayer, player, level, updateRegistry, inventory, setInventory} from "./state.js"
-import {Menu} from "./menu.js"
-import {Inventory} from "./inventory.js"
 import {Sprite} from "./Sprite.js";
-import {loadLevel} from "./level.js"
-import {init as initResource} from "./test/resource.js"
 import {updateAudio, initAudio, music, walk_wood} from "./audio.js"
-import {Player} from "./player.js"
+import {updateRegistry, player, setPlayer} from "./state.js"
 
 //timekeeper
 var lastTick = null;
@@ -26,36 +20,20 @@ function main() {
     initGraphics(document.getElementById('glCanvas'));
     initInput();
     initAudio();
-    
-    setInventory(new Inventory())
-    
-    initResource(function() {
-        
-        setPlayer(new Player());
-        
-        loadLevel(1) //TODO maybe remove. maybe replace with menu
 
-        window.running = true;
-        requestAnimationFrame(update);
-    });
-}
+    // initResource(function() {
 
-//TODO move to Fire. this also has the advantage to give them random offsets. so that they aren't uniform.
-function updateFires() {
-	fireCntr += 1;
-	if ((fireCntr % 60) === 0) {
-		fireCntr = 0;
-		firePos += 1
-		if (firePos > 5)
-			firePos = 0
-	}
-	for (let sprite of level.objects) {
-		if (sprite.type !== "fire")
-			continue
+    //     setPlayer(new Player());
 
-		sprite.setSize(vec2.fromValues(1, (firePos + 1) / 2))
-		sprite.sprite.texture.setFrame(firePos)
-	}
+    //     loadLevel(1) //TODO maybe remove. maybe replace with menu
+
+    //     window.running = true;
+    //     requestAnimationFrame(update);
+    // });
+
+    setPlayer({ position: vec2.fromValues(0, 0) });
+    window.running = true;
+    requestAnimationFrame(update);
 }
 
 function update(now) {
@@ -78,37 +56,6 @@ function update(now) {
         shouldRender = true;
         updateInput(); //pull keypresses
 		updateRegistry.update(); //update all that needs to be updated
-        if (!inventory.level_end && toggleInventory()) { //TODO inventory code
-            inventory.opened = !inventory.opened;
-            inventory.cursorPosition = 0;
-        }
-        if (Menu.current !== null) { //TODO create menu object
-            walk_wood.pause();
-            if (Menu.current.cooldown == -1) {
-                if (pickingUp()) {
-                    if (music.paused) {
-                        music.play();
-                    }
-                    Menu.current.close();
-                }
-            } else {
-                Menu.current.cooldown -= FRAME_TIME / 1000;
-                if (Menu.current.cooldown < 0) {
-                    Menu.current.close();
-                }
-            }
-        } else if (inventory.opened) {
-            walk_wood.pause();
-            inventory.updateInventory();
-        } else if (!inventory.end_end) {
-            //THIS IS THE MAIN UPDATE
-            player.handleInput()
-            updatePhysics(FRAME_TIME / 1000); //update physics
-			updateView(); //update camera
-			player.updatePlayerAnimation(); //operate on player
-
-			updateFires();
-        }
         updateAudio(player.position);
     }
 
