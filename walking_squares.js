@@ -2,6 +2,7 @@ import {CollidableGameObject, AnimatedGameObject, GameObject, Transformation} fr
 import {level} from "./state.js"
 import {MAP_WIDTH, MAP_HEIGHT} from "./generation.js"
 import {vec2} from "./gl-matrix-min.js"
+import {Coral} from "./interactable.js"
 
 function initTileAssets() {
     //TODO init array for tiles. Could be optimized out
@@ -28,6 +29,20 @@ function spawnAlgaeAt(pos, size) {
         2,
         25 + Math.floor(Math.random(15))
     ));
+}
+function spawnCoralAt(pos, size) {
+    
+    let coral = new Coral(
+        "./Assets/animationen/koralle_anim.png",
+        pos,
+        vec2.fromValues(size, size),
+        "plant",
+        2,
+        50 + Math.floor(Math.random(30))
+    )
+    coral.sprite
+    
+    level.addObject();
 }
 
 export function computeSquareMap(scanlineArr) {
@@ -77,6 +92,7 @@ export function computeSquareMap(scanlineArr) {
                             let x = Math.random() * 0.5;
                             spawnAlgaeAt(vec2.fromValues(w * GRID_SIZE - side_offset + (x - 0.5) * GRID_SIZE, -(h * GRID_SIZE + depth_offset) + size / 2 - x * GRID_SIZE), size);
                         }
+                        
                     } else if (br == 1) {
                         transform = Transformation.BOTTOM_RIGHT;
                         shape = COLLISION_SHAPES.br;
@@ -85,6 +101,12 @@ export function computeSquareMap(scanlineArr) {
                             let size = Math.random() * 0.4 + 0.8;
                             let x = Math.random() * 0.5;
                             spawnAlgaeAt(vec2.fromValues(w * GRID_SIZE - side_offset + x * GRID_SIZE, -(h * GRID_SIZE + depth_offset) + size / 2 - (0.5 - x) * GRID_SIZE), size);
+                        }
+                        if (Math.random() > 0.8)
+                        {
+                            let size = Math.random() * 0.4 + 0.8;
+                            let x = Math.random() * 0.5;
+                            spawnCoralAt(vec2.fromValues(w * GRID_SIZE - side_offset + x * GRID_SIZE, -(h * GRID_SIZE + depth_offset) + size / 2 - (0.5 - x) * GRID_SIZE), size);
                         }
                     }
 
