@@ -20,6 +20,7 @@ export let GameObject = function(spritePath, position, size, type, scale = vec2.
 	this.baseScale = vec2.clone(scale);
 	this.offset = offset;
 	this.orientation = orientation;
+    this.flip = false;
     vec2.scale(this.halfSize, size, 0.5); //use center as reference point for position
 
 	if (spritePath === null) {
@@ -32,7 +33,7 @@ export let GameObject = function(spritePath, position, size, type, scale = vec2.
 GameObject.prototype.calculateTransform = function() {
     let transform = mat4.create();
 
-    let rotation = quat.fromEuler(quat.create(), 0, 0, this.orientation);
+    let rotation = quat.fromEuler(quat.create(), 0, this.flip ? 180 : 0, this.orientation);
 
     mat4.fromRotationTranslationScale(
         transform,

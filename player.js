@@ -85,6 +85,15 @@ Player.prototype.handleInput = function(delta) {
     }
     if (velLength > 0.01) {
         this.orientation = 90-Math.atan2(this.velocity[0], this.velocity[1]) / Math.PI * 180;
+        if ((this.orientation > 90) && (this.orientation < 270))
+        {
+            this.orientation = (180 + this.orientation) % 360
+            this.flip = true
+        }
+        else
+        {
+            this.flip = false
+        }
         vec2.scale(this.lookDirection, this.velocity, -1 / velLength);
     }
     //stupid pointlight
