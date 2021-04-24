@@ -42,7 +42,6 @@ export function initAudio() {
 
 //update volume of all positional sounds.
 export function updateAudio(listener) {
-
 	for (let soundID in sounds)
 		if (typeof sounds[soundID].update === "function")
 			sounds[soundID].update(listener);

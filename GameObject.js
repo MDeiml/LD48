@@ -150,26 +150,9 @@ VerticalCollidableGameObject.prototype.onCollide = function(intersection, other)
     }
 }
 
-
 export let Interactable = function(spritePath, position, size, scale = vec2.fromValues(1, 1), offset = vec2.fromValues(0, 0), orientation = Orientation.DEFAULT) {
     GameObject.call(this, spritePath, position, size, "interactable", scale, offset, orientation);
 }
-Interactable.prototype = Object.create(GameObject.prototype);
-Object.defineProperty(Interactable.prototype, 'constructor', {
-    value: Interactable,
-    enumerable: false, // so that it does not appear in 'for in' loop
-    writable: true });
-Interactable.prototype.onInteract = function(obj) {
-    console.log("ping")
-    let itemMenu = getItemMenuSprite(this.pickup, mat4.fromScaling(mat4.create(), vec3.fromValues(5, 5, 5)), null, true);
-    itemMenu.open()
-    itemMenu.cooldown = -1;
-    inventory.pickUp(this);
-}
-Interactable.prototype.canInteract = function(obj) {
-    return obj.isPlayer();
-}
-
 
 export let Teleporter = function(spritePath, position, size, scale = vec2.fromValues(1, 1), offset = vec2.fromValues(0, 0), orientation = Orientation.DEFAULT) {
     Interactable.call(this, spritePath, position, size, "teleporter", scale, offset, orientation);
@@ -182,54 +165,3 @@ Object.defineProperty(Teleporter.prototype, 'constructor', {
 Teleporter.prototype.onInteract = function(obj) {
     obj.teleport = vec2.fromValues(this.to["x"], this.to["y"])
 }
-
-
-export let DoorGameObject = function(spritePath, position, size, scale = vec2.fromValues(1, 1), offset = vec2.fromValues(0, 0), orientation = Orientation.DEFAULT) {
-    GameObject.call(this, spritePath, position, size, "door", scale, offset, orientation);
-    
-    this.door = new Sprite("assets/Door.png", mat4.create());
-    this.timer = 0
-}
-DoorGameObject.prototype = Object.create(GameObject.prototype);
-Object.defineProperty(DoorGameObject.prototype, 'constructor', {
-    value: DoorGameObject,
-    enumerable: false, // so that it does not appear in 'for in' loop
-    writable: true });
-DoorGameObject.prototype.onCollide = function(intersection, other) {
-    if (!this.state) {
-        new PositionalAudio(this.position, "assets/sounds/door/door_open.wav", false).play();
-        this.timer = 0.3;
-        this.state = "opening";
-        updateRegistry.registerUpdate("door" + this.position.toString(), this.update.bind(this))
-    } else if (this.state == "open") {
-        this.timer = 1;
-        updateRegistry.registerUpdate("door" + this.position.toString(), this.update.bind(this))
-    } else if (this.state == "closing") {
-        this.timer = 0.3 - this.timer;
-        this.state = "opening";
-    }
-}
-DoorGameObject.prototype.update = function (delta) {
-    if (this.timer > 0) { //door state transition
-        this.timer -= delta;
-        if (this.timer <= 0) {
-            if (this.state == "opening") {
-                this.state = "open";
-                this.timer = 1;
-            } else if (this.state == "open") {
-                new PositionalAudio(this.position, "assets/sounds/door/door_close.wav", false).play();
-                this.state = "closing";
-                this.timer = 0.3;
-            } else if (this.state == "closing") {
-                this.state = null;
-            }
-        }
-    }
-    else {
-        updateRegistry.unregisterUpdate("door" + this.position.toString()) //update completed stop tracker
-    }
-}
-
-
-
-
