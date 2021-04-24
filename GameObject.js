@@ -90,8 +90,6 @@ export let MobileGameObject = function(spritePath, position, size, type, scale =
     GameObject.call(this, spritePath, position, size, type, scale, offset, orientation);
 
     this.velocity = vec2.fromValues(0, 0);
-    this.onGround = false;
-    this.canInteract = false;
 }
 MobileGameObject.prototype = Object.create(GameObject.prototype);
 Object.defineProperty(MobileGameObject.prototype, 'constructor', {
