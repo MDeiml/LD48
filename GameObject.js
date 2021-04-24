@@ -125,17 +125,6 @@ Object.defineProperty(CollidableGameObject.prototype, 'constructor', {
     enumerable: false, // so that it does not appear in 'for in' loop
     writable: true });
 CollidableGameObject.prototype.onCollide = function(intersection, other) {
-    other.position[1] -= intersection[1];
-    //if (intersection[1] == 0 || this.orientation != Orientation.ROTATED_45) {
-    //    other.position[0] -= intersection[0];
-    //}
-    if (intersection[0] != 0) {
-        other.velocity[0] = 0;
-    }
-    if (intersection[1] != 0){
-        other.velocity[1] = 0;
-        if (intersection[1] < 0) other.onGround = true;
-    }
 }
 
 

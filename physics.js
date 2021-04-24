@@ -9,10 +9,13 @@ export function updatePhysics(delta) {
             vec2.scale(pos, pos, delta);
             vec2.add(pos, pos, obj.position);
             for (let other of level.objects) {
-                if (other.type == "collidable" && other.shape.length == 2) {
-                    let intersection = intersectLineCircle(other.shape[0], other.shape[1], vec2.sub(vec2.create(), pos, other.position), 0.5)
-                    if (intersection) {
-                        vec2.add(pos, pos, intersection);
+                if (other.type == "collidable") {
+                    for (let line of other.shape)
+                    {
+                        let intersection = intersectLineCircle(line[0], line[1], vec2.sub(vec2.create(), pos, other.position), 0.5)
+                        if (intersection) {
+                            vec2.add(pos, pos, intersection);
+                        }
                     }
                 }
             }
