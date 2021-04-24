@@ -5,6 +5,7 @@ import {Sprite} from "./Sprite.js";
 import {updateAudio, initAudio, music, walk_wood} from "./audio.js"
 import {updateRegistry, player, setPlayer} from "./state.js"
 import {generateLevel} from "./generation.js"
+import {Player} from "./player.js"
 
 //timekeeper
 var lastTick = null;
@@ -33,7 +34,7 @@ function main() {
     // });
 
     generateLevel();
-    setPlayer({ position: vec2.fromValues(0, 0) });
+    setPlayer(new Player());
     window.running = true;
     requestAnimationFrame(update);
 }
