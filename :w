@@ -14,8 +14,6 @@ export function setPlayer(obj) {
 export let level = {
     objects: {
         "bubble": [],
-        "collidable": [],
-        "player": []
     },
 	lights: new Array(180), //TODO move
     lightCnt: 1,
@@ -41,10 +39,17 @@ export let level = {
         if (!type) {
             type = "default";
         }
+        if (type == "player")  {
+            console.log(this.objects["player"]);
+        }
         if (this.objects[type] === undefined) {
+            console.log(type);
             this.objects[type] = [];
         }
         this.objects[type].push(obj);
+        if (type == "player")  {
+            console.log(this.objects["player"]);
+        }
     }
 
 };

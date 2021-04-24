@@ -108,7 +108,11 @@ function drawLightShader() {
 	gl.uniform1fv(shaders["lightShader"].getUniform('lights'), level.lights)
 	gl.uniformMatrix4fv(shaders["lightShader"].getUniform('VP'), false, pvMatrix);
 
+    for (let sprite of level.objects["background"]) {
+        sprite.draw(shaders["lightShader"]);
+    }
     for (let type in level.objects) {
+        if (type == "background") continue;
         for (let sprite of level.objects[type]) {
             sprite.draw(shaders["lightShader"]);
         }

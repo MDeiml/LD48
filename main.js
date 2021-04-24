@@ -10,6 +10,7 @@ import {computeSquareMap, GRID_SIZE} from "./walking_squares.js"
 import {init as initResource} from "./resource.js"
 import {GameObject} from "./GameObject.js"
 import {updatePhysics} from "./physics.js"
+import {updateBubbles} from "./bubble.js"
 
 //timekeeper
 var lastTick = null;
@@ -22,6 +23,7 @@ function main() {
     initGraphics(document.getElementById('glCanvas'));
     initInput();
     initAudio();
+    updateRegistry.registerUpdate("bubbles", updateBubbles);
 
     initResource(function() {
         level.addObject(new GameObject("Assets/background.jpg", vec2.fromValues(-0.5 * GRID_SIZE, -MAP_HEIGHT * GRID_SIZE / 2), vec2.fromValues( (MAP_WIDTH - 1) * GRID_SIZE, MAP_HEIGHT * GRID_SIZE), "background" ))
@@ -53,7 +55,7 @@ function update(now) {
         unprocessed -= FRAME_TIME;
         shouldRender = true;
         updateInput(); //pull keypresses
-		updateRegistry.update(); //update all that needs to be updated
+		updateRegistry.update(FRAME_TIME / 1000); //update all that needs to be updated
         updatePhysics(FRAME_TIME / 1000);
 
         updateView();
