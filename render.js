@@ -97,7 +97,6 @@ function drawBaseShader() {
 
 	for (let sprite of level.objects)
 	{
-		console.log(sprite.type)
 		if (sprite.type === "background")
 		{
 			shaders["bgShader"].bind();
