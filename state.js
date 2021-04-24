@@ -15,6 +15,7 @@ export let level = {
     objects: {
         "bubble": [],
         "collidable": [],
+        "random_shit": [],
         "player": []
     },
 	lights: new Array(180), //TODO move
