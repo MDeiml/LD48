@@ -1,7 +1,7 @@
 const GEN_WIDTH = 8;
 const GEN_HEIGHT = 32;
-const MAP_WIDTH = GEN_WIDTH * 2 + 1;
-const MAP_HEIGHT = GEN_HEIGHT * 2 + 1;
+export const MAP_WIDTH = GEN_WIDTH * 2 + 1;
+export const MAP_HEIGHT = GEN_HEIGHT * 2 + 1;
 
 export function generateLevel() {
     let pixels = [];
