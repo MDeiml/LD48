@@ -111,8 +111,17 @@ function drawLightShader() {
     for (let sprite of level.objects["background"]) {
         sprite.draw(shaders["lightShader"]);
     }
+    for (let sprite of level.objects["random_shit"]) {
+        sprite.draw(shaders["lightShader"]);
+    }
+    for (let sprite of level.objects["rope"]) {
+        sprite.draw(shaders["lightShader"]);
+    }
+    for (let sprite of level.objects["plant"]) {
+        sprite.draw(shaders["lightShader"]);
+    }
     for (let type in level.objects) {
-        if (type == "background") continue;
+        if (type == "background" || type == "random_shit" || type == "rope" || type == "plant") continue;
         for (let sprite of level.objects[type]) {
             sprite.draw(shaders["lightShader"]);
         }

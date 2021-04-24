@@ -15,10 +15,11 @@ export let level = {
     objects: {
         "bubble": [],
         "collidable": [],
+        "random_shit": [],
         "player": []
     },
 	lights: new Array(180), //TODO move
-    lightCnt: 1,
+    lightCnt: 2,
 	updateLight: function(lightID, color, pos, dir, cutoff, intensity) {
 		let startPos = lightID * 9;
 
