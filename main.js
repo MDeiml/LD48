@@ -28,7 +28,7 @@ function main() {
     updateRegistry.registerUpdate("bubbles", updateBubbles);
 
     initResource(function() {
-        level.addObject(new GameObject("Assets/background.jpg", vec2.fromValues(-0.5 * GRID_SIZE, -MAP_HEIGHT * GRID_SIZE / 2), vec2.fromValues( MAP_WIDTH * GRID_SIZE, MAP_HEIGHT * GRID_SIZE), "background" ))
+        level.addObject(new GameObject("Assets/background_blue.png", vec2.fromValues(-0.5 * GRID_SIZE, -MAP_HEIGHT * GRID_SIZE / 2), vec2.fromValues( MAP_WIDTH * GRID_SIZE, MAP_HEIGHT * GRID_SIZE), "background" ))
         for (let i = 0; i < MAP_WIDTH; i++) {
             let h = GRID_SIZE * 920 / 1323;
             level.addObject(new GameObject(
