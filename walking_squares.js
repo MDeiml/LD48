@@ -88,7 +88,7 @@ export function computeSquareMap(scanlineArr) {
                     }
 
                     level.addObject(new CollidableGameObject(
-                        "Segments/0010.png",
+                        "Segments/1000.png",
                         vec2.fromValues(w * GRID_SIZE - side_offset, -(h * GRID_SIZE + depth_offset)),
                         vec2.fromValues(GRID_SIZE, GRID_SIZE),
                         shape,
@@ -158,7 +158,7 @@ export function computeSquareMap(scanlineArr) {
                         }
 
                         level.addObject(new CollidableGameObject(
-                            "Segments/0011.png",
+                            "Segments/1100.png",
                             vec2.fromValues(w * GRID_SIZE - side_offset, -(h * GRID_SIZE + depth_offset)),
                             vec2.fromValues(GRID_SIZE, GRID_SIZE),
                             shape,
