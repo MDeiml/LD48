@@ -1,3 +1,5 @@
+import {random} from "./util.js"
+
 const GEN_WIDTH = 8;
 const GEN_HEIGHT = 32;
 export const MAP_WIDTH = GEN_WIDTH * 2 + 1;
@@ -32,10 +34,10 @@ export function generateLevel() {
             let keys = Object.keys(queue);
             if (keys.length == 0)
                 break;
-            next = +keys[Math.floor(Math.random() * keys.length)];
+            next = +keys[Math.floor(random() * keys.length)];
             pixels[(next + queue[next]) / 2] = false;
         } else {
-            let rand = Math.floor(Math.random() * neighbours.length)
+            let rand = Math.floor(random() * neighbours.length)
             next = neighbours[rand];
             pixels[(next + current) / 2] = false;
             for (let i = 0; i < neighbours.length; i++) {

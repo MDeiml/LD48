@@ -10,7 +10,8 @@ const RANDOM_SHIT_RADIUS = 10;
 
 export function updateBubbles(delta) {
     if (Math.random() < delta * PLAYER_BUBBLE_SPAWN_PER_SECOND) {
-        let bubble = new MobileGameObject("./Assets/bubble.png", vec2.clone(player.position), vec2.fromValues(0.5, 0.5), "bubble");
+        let size = 0.3 + Math.random() * 0.3
+        let bubble = new MobileGameObject("./Assets/bubble.png", vec2.clone(player.position), vec2.fromValues(size, size), "bubble");
         level.addObject(bubble);
         bubble.velocity[1] = BUBBLE_VELOCITY;
         bubble.velocity[0] = Math.random() * 0.2 - 0.1;
