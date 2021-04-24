@@ -74,7 +74,9 @@ Player.prototype.handleInput = function() {
     }
 
     vec2.copy(this.velocity, vel);
-    level.updateLight(0, [0.6, 0.3, 0.3], [this.position[0], this.position[1]],[0, 1], 0.7, 1);
+    //stupid pointlight
+    level.updateLight(0, [0.3, 0.8, 0.5], [this.position[0], this.position[1]],[0, 1], -1.0, 1);
+    level.updateLight(1, [0.6, 0.3, 0.3], [this.position[0], this.position[1]],[0, 1], 0.7, 3);
 }
 
 
