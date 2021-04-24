@@ -52,12 +52,5 @@ export function generateLevel() {
         }
     }
     
-    for(let i = (MAP_HEIGHT * MAP_WIDTH) - 1; i >= MAP_WIDTH;)
-    {
-        pixels[i + 1] = true;
-        pixels[i] = true;
-        i = i - MAP_WIDTH;
-    }
-    
     return pixels;
 }
