@@ -112,7 +112,6 @@ function drawLightShader() {
 
 	gl.uniform1f(shaders["lightShader"].getUniform('ambientLight'), 1);
     for (let sprite of level.objects["background_surface"]) {
-        console.log("test");
         sprite.draw(shaders["lightShader"]);
     }
 	gl.uniform1f(shaders["lightShader"].getUniform('ambientLight'), 0.8 - 0.799 * Math.min(1, 1 * -player.position[1] / MAP_HEIGHT / GRID_SIZE));
