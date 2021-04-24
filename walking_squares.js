@@ -39,14 +39,14 @@ function computeSquareMap(scanlineArr, width, height) {
                     else if (br == 1)
                         transform = Transformation.BOTTOM_RIGHT
                     
-                    level.objects.push(new CollidableGameObject("corner.png", vec2.fromValues(w - side_offset, -(h + depth_offset)), vec2.size(10, 10)))
+                    level.objects.push(new CollidableGameObject("Segments/0010.png", vec2.fromValues(w - side_offset, -(h + depth_offset)), vec2.size(10, 10)))
                     break;
                 case 2:       //wall or corridor
                     if ((tl == br) && (tr == bl)) { //corridor
                         level.objects.push(new CollidableGameObject("corridor.png", vec2.fromValues(w - side_offset, -(h + depth_offset)), vec2.size(10, 10)))
                     }
                     else {
-                        level.objects.push(new CollidableGameObject("wall.png", vec2.fromValues(w - side_offset, -(h + depth_offset)), vec2.size(10, 10)))
+                        level.objects.push(new CollidableGameObject("Segments/0011.png", vec2.fromValues(w - side_offset, -(h + depth_offset)), vec2.size(10, 10)))
                     }
                     break;
                 case 3:       //inverted corner
@@ -60,7 +60,7 @@ function computeSquareMap(scanlineArr, width, height) {
                     else if (br == 0)
                         transform = Transformation.BOTTOM_RIGHT
                     
-                    level.objects.push(new CollidableGameObject("corner.png", vec2.fromValues(w - side_offset, -(h + depth_offset)), vec2.size(10, 10)))
+                    level.objects.push(new CollidableGameObject("Segments/0111.png", vec2.fromValues(w - side_offset, -(h + depth_offset)), vec2.size(10, 10)))
                     break;
                 case 4:       //solid wall
                     level.objects.push(new CollidableGameObject("wall.png", vec2.fromValues(w - side_offset, -(h + depth_offset)), vec2.size(10, 10)))
