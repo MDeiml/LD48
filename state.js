@@ -14,6 +14,7 @@ export function setPlayer(obj) {
 export let level = {
     objects: [],
 	lights: new Array(180), //TODO move
+    lightCnt: 1,
 	updateLight: function(lightID, color, pos, dir, cutoff, intensity) {
 		let startPos = lightID * 9;
 

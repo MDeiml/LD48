@@ -15,6 +15,8 @@ export let Player = function() {
     this.sprite.texture.frames = 4;
 
     updateRegistry.registerUpdate("player_input", this.handleInput.bind(this));
+    updateRegistry.registerUpdate("player_anim", this.updatePlayerAnimation.bind(this));
+    
 }
 Player.prototype = Object.create(MobileGameObject.prototype);
 Object.defineProperty(Player.prototype, 'constructor', {
@@ -41,8 +43,7 @@ Player.prototype.handleInput = function() {
         vel[1] -= PLAYER_SPEED;
     }
     vec2.copy(this.velocity, vel);
-	
-	this.updatePlayerAnimation();
+    level.updateLight(0, [0.6, 0.3, 0.3], [this.position[0], this.position[1]],[0, 1], 0.7, 1);
 }
 
 
