@@ -110,8 +110,17 @@ function drawLightShader() {
 	gl.uniform1fv(shaders["lightShader"].getUniform('lights'), level.lights)
 	gl.uniformMatrix4fv(shaders["lightShader"].getUniform('VP'), false, pvMatrix);
 
-	gl.uniform1f(shaders["lightShader"].getUniform('ambientLight'), 0.3 - 0.299 * Math.min(1, 1 * -player.position[1] / MAP_HEIGHT / GRID_SIZE));
+	gl.uniform1f(shaders["lightShader"].getUniform('ambientLight'), 1);
+    for (let sprite of level.objects["background_surface"]) {
+        console.log("test");
+        sprite.draw(shaders["lightShader"]);
+    }
+	gl.uniform1f(shaders["lightShader"].getUniform('ambientLight'), 0.8 - 0.799 * Math.min(1, 1 * -player.position[1] / MAP_HEIGHT / GRID_SIZE));
     for (let sprite of level.objects["background"]) {
+        sprite.draw(shaders["lightShader"]);
+    }
+	gl.uniform1f(shaders["lightShader"].getUniform('ambientLight'), 0.8 - 0.5 * Math.min(1, 1 * -player.position[1] / MAP_HEIGHT / GRID_SIZE));
+    for (let sprite of level.objects["bubbles"]) {
         sprite.draw(shaders["lightShader"]);
     }
 	gl.uniform1f(shaders["lightShader"].getUniform('ambientLight'), 0.3 - 0.299 * Math.min(1, 3 * -player.position[1] / MAP_HEIGHT / GRID_SIZE))
@@ -128,7 +137,7 @@ function drawLightShader() {
         sprite.draw(shaders["lightShader"]);
     }
     for (let type in level.objects) {
-        if (type == "background" || type == "random_shit" || type == "rope" || type == "plant") continue;
+        if (type == "background_surface" || type == "background" || type == "random_shit" || type == "rope" || type == "plant") continue;
         for (let sprite of level.objects[type]) {
             if (vec2.squaredDistance(sprite.position, player.position) > 15 * 15) continue;
             sprite.draw(shaders["lightShader"]);
