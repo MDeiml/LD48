@@ -36,12 +36,20 @@ function keyDown(code) {
 }
 
 //CONTROLS STARTING HERE
-export function walkingLeft() {
+export function swimmingLeft() {
 	return key("KeyA") || key("ArrowLeft");
 }
 
-export function walkingRight() {
+export function swimmingRight() {
 	return key("KeyD") || key("ArrowRight");
+}
+
+export function swimmingUp() {
+	return key("KeyW") || key("ArrowUp");
+}
+
+export function swimmingDown() {
+	return key("KeyS") || key("ArrowDown");
 }
 
 export function menuLeft() {
@@ -60,20 +68,3 @@ export function menuDown() {
 	return keyDown("KeyS") || keyDown("ArrowDown");
 }
 
-export function jumping() {
-    return keyDown("Space") || keyDown("ArrowUp");
-}
-
-export function holdingJump() {
-    return key("Space") || key("ArrowUp");
-}
-
-export function pickingUp() {
-	let ret = keyDown("KeyE");
-    //lastKeys["KeyE"] = true;
-    return ret;
-}
-
-export function toggleInventory() {
-    return keyDown("Tab");
-}

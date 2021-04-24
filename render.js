@@ -58,7 +58,6 @@ function initShaders() {
 
 export function updateView() {
     let pos = vec2.clone(player.position);
-    pos[0] = Math.max(0, pos[0]);
     camera.setPos(pos);
     camera.setUpsideDown(level.upsideDown);
     updateViewMat = true;
@@ -97,22 +96,20 @@ function drawBaseShader() {
 
 	for (let sprite of level.objects)
 	{
-		if (sprite.type === "background")
-		{
-			shaders["bgShader"].bind();
-			gl.uniform3fv(shaders["bgShader"].getUniform('backgroundFilter'), level.bgFilter);
-			gl.uniformMatrix4fv(shaders["bgShader"].getUniform('VP'), false, pvMatrix);
+		//if (sprite.type === "background")
+		//{
+			//shaders["bgShader"].bind();
+			//gl.uniform3fv(shaders["bgShader"].getUniform('backgroundFilter'), level.bgFilter);
+			//gl.uniformMatrix4fv(shaders["bgShader"].getUniform('VP'), false, pvMatrix);
 
-			sprite.draw(shaders["bgShader"]);
+			//sprite.draw(shaders["bgShader"]);
 
-			shaders["defaultShader"].bind();
-			gl.uniformMatrix4fv(shaders["defaultShader"].getUniform('VP'), false, pvMatrix);
-		}
-		else
+			//shaders["defaultShader"].bind();
+			//gl.uniformMatrix4fv(shaders["defaultShader"].getUniform('VP'), false, pvMatrix);
+		//}
+		//else
 			sprite.draw(shaders["defaultShader"]);
 	}
-
-	// player.draw(shaders["defaultShader"]);
 }
 
 function drawLightShader() {

@@ -8,7 +8,8 @@ let preload_textures = [
 "Segments/1010_f.png",
 "Segments/1111.png",
 "Segments/0000.png",
-"Segments/0111.png"
+"Segments/0111.png",
+"Assets/background.jpg"
 
 ];
 

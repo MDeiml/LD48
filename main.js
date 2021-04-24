@@ -1,12 +1,15 @@
 import { init as initGraphics, update as updateGraphics, projection, updateView } from "./render.js"
 import {mat4, vec3, vec2} from "./gl-matrix-min.js"
-import { init as initInput, update as updateInput, toggleInventory, menuUp, menuDown, menuLeft, menuRight} from "./input.js"
+import { init as initInput, update as updateInput} from "./input.js"
 import {Sprite} from "./Sprite.js";
 import {updateAudio, initAudio, music, walk_wood} from "./audio.js"
 import {updateRegistry, player, setPlayer, level} from "./state.js"
-import {generateLevel} from "./generation.js"
+import {generateLevel, MAP_WIDTH, MAP_HEIGHT} from "./generation.js"
+import {Player} from "./player.js"
 import {computeSquareMap} from "./walking_squares.js"
 import {init as initResource} from "./resource.js"
+import {GameObject} from "./GameObject.js"
+import {updatePhysics} from "./physics.js"
 
 //timekeeper
 var lastTick = null;
@@ -21,14 +24,13 @@ function main() {
     initAudio();
 
     initResource(function() {
+        level.objects.push(new GameObject("Assets/background.jpg", vec2.fromValues(-0.5, -MAP_HEIGHT / 2), vec2.fromValues( MAP_WIDTH - 1, MAP_HEIGHT), "background" ))
         let map_data = generateLevel();
         computeSquareMap(map_data);
-        setPlayer({ position: vec2.fromValues(0, 0) });
+        setPlayer(new Player());
         window.running = true;
-        
         requestAnimationFrame(update);
     });
-
 }
 
 function update(now) {
@@ -51,22 +53,9 @@ function update(now) {
         shouldRender = true;
         updateInput(); //pull keypresses
 		updateRegistry.update(); //update all that needs to be updated
-        
-        
-        if (menuUp()) {
-            player.position[1] += 0.2
-        }
-        if (menuDown()) {
-            player.position[1] -= 0.2
-        }
-        if (menuLeft()) {
-            player.position[0] -= 0.2
-        }
-        if (menuLeft()) {
-            player.position[0] += 0.2
-        }
-        updateView()
-        
+        updatePhysics(FRAME_TIME / 1000);
+
+        updateView();
         updateAudio(player.position);
     }
 
