@@ -1,4 +1,4 @@
-import {MobileGameObject} from "./GameObject.js"
+import {MobileGameObject, GameObject} from "./GameObject.js"
 import {Sprite} from "./Sprite.js"
 import {mat4, vec2, vec3, quat} from "./gl-matrix-min.js"
 import {swimmingLeft, swimmingRight, swimmingUp, swimmingDown, swimmingAccelerate, swimmingDecelerate} from "./input.js"
@@ -16,7 +16,8 @@ export let Player = function() {
 
     updateRegistry.registerUpdate("player_input", this.handleInput.bind(this));
     updateRegistry.registerUpdate("player_anim", this.updatePlayerAnimation.bind(this));
-    
+
+    this.lastRopePoint = vec2.clone(this.position);
 }
 Player.prototype = Object.create(MobileGameObject.prototype);
 Object.defineProperty(Player.prototype, 'constructor', {
@@ -27,25 +28,36 @@ Object.defineProperty(Player.prototype, 'constructor', {
 Player.prototype.isPlayer = function(){return true;}
 // Player.prototype.setInteraction = function(isactive) {this.canInteract = isactive }
 Player.prototype.handleInput = function() {
+    let ropeDir = vec2.sub(vec2.create(), this.position, this.lastRopePoint);
+    let ropeDirLength = vec2.length(ropeDir);
+    if (ropeDirLength > 1) {
+        let angle = vec2.angle(ropeDir, vec2.fromValues(1, 0));
+        let nextRopePoint = vec2.scaleAndAdd(ropeDir, this.lastRopePoint, ropeDir, 1 / ropeDirLength);
+        let ropeMid = vec2.add(this.lastRopePoint, nextRopePoint, nextRopePoint);
+        vec2.scale(ropeMid, ropeMid, 0.5);
+        level.addObject(new GameObject("./Assets/rope.png", ropeMid, vec2.fromValues(1, 1), "rope"));
+        this.lastRopePoint = nextRopePoint;
+    }
+
     let vel = vec2.fromValues(0, 0);
-	//handle player Speed
-	if (swimmingAccelerate()) {
-	PLAYER_SPEED =PLAYER_SPEED *1.02;
-	}
-	if (swimmingDecelerate()) {
-	PLAYER_SPEED =2.5;
-	}
-	
+    //handle player Speed
+    if (swimmingAccelerate()) {
+        PLAYER_SPEED = PLAYER_SPEED *1.02;
+    }
+    if (swimmingDecelerate()) {
+        PLAYER_SPEED = 2.5;
+    }
+
     vec2.copy(this.velocity, vel);
     //handle movement
     if (swimmingLeft()) {
-		vel[0] -= PLAYER_SPEED;
+        vel[0] -= PLAYER_SPEED;
     }
     if (swimmingRight()) {
         vel[0] += PLAYER_SPEED;
     }
     if (swimmingUp()) {
-		vel[1] += PLAYER_SPEED;
+        vel[1] += PLAYER_SPEED;
     }
     if (swimmingDown()) {
         vel[1] -= PLAYER_SPEED;
@@ -57,11 +69,11 @@ Player.prototype.handleInput = function() {
 
 
 Player.prototype.updatePlayerAnimation = function() {
-	FrameCounter++;
-	if (FrameCounter >=20){
-	this.sprite.texture.nextFrame();
-	FrameCounter = 0;
-	}
+    FrameCounter++;
+    if (FrameCounter >=20){
+        this.sprite.texture.nextFrame();
+        FrameCounter = 0;
+    }
 }
 
 
