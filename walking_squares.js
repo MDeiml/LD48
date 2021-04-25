@@ -45,10 +45,20 @@ const tutorial_map = [[
 ]]
 
 export function generateTutorial() {
-    level.addObject(new GameObject("Assets/background_blue.png", vec2.fromValues(-(MAP_WIDTH + 9)/2 * GRID_SIZE, -7 * GRID_SIZE), vec2.fromValues( 7 * GRID_SIZE, 15 * GRID_SIZE), "background" ))
+    let tut_background = new GameObject("Assets/background_blue.png", vec2.fromValues(-(MAP_WIDTH + 9)/2 * GRID_SIZE, -7 * GRID_SIZE), vec2.fromValues( 15 * GRID_SIZE, 7 * GRID_SIZE), "background")
+    tut_background.setOrientation(270)
+    level.addObject(tut_background)
     computeSquareMap(tutorial_map, 7, 10, (MAP_WIDTH + 9) * GRID_SIZE/2, -GRID_SIZE, false, 2, false);
     let collision_coords = vec2.fromValues(-(MAP_WIDTH + 1)/2, -2);
     vec2.round(collision_coords, collision_coords);
+    
+    
+    let side_offset = Math.floor(7 / 2) * GRID_SIZE + MAP_WIDTH + 9 * GRID_SIZE/2; //offset cube objects so that they start at the middle
+    let depth_offset = GRID_SIZE - GRID_SIZE;
+    
+    let size = 2;
+    spawnCoralAt(vec2.fromValues(-(MAP_WIDTH + 12)/2 * GRID_SIZE, -5.76 * GRID_SIZE), size);
+    
     //console.log(Object.keys(level.collidables))
     
     //for (let x = 0; x <= 1; x++) {
