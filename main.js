@@ -2,7 +2,7 @@ import { init as initGraphics, update as updateGraphics, projection, updateView 
 import {mat4, vec3, vec2} from "./gl-matrix-min.js"
 import { init as initInput, update as updateInput} from "./input.js"
 import {Sprite} from "./Sprite.js";
-import {updateAudio, initAudio, music, walk_wood} from "./audio.js"
+import {updateAudio, initAudio} from "./audio.js"
 import {updateRegistry, player, setPlayer, level} from "./state.js"
 import {generateLevel, MAP_WIDTH, MAP_HEIGHT} from "./generation.js"
 import {Player} from "./player.js"

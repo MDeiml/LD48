@@ -1,6 +1,7 @@
 import {CollidableGameObject, AnimatedGameObject, GameObject, Transformation} from "./GameObject.js"
 import {vec2} from "./gl-matrix-min.js"
 import {level, updateRegistry} from "./state.js"
+import {PositionalAudio} from "./audio.js"
 
 
 let Bubble = function(parent, size) {
@@ -19,6 +20,7 @@ Object.defineProperty(Bubble.prototype, 'constructor', {
     value: Bubble,
     enumerable: false, // so that it does not appear in 'for in' loop
     writable: true });
+Bubble.COLLECT_SOUND = new PositionalAudio(vec2.fromValues(0,0), "Assets/audio/bubble_pop.wav", false)
 Bubble.prototype.cleanup = function() {
     updateRegistry.unregisterUpdate(this.update_name);
 }
@@ -52,6 +54,8 @@ Bubble.prototype.onCollide = function(intersection, other) {
         other.breath += 10 //add function to clamp it to 100
         console.log(other.breath)
         this.collected = true;
+        Bubble.COLLECT_SOUND.moveTo(this.getPosition())
+        Bubble.COLLECT_SOUND.play()
         
         //have parent remove bubble
         this.update_name = "bubble_deletion_" + Math.random();

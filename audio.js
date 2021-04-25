@@ -4,7 +4,6 @@ import { vec2 } from './gl-matrix-min.js'
 let sounds = {}
 
 //ambient Audio handles
-export let walk_wood = null;
 export let music;
 
 //TODO currently it is impossible to play the same audio from multiple positions
@@ -45,5 +44,4 @@ export function updateAudio(listener) {
 	for (let soundID in sounds)
 		if (typeof sounds[soundID].update === "function")
 			sounds[soundID].update(listener);
-
 }
