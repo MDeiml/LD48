@@ -75,8 +75,10 @@ function updateProjection() {
     gl.canvas.width = w;
     gl.canvas.height = h;
     gl.viewport(0, 0, w, h);
-    projection.updateAspect(w/h);
-
+    projection.updateAspect(w/ h);
+    
+    ui.updateAspects(w/h)
+    
 	updateViewMat = true;
 }
 
@@ -160,7 +162,7 @@ function drawLightShader() {
 function drawUI() {
     //TODO THIS NEEDS TO MOVE
     shaders["defaultShader"].bind();
-    gl.uniformMatrix4fv(shaders["defaultShader"].getUniform('VP'), false, mat4.create());
+    gl.uniformMatrix4fv(shaders["defaultShader"].getUniform('VP'), false, projection.get());
 
     for (let element of ui.elements) {
         element.draw(shaders["defaultShader"]);

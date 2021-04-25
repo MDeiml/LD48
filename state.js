@@ -92,7 +92,14 @@ export let level = {
 };
 
 export let ui = {
-    elements: []
+    elements: [],
+    updateAspects: function(aspect) {
+        for (let element of this.elements) {
+            if (element.base_pos) {
+                element.setPosition(vec2.fromValues(element.base_pos[0] * aspect / 2, element.base_pos[1]))
+            }
+        }
+    }
 }
 
 export let updateRegistry = {
