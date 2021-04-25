@@ -10,6 +10,9 @@ export function updatePhysics(delta) {
     for (let obj of level.objects["bubble"]) {
         obj.setPosition(handlePhysics(delta, obj.getPosition(), obj.velocity, obj.halfSize, obj));
     }
+    for (let obj of level.objects["big_fish"]) {
+        obj.setPosition(handlePhysics(delta, obj.getPosition(), obj.velocity, obj.halfSize, obj));
+    }
 }
 
 export function handlePhysics(delta, pos, vel, halfSize, obj = null) {

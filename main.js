@@ -11,6 +11,7 @@ import {init as initResource} from "./resource.js"
 import {GameObject, AnimatedGameObject} from "./GameObject.js"
 import {updatePhysics} from "./physics.js"
 import {updateBubbles} from "./bubble.js"
+import {updateFish, initFish} from "./fish.js";
 import {set_seed} from "./util.js"
 import {updateRopes} from "./rope.js";
 import {createUI} from "./menu.js"
@@ -27,8 +28,10 @@ function main() {
     initGraphics(document.getElementById('glCanvas'));
     initInput();
     initAudio();
+    initFish();
     updateRegistry.registerUpdate("bubbles", updateBubbles);
     updateRegistry.registerUpdate("ropes", updateRopes);
+    updateRegistry.registerUpdate("fish", updateFish);
 
     initResource(function() {
         level.addObject(new GameObject("Assets/background_blue.png", vec2.fromValues(-0.5 * GRID_SIZE, -MAP_HEIGHT * GRID_SIZE / 4), vec2.fromValues( (MAP_WIDTH + 1) * GRID_SIZE, MAP_HEIGHT / 2 * GRID_SIZE), "background" ))

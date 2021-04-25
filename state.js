@@ -25,7 +25,7 @@ export let level = {
         "angler": []
     },
 	lights: new Array(180), //TODO move
-    lightCnt: 2,
+    lightCnt: 3,
 	updateLight: function(lightID, color, pos, dir, cutoff, intensity) {
 		let startPos = lightID * 9;
 

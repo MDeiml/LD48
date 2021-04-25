@@ -52,7 +52,7 @@ export function generateLevel() {
     }
 
     for (let i = 0; i < pixels.length; i++) {
-        if (Math.random() > i * 2 / pixels.length) {
+        if (Math.random() > i * 4 / pixels.length) {
             pixels[i] = false;
         }
     }
