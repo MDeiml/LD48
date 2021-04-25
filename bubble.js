@@ -1,5 +1,5 @@
 import {level, player} from "./state.js";
-import {MobileGameObject, GameObject} from "./GameObject.js";
+import {MobileGameObject, AnimatedGameObject, GameObject} from "./GameObject.js";
 import {vec2} from "./gl-matrix-min.js";
 
 const BUBBLE_VELOCITY = 1;
@@ -78,8 +78,16 @@ export function updateBubbles(delta) {
         vec2.add(pos, pos, player.position);
         let isAnimal = Math.random() < 0.1;
         let size = isAnimal ? (Math.random() * 0.3 + 0.1) : (Math.random() * 0.05 + 0.1);
-        let obj = new GameObject("./Assets/bubble-alt.png", pos, vec2.fromValues(size, size), "random_shit");
+        let obj = null
+        if (isAnimal) {
+            obj = new AnimatedGameObject("./Assets/animationen/qualle_anim.png", pos, vec2.fromValues(size, size), "random_shit", 4);
+        }
+        else {
+            obj = new GameObject("./Assets/bubble-alt.png", pos, vec2.fromValues(size, size), "random_shit");
+        }
         obj.velocity = vec2.random(vec2.create(), 0.1);
+        if (obj.velocity[0] < 0)
+            obj.flip = true
         obj.timerPeriod = isAnimal ? Math.random() * 0.4 + 1.2 : 0;
         obj.timer = Math.random() * obj.timerPeriod;
         level.addObject(obj);
