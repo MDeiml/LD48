@@ -3,7 +3,7 @@ import {MobileGameObject, GameObject} from "./GameObject.js";
 import {vec2} from "./gl-matrix-min.js";
 
 const BUBBLE_VELOCITY = 1;
-const PLAYER_BUBBLE_SPAWN_PER_SECOND = 1;
+const PLAYER_BUBBLE_SPAWN_PER_SECOND = 3;
 const MAX_BUBBLES = 60;
 const NUM_RANDOM_SHIT = 100;
 const RANDOM_SHIT_RADIUS = 10;
@@ -19,7 +19,7 @@ export function updateBubbles(delta) {
 			var_PLAYER_BUBBLE_SPAWN_PER_SECOND = 60;
 			var_Death_delta_Time += delta;
 		}
-				
+
 	}
     if (Math.random() < delta * var_PLAYER_BUBBLE_SPAWN_PER_SECOND) {
         let size = 0.05 + Math.random() * 0.05
