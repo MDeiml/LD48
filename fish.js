@@ -10,8 +10,9 @@ const NUM_FISH = 30;
 const FISH_RADIUS = 10;
 
 const DEPTHS = [
-    { start: 0 * 4, end: 8 * 4, big_fish: "Assets/fish1/octopus.png", big_fish_frames: 1, flip_big_fish: true, small_fish: ["Assets/fish1/koi.png", "Assets/fish1/angelfish.png", "Assets/fish1/salmon.png"], small_fish_angle: [110, 0, 0]},
-    { start: 24 * 4, end: 32 * 4, big_fish: "Assets/fish4/anglerfisch_anim.png", big_fish_frames: 4, small_fish: ["Assets/fish1/koi.png"], small_fish: [180]}
+    { start: 0 * 4, end: 8 * 4, big_fish: "Assets/fish1/octopus.png", big_fish_frames: 1, flip_big_fish: true, small_fish: ["Assets/fish1/koi.png", "Assets/fish1/angelfish.png", "Assets/fish1/salmon.png"], small_fish_angle: [110, 0, 0], flip_small_fish: [false, false, false]},
+    { start: 8 * 4, end: 16 * 4, big_fish: "Assets/fish1/octopus.png", big_fish_frames: 1, flip_big_fish: true, small_fish: ["Assets/fish2/guppy.png", "Assets/fish2/wels.png"], small_fish_angle: [0, -20], flip_small_fish: [true, false]},
+    { start: 24 * 4, end: 32 * 4, big_fish: "Assets/fish4/anglerfisch_anim.png", big_fish_frames: 4, small_fish: ["Assets/fish1/koi.png"], small_fish_angle: [180], flip_small_fish: [false]}
 ];
 
 let big_fish;
@@ -78,6 +79,7 @@ export function updateFish(delta) {
         obj.orientation = depth.small_fish_angle[asset_index] * (obj.flip ? -1 : 1);
         obj.timerPeriod = Math.random() * 0.4 + 1.2;
         obj.timer = Math.random() * obj.timerPeriod;
+        obj.flip ^= depth.flip_small_fish[asset_index];
         level.addObject(obj);
     }
 
@@ -95,6 +97,6 @@ export function updateFish(delta) {
             vec2.set(big_fish[d].velocity, 0, 0);
         }
     }
-    let angler = big_fish[1];
+    let angler = big_fish[2];
     level.updateLight(2, [0.3, 1, 0.5], [angler.position[0] - (angler.flip ? -1.2 : 1.2), angler.position[1] + 0.4],[0, 1], -1.0, 1);
 }
