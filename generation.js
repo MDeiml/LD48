@@ -11,7 +11,7 @@ export function generateLevel() {
         pixels.push(true);
     }
 
-    let current = 0;
+    let current = GEN_WIDTH;
     let queue = {};
     let prev = {};
     while (true) {
