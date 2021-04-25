@@ -1,4 +1,4 @@
-import {level} from "./state.js";
+import {level, COLLIDABLE_GRID_SIZE} from "./state.js";
 import {MobileGameObject, CollidableGameObject} from "./GameObject.js";
 import {vec2} from "./gl-matrix-min.js";
 
@@ -12,15 +12,23 @@ export function updatePhysics(delta) {
 }
 
 function handlePhysics(delta, obj) {
-    let pos = vec2.clone(obj.velocity);
-    vec2.scale(pos, pos, delta);
-    vec2.add(pos, pos, obj.position);
-    for (let other of level.objects["collidable"]) {
-        for (let line of other.shape)
-        {
-            let intersection = intersectLineCircle(line[0], line[1], vec2.sub(vec2.create(), pos, other.position), 0.5)
-            if (intersection) {
-                vec2.add(pos, pos, intersection);
+    let pos = vec2.scaleAndAdd(obj.position, obj.position, obj.velocity, delta);
+    let pmin = vec2.sub(vec2.create(), obj.position, obj.halfSize);
+    vec2.scale(pmin, pmin, 1/COLLIDABLE_GRID_SIZE);
+    vec2.round(pmin, pmin);
+    let pmax = vec2.add(vec2.create(), obj.position, obj.halfSize);
+    vec2.scale(pmax, pmax, 1/COLLIDABLE_GRID_SIZE);
+    vec2.round(pmax, pmax);
+    for (let x = pmin[0]; x <= pmax[0]; x++) {
+        for (let y = pmin[1]; y <= pmax[1]; y++) {
+            if (level.collidables[vec2.fromValues(x, y)] == undefined) continue;
+            for (let other of level.collidables[vec2.fromValues(x, y)]) {
+                for (let line of other.shape) {
+                    let intersection = intersectLineCircle(line[0], line[1], vec2.sub(vec2.create(), pos, other.position), 0.5)
+                    if (intersection) {
+                        vec2.add(pos, pos, intersection);
+                    }
+                }
             }
         }
     }

@@ -1,5 +1,7 @@
-import { vec3 } from "./gl-matrix-min.js"
+import { vec2 } from "./gl-matrix-min.js"
 import { Sprite } from "./Sprite.js"
+
+export const COLLIDABLE_GRID_SIZE = 4;
 
 export let gl = null;
 export function setGl(context) {
@@ -12,6 +14,7 @@ export function setPlayer(obj) {
 }
 
 export let level = {
+    collidables: {},
     objects: {
         "bubble": [],
         "collidable": [],
@@ -44,6 +47,15 @@ export let level = {
         }
         if (this.objects[type] === undefined) {
             this.objects[type] = [];
+        }
+        if (type == "collidable") {
+            let coords = vec2.scale(vec2.create(), obj.position, 1/COLLIDABLE_GRID_SIZE);
+            vec2.round(coords, coords);
+            if (this.collidables[coords] === undefined) {
+                this.collidables[coords] = [obj]
+            } else {
+                this.collidables.push(obj);
+            }
         }
         this.objects[type].push(obj);
     }

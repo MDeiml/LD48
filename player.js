@@ -9,7 +9,7 @@ import {heartbeat} from "./util.js"
 const PLAYER_SPEED = 2.5;
 const FRAME_TIME = 1000/60;
 var FrameCounter = 0;
-const MAX_BREATH = 5;
+const MAX_BREATH = 100;
 
 export let Player = function() {
     MobileGameObject.call(this, "./Assets/animationen/taucher-animation.png", vec2.fromValues( 0, 0), vec2.fromValues(1, 1), "player", vec2.fromValues(1, 1), vec2.fromValues(0, 0));

@@ -8,7 +8,7 @@ function initTileAssets() {
     //TODO init array for tiles. Could be optimized out
 }
 
-export const GRID_SIZE = 4;
+export const GRID_SIZE = 4; // when changing also check state.js COLLIDABLE_GRID_SIZE
 const COLLISION_SHAPES = {
     tl : [[vec2.fromValues(-0.5 * GRID_SIZE, 0), vec2.fromValues(0, 0.5 * GRID_SIZE)]],
     tr : [[vec2.fromValues(0, 0.5 * GRID_SIZE), vec2.fromValues(0.5 * GRID_SIZE, 0)]],
