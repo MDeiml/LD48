@@ -5,6 +5,7 @@ import {swimmingLeft, swimmingRight, swimmingUp, swimmingDown, swimmingAccelerat
 import {level, updateRegistry} from "./state.js"
 import {heartbeat} from "./util.js"
 import {Rope} from "./rope.js";
+import {updateView} from "./render.js";
 
 const PLAYER_SPEED = 2.5;
 const FRAME_TIME = 1000/60;
@@ -105,6 +106,12 @@ Player.prototype.handleInput = function(delta) {
         }
         vec2.scale(this.lookDirection, this.velocity, -1 / velLength);
     }
+
+    if (vec2.squaredDistance(this.position, level.objects["target"][0].position) < 2 * 2) {
+        level.upsideDown = true;
+        updateView();
+    }
+
     //stupid pointlight
     this.rate += delta * 2
     if (this.rate > 4)
