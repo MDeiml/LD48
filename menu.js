@@ -1,6 +1,7 @@
 import {mat4, vec3, vec2, quat} from "./gl-matrix-min.js"
 import {GameObject} from "./GameObject.js"
 import {ui, player, updateRegistry} from "./state.js"
+import {MAX_BREATH} from "./player.js";
 
 
 const MIN_ORIENTATION = 112.5;//247.5
@@ -17,7 +18,7 @@ Object.defineProperty(Menu.prototype, 'constructor', {
     writable: true });
 
 function updateOxygen() {
-    let ratio = player.breath / 100;
+    let ratio = player.breath / MAX_BREATH;
     this.setOrientation((MIN_ORIENTATION - MAX_ORIENTATION) * ratio + MAX_ORIENTATION);
 }
 
@@ -29,7 +30,7 @@ export function createUI() {
     updateRegistry.registerUpdate("oxygen_scale", updateOxygen.bind(pfeil))
     //create barometer
     //add updates
-    
-    
-    
+
+
+
 }

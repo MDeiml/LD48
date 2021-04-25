@@ -10,7 +10,7 @@ import {updateView, setFlicker} from "./render.js";
 const PLAYER_SPEED = 2.5;
 const FRAME_TIME = 1000/60;
 var FrameCounter = 0;
-const MAX_BREATH = 100;
+export const MAX_BREATH = 30;
 
 export let Player = function() {
     MobileGameObject.call(this, "./Assets/animationen/taucher-animation.png", vec2.fromValues( 0, 0), vec2.fromValues(1, 1), "player", null, vec2.fromValues(1, 1), vec2.fromValues(0, 0));
@@ -135,17 +135,17 @@ Player.prototype.handleInput = function(delta) {
     level.updateLight(1, [0.6, 0.3, 0.3], vec2.scaleAndAdd(vec2.create(), this.position, this.lookDirection, -0.4), this.lookDirection, 0.7, this.position[1] - this.lookDirection[1] > -1.5 ? 0 : 3 * flicker);
 }
 
-Player.prototype.updateBreathing = function() {
+Player.prototype.updateBreathing = function(delta) {
 
     if (this.breath == 0)
         return
 
-    if (this.position[1] > 0) //above water
+    if (this.position[1] > -0.2) //above water
     {
-        this.breath = this.breath + 1
+        this.breath = this.breath + delta * MAX_BREATH;
     }
     else {
-        this.breath = this.breath - (1/120)
+        this.breath = this.breath - delta * (swimmingAccelerate() ? 2 : 1);
     }
     this.breath = Math.min(Math.max(this.breath, 0), MAX_BREATH);
 

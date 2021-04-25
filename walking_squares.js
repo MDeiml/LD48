@@ -42,9 +42,11 @@ export function computeSquareMap(map_data) {
     let side_offset = Math.floor(MAP_WIDTH / 2) * GRID_SIZE; //offset cube objects so that they start at the middle
     let depth_offset = GRID_SIZE;
 
-    let current = 0 + MAP_WIDTH * Math.floor(MAP_HEIGHT / 2) - Math.floor(MAP_WIDTH / 2) - 1;
-    let x = current % MAP_WIDTH;
-    let y = Math.floor(current / MAP_WIDTH);
+    let x = Math.floor(MAP_WIDTH / 2);
+    x += x % 2;
+    let y = Math.floor(MAP_HEIGHT / 2);
+    y += y % 2;
+    let current = x + MAP_WIDTH * y;
     let target_pos = vec2.fromValues(x * GRID_SIZE - 0.5 * GRID_SIZE - side_offset, -(y * GRID_SIZE - 0.5 * GRID_SIZE + depth_offset));
     level.addObject(new GameObject("./Assets/animationen/taucher-1.png", target_pos, vec2.fromValues(1, 1), "target"));
     let rope = new Rope("./Assets/rope_g.png");
