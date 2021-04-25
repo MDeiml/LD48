@@ -5,7 +5,7 @@ import {swimmingLeft, swimmingRight, swimmingUp, swimmingDown, swimmingAccelerat
 import {level, updateRegistry} from "./state.js"
 import {heartbeat} from "./util.js"
 import {Rope} from "./rope.js";
-import {updateView} from "./render.js";
+import {updateView, setFlicker} from "./render.js";
 
 const PLAYER_SPEED = 2.5;
 const FRAME_TIME = 1000/60;
@@ -31,6 +31,7 @@ export let Player = function() {
     this.rope.addPoint(vec2.clone(this.position));
     this.rope.addPoint(vec2.clone(this.position));
     this.lookDirection = vec2.fromValues(-1, 0);
+    this.flickerTimer = -2;
 }
 Player.prototype = Object.create(MobileGameObject.prototype);
 Object.defineProperty(Player.prototype, 'constructor', {
@@ -107,17 +108,31 @@ Player.prototype.handleInput = function(delta) {
         vec2.scale(this.lookDirection, this.velocity, -1 / velLength);
     }
 
-    if (vec2.squaredDistance(this.position, level.objects["target"][0].position) < 2 * 2) {
-        level.upsideDown = true;
-        updateView();
+    if (vec2.squaredDistance(this.position, level.objects["target"][0].position) < 2 * 2 && !level.upsideDown && this.flickerTimer <= -2) {
+        this.flickerTimer = 2;
     }
+
+    this.flickerTimer -= delta;
+    if (this.flickerTimer < 0 && this.flickerTimer + delta >= 0) {
+        this.velocity[0] *= -0.1;
+        updateView();
+        level.upsideDown = true;
+    }
+    console.log(this.flickerTimer);
+    let flicker = 1;
+    if (this.flickerTimer <= -2) {
+        this.flickerTimer = -2;
+    } else {
+        flicker = Math.sin(Math.pow(Math.abs(this.flickerTimer), 0.5) * 20)
+    }
+    setFlicker(flicker);
 
     //stupid pointlight
     this.rate += delta * 2
     if (this.rate > 4)
         this.rate -= 4
-    level.updateLight(0, [0.3, 0.8, 0.5], [this.position[0], this.position[1]],[0, 1], -1.0,  (2  - this.effect_strength * heartbeat(this.rate)) / 3);
-    level.updateLight(1, [0.6, 0.3, 0.3], vec2.scaleAndAdd(vec2.create(), this.position, this.lookDirection, -0.4), this.lookDirection, 0.7, this.position[1] - this.lookDirection[1] > -1.5 ? 0 : 3);
+    level.updateLight(0, [0.3, 0.8, 0.5], [this.position[0], this.position[1]],[0, 1], -1.0,  (2  - this.effect_strength * heartbeat(this.rate)) / 3 * flicker);
+    level.updateLight(1, [0.6, 0.3, 0.3], vec2.scaleAndAdd(vec2.create(), this.position, this.lookDirection, -0.4), this.lookDirection, 0.7, this.position[1] - this.lookDirection[1] > -1.5 ? 0 : 3 * flicker);
 }
 
 Player.prototype.updateBreathing = function() {
