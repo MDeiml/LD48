@@ -49,7 +49,7 @@ export let level = {
             this.objects[type] = [];
         }
         if (type == "collidable" || type == "bubbles") {
-            let coords = vec2.scale(vec2.create(), obj.position, 1/COLLIDABLE_GRID_SIZE);
+            let coords = vec2.scale(vec2.create(), obj.getPosition(), 1/COLLIDABLE_GRID_SIZE);
             vec2.round(coords, coords);
             if (this.collidables[coords] === undefined) {
                 this.collidables[coords] = [obj]
@@ -63,11 +63,11 @@ export let level = {
     removeObject: function(obj) {
         let type = obj.type;
         if (type == "collidable" || type == "bubbles") {
-            let coords = vec2.scale(vec2.create(), obj.position, 1/COLLIDABLE_GRID_SIZE);
+            let coords = vec2.scale(vec2.create(), obj.getPosition(), 1/COLLIDABLE_GRID_SIZE);
             vec2.round(coords, coords);
             let objPos = null
             for (let index in this.collidables[coords]) {
-                if (this.collidables[coords][index].position == obj.position) {//this assumes that the object is static we may need to change that.Or maybe === is the more appropriate check here
+                if (this.collidables[coords][index] === obj) {
                     objPos = index;
                     break;
                 }
@@ -76,7 +76,7 @@ export let level = {
         }
         let objPos = null
         for (let index in this.objects[type]) {
-            if (this.objects[type][index].position == obj.position) {//this assumes that the object is static we may need to change that.Or maybe === is the more appropriate check here
+            if (this.objects[type][index] === obj) {
                 objPos = index;
                 break;
             }

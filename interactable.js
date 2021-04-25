@@ -20,7 +20,7 @@ Object.defineProperty(Bubble.prototype, 'constructor', {
     enumerable: false, // so that it does not appear in 'for in' loop
     writable: true });
 Bubble.prototype.cleanup = function() {
-    updateRegistry.unregisterUpdate(this.updateName);
+    updateRegistry.unregisterUpdate(this.update_name);
 }
 
 

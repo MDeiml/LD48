@@ -117,7 +117,7 @@ CollidableGameObject.prototype.onCollide = function(intersection, other) {
     //let pos = vec2.create();
     //vec2.add(pos, other.position, intersection);
     //other.setPosition(pos);
-    
+    console.log("test");
     vec2.add(other.position, other.position, intersection);
 }
 

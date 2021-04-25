@@ -19,6 +19,7 @@ function handlePhysics(delta, obj) {
     let pmax = vec2.add(vec2.create(), obj.position, obj.halfSize);
     vec2.scale(pmax, pmax, 1/COLLIDABLE_GRID_SIZE);
     vec2.round(pmax, pmax);
+    obj.setPosition(pos);
     for (let x = pmin[0]; x <= pmax[0]; x++) {
         for (let y = pmin[1]; y <= pmax[1]; y++) {
             if (level.collidables[vec2.fromValues(x, y)] == undefined) continue;
@@ -32,7 +33,6 @@ function handlePhysics(delta, obj) {
             }
         }
     }
-    obj.setPosition(pos);
 }
 
 function intersectLineCircle(a, b, m, r) {
