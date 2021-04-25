@@ -5,19 +5,19 @@ import {Bubble} from "./interactable.js";
 
 export function updatePhysics(delta) {
     for (let obj of level.objects["player"]) {
-        handlePhysics(delta, obj);
+        obj.setPosition(handlePhysics(delta, obj.getPosition(), obj.velocity, obj.halfSize, obj));
     }
     for (let obj of level.objects["bubble"]) {
-        handlePhysics(delta, obj);
+        obj.setPosition(handlePhysics(delta, obj.getPosition(), obj.velocity, obj.halfSize, obj));
     }
 }
 
-function handlePhysics(delta, obj) {
-    let pos = vec2.scaleAndAdd(vec2.create(), obj.getPosition(), obj.velocity, delta);
-    let pmin = vec2.sub(vec2.create(), obj.position, obj.halfSize);
+export function handlePhysics(delta, pos, vel, halfSize, obj = null) {
+    vec2.scaleAndAdd(pos, pos, vel, delta);
+    let pmin = vec2.sub(vec2.create(), pos, halfSize);
     vec2.scale(pmin, pmin, 1/COLLIDABLE_GRID_SIZE);
     vec2.round(pmin, pmin);
-    let pmax = vec2.add(vec2.create(), obj.position, obj.halfSize);
+    let pmax = vec2.add(vec2.create(), pos, halfSize);
     vec2.scale(pmax, pmax, 1/COLLIDABLE_GRID_SIZE);
     vec2.round(pmax, pmax);
     for (let x = pmin[0]; x <= pmax[0]; x++) {
@@ -28,7 +28,7 @@ function handlePhysics(delta, obj) {
                     let intersection = intersectLineCircle(line[0], line[1], vec2.sub(vec2.create(), pos, other.getPosition()), 0.5)
                     if (intersection) {
                         if (other.type == "bubbles") {
-                            if (obj.type == "player" && !other.collected) {
+                            if (obj != null && obj.type == "player" && !other.collected) {
                                 obj.breath += 10 //add function to clamp it to 100
                                 other.collected = true;
                                 Bubble.COLLECT_SOUND.moveTo(other.getPosition())
@@ -45,7 +45,7 @@ function handlePhysics(delta, obj) {
             }
         }
     }
-    obj.setPosition(pos);
+    return pos;
 }
 
 function intersectLineCircle(a, b, m, r) {
