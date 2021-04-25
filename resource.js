@@ -10,8 +10,9 @@ let preload_textures = [
 // "Segments/0111.png",
 "Assets/background.jpg",
 "Assets/fish4/anglerfisch_anim.png",
+"Assets/background_blue.png"
+]
 
-];
 
 export function init(callback) {
     let loading = preload_textures.length;
