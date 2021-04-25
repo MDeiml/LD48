@@ -3,6 +3,7 @@ import {level} from "./state.js"
 import {MAP_WIDTH, MAP_HEIGHT} from "./generation.js"
 import {vec2} from "./gl-matrix-min.js"
 import {Coral} from "./interactable.js"
+import {Rope} from "./rope.js";
 
 function initTileAssets() {
     //TODO init array for tiles. Could be optimized out
@@ -45,7 +46,8 @@ export function computeSquareMap(map_data) {
     let current = 0 + MAP_WIDTH * MAP_HEIGHT - 1;
     let x = current % MAP_WIDTH;
     let y = Math.floor(current / MAP_WIDTH);
-    let lastRopePoint = vec2.fromValues(x * GRID_SIZE - 0.5 * GRID_SIZE - side_offset, -(y * GRID_SIZE - 0.5 * GRID_SIZE + depth_offset));
+    let rope = new Rope("./Assets/rope_g.png");
+    rope.addPoint(vec2.fromValues(x * GRID_SIZE - 0.5 * GRID_SIZE - side_offset, -(y * GRID_SIZE - 0.5 * GRID_SIZE + depth_offset)));
     let randomOffset = vec2.create();
     while (prev[current]) {
         let x = current % MAP_WIDTH;
@@ -58,21 +60,7 @@ export function computeSquareMap(map_data) {
             vec2.add(randomOffset, randomOffset, vec2.fromValues(Math.random() - 0.5, Math.random() -  0.5));
             vec2.scale(randomOffset, randomOffset, 0.5);
             vec2.add(nextRopePoint, nextRopePoint, randomOffset);
-            let ropeDir = vec2.sub(vec2.create(), nextRopePoint, lastRopePoint);
-            let angle = -Math.atan2(ropeDir[0], ropeDir[1]) / Math.PI * 180;
-            vec2.add(lastRopePoint, nextRopePoint, lastRopePoint);
-            vec2.scale(lastRopePoint, lastRopePoint, 0.5);
-            level.addObject(new GameObject(
-                "./Assets/rope_g.png",
-                lastRopePoint,
-                vec2.fromValues(0.3, 1.05 * vec2.length(ropeDir)),
-                "rope",
-                null,
-                vec2.fromValues(1, 1),
-                vec2.fromValues(0, 0),
-                angle
-            ));
-            lastRopePoint = nextRopePoint;
+            rope.addPoint(nextRopePoint);
         }
         current = prev[current];
     }
