@@ -25,8 +25,8 @@ Bubble.prototype.cleanup = function() {
     updateRegistry.unregisterUpdate(this.update_name);
 }
 Bubble.prototype.collect = function() {
-    if (this.collected)
-        return 
+    if (this.collected || player.breath <= 0)
+        return
     player.breath += 10 //add function to clamp it to 100
     this.collected = true;
     Bubble.COLLECT_SOUND.moveTo(this.getPosition())
