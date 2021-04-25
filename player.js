@@ -140,7 +140,7 @@ Player.prototype.updateBreathing = function() {
     if (this.breath == 0)
         return
 
-    if (this.position[1] > 0) //above water
+    if (this.position[1] > -0.1) //above water
     {
         this.breath = this.breath + 1
     }
