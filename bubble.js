@@ -13,6 +13,31 @@ var var_MAX_BUBBLES = 1* MAX_BUBBLES;
 var var_PLAYER_BUBBLE_SPAWN_PER_SECOND = PLAYER_BUBBLE_SPAWN_PER_SECOND;
 var var_Death_delta_Time = 0;
 
+function spawnAtRadius(distance = RANDOM_SHIT_RADIUS) {
+    let pos = vec2.random(vec2.create(), distance);
+    vec2.add(pos, pos, player.position);
+    let isAnimal = Math.random() < 0.1;
+    let size = isAnimal ? (Math.random() * 0.3 + 0.1) : (Math.random() * 0.05 + 0.1);
+    let obj = null
+    if (isAnimal) {
+        obj = new AnimatedGameObject("./Assets/animationen/qualle_anim.png", pos, vec2.fromValues(size, size), "jelly", 4);
+    }
+    else {
+        obj = new GameObject("./Assets/bubble-alt.png", pos, vec2.fromValues(size, size), "random_shit");
+    }
+    obj.velocity = vec2.random(vec2.create(), 0.1);
+    obj.orientation = -Math.atan2(obj.velocity[0], obj.velocity[1]) / Math.PI * 180 + 30;
+    obj.timerPeriod = isAnimal ? Math.random() * 0.4 + 1.2 : 0;
+    obj.timer = Math.random() * obj.timerPeriod;
+    level.addObject(obj);
+}
+
+export function initBubbles() {
+    while (level.objects["random_shit"].length + level.objects["jelly"].length < NUM_RANDOM_SHIT) {
+        spawnAtRadius(RANDOM_SHIT_RADIUS * Math.random() * 2)
+    }
+}
+
 export function updateBubbles(delta) {
 	if (player.breath == 0){
 		var_PLAYER_BUBBLE_SPAWN_PER_SECOND = 0;
@@ -82,23 +107,9 @@ export function updateBubbles(delta) {
             i--;
         }
     }
+
     while (level.objects["random_shit"].length + level.objects["jelly"].length < NUM_RANDOM_SHIT) {
-        let pos = vec2.random(vec2.create(), RANDOM_SHIT_RADIUS);
-        vec2.add(pos, pos, player.position);
-        let isAnimal = Math.random() < 0.1;
-        let size = isAnimal ? (Math.random() * 0.3 + 0.1) : (Math.random() * 0.05 + 0.1);
-        let obj = null
-        if (isAnimal) {
-            obj = new AnimatedGameObject("./Assets/animationen/qualle_anim.png", pos, vec2.fromValues(size, size), "jelly", 4);
-        }
-        else {
-            obj = new GameObject("./Assets/bubble-alt.png", pos, vec2.fromValues(size, size), "random_shit");
-        }
-        obj.velocity = vec2.random(vec2.create(), 0.1);
-        obj.orientation = -Math.atan2(obj.velocity[0], obj.velocity[1]) / Math.PI * 180 + 30;
-        obj.timerPeriod = isAnimal ? Math.random() * 0.4 + 1.2 : 0;
-        obj.timer = Math.random() * obj.timerPeriod;
-        level.addObject(obj);
+        spawnAtRadius();
     }
 
 }

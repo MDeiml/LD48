@@ -17,6 +17,30 @@ const DEPTHS = [
 
 let big_fish;
 
+function spawnFishAtDistance(distance = FISH_RADIUS) {
+    let pos = vec2.random(vec2.create(), distance);
+    vec2.add(pos, pos, player.position);
+    let depth = DEPTHS[0];
+    for (let d of DEPTHS) {
+        if (pos[1] < -d.start && pos[1] > -d.end) {
+            depth = d;
+            break;
+        }
+    }
+    let asset_index = Math.floor(Math.random() * depth.small_fish.length)
+    let asset = depth.small_fish[asset_index];
+    let size = Math.random() * 0.3 + 0.3;
+    let obj = new GameObject(asset, pos, vec2.fromValues(size, size), "fish");
+    obj.flip = Math.random() > 0.5;
+    obj.velocity = vec2.fromValues(Math.random() * 0.1 + 0.05, 0);
+    if (!obj.flip) obj.velocity[0] *= -1;
+    obj.orientation = depth.small_fish_angle[asset_index] * (obj.flip ? -1 : 1);
+    obj.timerPeriod = Math.random() * 0.4 + 1.2;
+    obj.timer = Math.random() * obj.timerPeriod;
+    obj.flip ^= depth.flip_small_fish[asset_index];
+    level.addObject(obj);
+}
+
 export function initFish() {
     big_fish = [];
     for (let d = 0; d < DEPTHS.length; d++) {
@@ -40,6 +64,11 @@ export function initFish() {
             }
         }
     }
+    
+    while (level.objects["fish"].length < NUM_FISH) {
+        spawnFishAtDistance(FISH_RADIUS * Math.random() * 2);
+    }
+
 }
 
 export function updateFish(delta) {
@@ -60,27 +89,7 @@ export function updateFish(delta) {
         }
     }
     while (level.objects["fish"].length < NUM_FISH) {
-        let pos = vec2.random(vec2.create(), FISH_RADIUS);
-        vec2.add(pos, pos, player.position);
-        let depth = DEPTHS[0];
-        for (let d of DEPTHS) {
-            if (pos[1] < -d.start && pos[1] > -d.end) {
-                depth = d;
-                break;
-            }
-        }
-        let asset_index = Math.floor(Math.random() * depth.small_fish.length)
-        let asset = depth.small_fish[asset_index];
-        let size = Math.random() * 0.3 + 0.3;
-        let obj = new GameObject(asset, pos, vec2.fromValues(size, size), "fish");
-        obj.flip = Math.random() > 0.5;
-        obj.velocity = vec2.fromValues(Math.random() * 0.1 + 0.05, 0);
-        if (!obj.flip) obj.velocity[0] *= -1;
-        obj.orientation = depth.small_fish_angle[asset_index] * (obj.flip ? -1 : 1);
-        obj.timerPeriod = Math.random() * 0.4 + 1.2;
-        obj.timer = Math.random() * obj.timerPeriod;
-        obj.flip ^= depth.flip_small_fish[asset_index];
-        level.addObject(obj);
+        spawnFishAtDistance();
     }
 
     // BIG FISH
