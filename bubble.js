@@ -55,7 +55,7 @@ export function updateBubbles(delta) {
     for (let i = 0; i < level.objects["random_shit"].length; i++) {
         let obj = level.objects["random_shit"][i];
         let sqDist = vec2.squaredDistance(obj.position, player.position);
-        if (sqDist > RANDOM_SHIT_RADIUS * RANDOM_SHIT_RADIUS) {
+        if (obj.position[1] > 0 || sqDist > RANDOM_SHIT_RADIUS * RANDOM_SHIT_RADIUS) {
             level.objects["random_shit"].splice(i, 1);
             i--;
         }
