@@ -51,16 +51,16 @@ export function generateTutorial() {
     computeSquareMap(tutorial_map, 7, 10, (MAP_WIDTH + 9) * GRID_SIZE/2, -GRID_SIZE, false, 2, false);
     let collision_coords = vec2.fromValues(-(MAP_WIDTH + 1)/2, -2);
     vec2.round(collision_coords, collision_coords);
-    
-    
+
+
     let side_offset = Math.floor(7 / 2) * GRID_SIZE + MAP_WIDTH + 9 * GRID_SIZE/2; //offset cube objects so that they start at the middle
     let depth_offset = GRID_SIZE - GRID_SIZE;
-    
+
     let size = 2;
     spawnCoralAt(vec2.fromValues(-(MAP_WIDTH + 12)/2 * GRID_SIZE, -5.76 * GRID_SIZE), size);
-    
+
     //console.log(Object.keys(level.collidables))
-    
+
     //for (let x = 0; x <= 1; x++) {
         //for (let y = 0; y <= 1; y++) {
             //for (let obj of level.collidables[vec2.fromValues(collision_coords[0] - x, collision_coords[1] - y)])
@@ -85,7 +85,22 @@ export function generateRopePath(map_data) {
     x += x % 2;
     let y = Math.floor(MAP_HEIGHT / 2);
     y += y % 2;
-    let current = x + MAP_WIDTH * y;
+    let start = x + MAP_WIDTH * y;
+    let current = start
+
+    const MAX_DEPTH = MAP_HEIGHT / 2 + 3;
+
+    while (prev[current]) {
+        let y = Math.floor(current / MAP_WIDTH);
+        if (y > MAX_DEPTH) {
+            start = prev[current];
+        }
+        current = prev[current];
+    }
+    current = start;
+    x = current % MAP_WIDTH;
+    y = Math.floor(current / MAP_WIDTH);
+
     let target_pos = vec2.fromValues(x * GRID_SIZE - 0.5 * GRID_SIZE - side_offset, -(y * GRID_SIZE - 0.5 * GRID_SIZE + depth_offset));
     level.addObject(new GameObject("./Assets/animationen/taucher-1.png", target_pos, vec2.fromValues(1, 1), "target"));
     let rope = new Rope("./Assets/rope_g.png");
@@ -121,9 +136,9 @@ export function computeSquareMap(map_data, width = MAP_WIDTH, height = MAP_HEIGH
 
             let tr = 1;
             let br = 1;
-            
+
             if (w >= 0)
-            {   
+            {
                 tl = scanlineArr[w + h * width] ? 1 : 0;
                 if (h < height - 1)
                     bl = scanlineArr[w + (h + 1) * width] ? 1 : 0;
@@ -137,7 +152,7 @@ export function computeSquareMap(map_data, width = MAP_WIDTH, height = MAP_HEIGH
                     tl = 0;
                 }
             }
-            
+
             if (w < width - 1)
             {
                 tr = scanlineArr[w + 1 + h * width] ? 1 : 0;
@@ -170,7 +185,7 @@ export function computeSquareMap(map_data, width = MAP_WIDTH, height = MAP_HEIGH
                     } else if (bl == 1) {
                         transform = Transformation.BOTTOM_LEFT
                         shape = COLLISION_SHAPES.bl
-                        
+
                         if (spawn_deco) {
                             let n = Math.random() * 2;
                             for (let i = 0; i < n; i++) {
