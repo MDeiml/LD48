@@ -57,6 +57,11 @@ function initShaders() {
 
 }
 
+let flicker = 1;
+export function setFlicker(f) {
+    flicker = f;
+}
+
 export function updateView() {
     let pos = vec2.clone(player.position);
     camera.setPos(pos);
@@ -125,7 +130,7 @@ function drawLightShader() {
 	gl.uniformMatrix4fv(shaders["lightShader"].getUniform('VP'), false, pvMatrix);
 
     for (let stage of draw_order) {
-        gl.uniform1f(shaders["lightShader"].getUniform('ambientLight'), stage.ambientLight);
+        gl.uniform1f(shaders["lightShader"].getUniform('ambientLight'), stage.ambientLight * flicker);
         for (let type of stage.types) {
             drawn[type] = true;
             for (let sprite of level.objects[type]) {
