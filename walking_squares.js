@@ -5,10 +5,6 @@ import {vec2} from "./gl-matrix-min.js"
 import {Coral} from "./interactable.js"
 import {Rope} from "./rope.js";
 
-function initTileAssets() {
-    //TODO init array for tiles. Could be optimized out
-}
-
 export const GRID_SIZE = 4; // when changing also check state.js COLLIDABLE_GRID_SIZE
 const COLLISION_SHAPES = {
     tl : [[vec2.fromValues(-0.5 * GRID_SIZE, 0), vec2.fromValues(0, 0.5 * GRID_SIZE)]],
@@ -35,8 +31,20 @@ function spawnCoralAt(pos, size) {
     level.addObject(new Coral( pos, size));
 }
 
-export function computeSquareMap(map_data) {
-    let scanlineArr = map_data[0];
+const tutorial_map = [[
+        true, true, true, true, true,
+        true, false, false, false, false,
+        true, false, true, true, true,
+        true, false, true, true, true,
+        true, false, true, true, true,
+        true, true, true, true, true
+]]
+
+export function generateTutorial() {
+    computeSquareMap(tutorial_map, 5, 6, (MAP_WIDTH + 7) * GRID_SIZE/2, GRID_SIZE, true);
+}
+
+export function generateRopePath(map_data) {
     let prev = map_data[1];
 
     let side_offset = Math.floor(MAP_WIDTH / 2) * GRID_SIZE; //offset cube objects so that they start at the middle
@@ -68,8 +76,15 @@ export function computeSquareMap(map_data) {
         current = prev[current];
     }
 
-    for (let h = 0; h < MAP_HEIGHT; h++) {
-        for (let w = -1; w < MAP_WIDTH; w++) {
+}
+
+export function computeSquareMap(map_data, width = MAP_WIDTH, height = MAP_HEIGHT, side_off = 0, depth_off = 0, debug = false) {
+    let scanlineArr = map_data[0];
+    let side_offset = Math.floor(width / 2) * GRID_SIZE + side_off; //offset cube objects so that they start at the middle
+    let depth_offset = GRID_SIZE + depth_off;
+
+    for (let h = 0; h < height; h++) {
+        for (let w = -1; w < width; w++) {
             let tl = 1;
             let bl = 1;
 
@@ -78,16 +93,16 @@ export function computeSquareMap(map_data) {
 
             if (w >= 0)
             {
-                tl = scanlineArr[w + h * MAP_WIDTH] ? 1 : 0;
-                if (h < MAP_HEIGHT - 1)
-                    bl = scanlineArr[w + (h + 1) * MAP_WIDTH] ? 1 : 0;
+                tl = scanlineArr[w + h * width] ? 1 : 0;
+                if (h < height - 1)
+                    bl = scanlineArr[w + (h + 1) * width] ? 1 : 0;
             }
 
-            if (w < MAP_WIDTH - 1)
+            if (w < width - 1)
             {
-                tr = scanlineArr[w + 1 + h * MAP_WIDTH] ? 1 : 0;
-                if (h < MAP_HEIGHT - 1)
-                    br = scanlineArr[w + 1 + (h + 1) * MAP_WIDTH] ? 1 : 0;
+                tr = scanlineArr[w + 1 + h * width] ? 1 : 0;
+                if (h < height - 1)
+                    br = scanlineArr[w + 1 + (h + 1) * width] ? 1 : 0;
             }
 
             let type = tl + tr + bl + br;

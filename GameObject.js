@@ -21,6 +21,7 @@ export let GameObject = function(spritePath, position, size, type, parent = null
 	this.orientation = orientation;
     this.flip = false;
     this.parent = parent;
+    
     vec2.scale(this.halfSize, size, 0.5); //use center as reference point for position
 
 	if (spritePath === null) {
