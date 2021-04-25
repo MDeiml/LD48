@@ -23,7 +23,7 @@ export let GameObject = function(spritePath, position, size, type, parent = null
     this.flip = false;
     this.parent = parent;
     vec2.scale(this.halfSize, size, 0.5); //use center as reference point for position
-    
+
 	if (spritePath === null) {
 		this.sprite = null;
 	} else {
@@ -40,7 +40,7 @@ GameObject.prototype.calculateTransform = function() {
         rotation,
         vec3.fromValues(this.position[0] + this.offset[0], this.position[1] + this.offset[1], 0),
         vec3.fromValues(this.halfSize[0] * this.scale[0], this.halfSize[1] * this.scale[1], 1));
-    
+
     return transform;
 }
 //update scale
@@ -74,7 +74,6 @@ GameObject.prototype.draw = function(shader) {
 		this.sprite.draw(shader);
 }
 
-GameObject.prototype.onCollide = function(intersection, other) {}
 GameObject.prototype.isPlayer = function(){return false;}
 
 export let MobileGameObject = function(spritePath, position, size, type, parent = null, scale = vec2.fromValues(1, 1), offset = vec2.fromValues(0, 0), orientation = Transformation.TOP_LEFT) {
@@ -113,50 +112,14 @@ Object.defineProperty(CollidableGameObject.prototype, 'constructor', {
     value: CollidableGameObject,
     enumerable: false, // so that it does not appear in 'for in' loop
     writable: true });
-CollidableGameObject.prototype.onCollide = function(intersection, other) {
-    //let pos = vec2.create();
-    //vec2.add(pos, other.position, intersection);
-    //other.setPosition(pos);
-    console.log("test");
-    vec2.add(other.position, other.position, intersection);
-}
 
-
-export let ForceTeleporter = function(spritePath, position, size, parent = null, scale = vec2.fromValues(1, 1), offset = vec2.fromValues(0, 0), orientation = Transformation.TOP_LEFT) {
-    GameObject.call(this, spritePath, position, size, "fire", parent, scale, offset, orientation);
-}
-ForceTeleporter.prototype = Object.create(GameObject.prototype);
-Object.defineProperty(ForceTeleporter.prototype, 'constructor', {
-    value: ForceTeleporter,
-    enumerable: false, // so that it does not appear in 'for in' loop
-    writable: true });
-ForceTeleporter.prototype.onCollide = function(intersection, other) {
-    obj.teleport = vec2.fromValues(this.to["x"], this.to["y"])
-}
-
-
-export let VerticalCollidableGameObject = function(spritePath, position, size, parent = null, scale = vec2.fromValues(1, 1), offset = vec2.fromValues(0, 0), orientation = Transformation.TOP_LEFT) {
-    GameObject.call(this, spritePath, position, size, "xcollidable", parent, scale, offset, orientation);
-}
-VerticalCollidableGameObject.prototype = Object.create(GameObject.prototype);
-Object.defineProperty(VerticalCollidableGameObject.prototype, 'constructor', {
-    value: VerticalCollidableGameObject,
-    enumerable: false, // so that it does not appear in 'for in' loop
-    writable: true });
-VerticalCollidableGameObject.prototype.onCollide = function(intersection, other) {
-    if (intersection[0] == 0 && intersection[1] < 0 && player.velocity[1] < 0 && player.maxY >= obj.position[1] + obj.halfSize[1] - 0.0001) {
-        player.setPosition(vec2.sub(player.position, player.position, intersection));
-        player.velocity[1] = 0;
-        player.onGround = true;
-    }
-}
 
 export let AnimatedGameObject = function(spritePath, position, size, type, frames = 1, updateStep = 20, parent = null, scale = vec2.fromValues(1, 1), offset = vec2.fromValues(0, 0), orientation = Transformation.TOP_LEFT) {
     GameObject.call(this, spritePath, position, size, type, parent, scale, offset, orientation);
-    
+
     this.sprite.texture.frames = frames;
     this.sprite.texture.currFrame = Math.floor(Math.random() * frames);
-    
+
     this.cntr = Math.floor(Math.random() * 20);
     this.updateStep = updateStep;
     this.updateName = "GameObj_anim" + Math.random()
@@ -168,7 +131,7 @@ export let AnimatedGameObject = function(spritePath, position, size, type, frame
             this.cntr = this.cntr % this.updateStep;
         }
     }.bind(this))
-    
+
 }
 AnimatedGameObject.prototype = Object.create(GameObject.prototype);
 Object.defineProperty(AnimatedGameObject.prototype, 'constructor', {

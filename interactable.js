@@ -47,14 +47,3 @@ Coral.prototype.clearBubble = function() {
     level.removeObject(this.bubble);
     delete this.bubble;
 }
-Bubble.prototype.onCollide = function(intersection, other) {
-    if (other.type == "player" && !this.collected) {
-        other.breath += 10 //add function to clamp it to 100
-        console.log(other.breath)
-        this.collected = true;
-        
-        //have parent remove bubble
-        this.update_name = "bubble_deletion_" + Math.random();
-        updateRegistry.registerUpdate(this.update_name, this.par.clearBubble.bind(this.par));
-    }
-}
