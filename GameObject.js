@@ -68,6 +68,14 @@ GameObject.prototype.getPosition = function() {
         return vec2.add(vec2.create(), this.position, this.parent.getPosition());
     return vec2.clone(this.position);
 }
+GameObject.prototype.setOrientation = function(newOrientation) {
+    if (this.parent)
+        this.orientation = newOrientation - this.parent.orientation;
+    else
+        this.orientation = newOrientation;
+	if (this.sprite !== null)
+		this.sprite.setTransformation(this.calculateTransform());
+}
 GameObject.prototype.draw = function(shader) {
     if (this.sprite !== null)
 		this.sprite.draw(shader);
