@@ -95,7 +95,7 @@ export function updateFish(delta) {
     // BIG FISH
     for (let d = 0; d < DEPTHS.length; d++) {
         let depth = DEPTHS[d];
-        if (player.position[1] < -depth.start && player.position[1] > -depth.end) {
+        if (player.position[1] < -depth.start * GRID_SIZE && player.position[1] > -depth.end * GRID_SIZE) {
             let vel = vec2.sub(vec2.create(), player.position, big_fish[d].position);
             vec2.scaleAndAdd(big_fish[d].velocity, big_fish[d].velocity, vel, delta * BIG_FISH_ACCEL);
             let velLength = vec2.length(big_fish[d].velocity);
