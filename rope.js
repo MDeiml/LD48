@@ -60,6 +60,7 @@ Rope.prototype.update = function(delta) {
             vec2.scaleAndAdd(this.points_velocity[i], this.points_velocity[i], dir, delta * 0.1);
             vec2.scaleAndAdd(this.points[i], this.points[i], this.points_velocity[i], delta);
             this.points[i][1] = Math.min(this.points[i][1], 0);
+            vec2.scale(this.points_velocity[i], this.points_velocity[i], Math.pow(0.9, delta));
             handlePhysics(delta, this.points[i], this.points_velocity[i], vec2.fromValues(0.2, 0.2));
         }
         if ((updateLast || updateCurrent) && i != 0) {
