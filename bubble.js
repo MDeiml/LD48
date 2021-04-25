@@ -4,9 +4,10 @@ import {vec2} from "./gl-matrix-min.js";
 
 const BUBBLE_VELOCITY = 1;
 const PLAYER_BUBBLE_SPAWN_PER_SECOND = 3;
-const MAX_BUBBLES = 60;
+const MAX_BUBBLES = 100;
 const NUM_RANDOM_SHIT = 100;
 const RANDOM_SHIT_RADIUS = 10;
+const BUBBLE_BUBBLE_SPAWN_PER_SECOND = 2;
 
 var var_MAX_BUBBLES = 1* MAX_BUBBLES;
 var var_PLAYER_BUBBLE_SPAWN_PER_SECOND = PLAYER_BUBBLE_SPAWN_PER_SECOND;
@@ -29,6 +30,18 @@ export function updateBubbles(delta) {
         bubble.velocity[0] = Math.random() * 0.2 - 0.1;
         if (Math.abs(bubble.velocity[0]) < 0.05) {
             bubble.velocity[0] = Math.sign(bubble.velocity[0]) * 0.05;
+        }
+    }
+    for (let obj of level.objects["plant"]) {
+        if (obj.bubble && vec2.squaredDistance(obj.position, player.position) < 20 * 20 && Math.random() < delta * BUBBLE_BUBBLE_SPAWN_PER_SECOND) {
+            let size = 0.05 + Math.random() * 0.05
+            let bubble = new MobileGameObject("./Assets/bubble.png", vec2.clone(obj.position), vec2.fromValues(size, size), "bubble");
+            level.addObject(bubble);
+            bubble.velocity[1] = BUBBLE_VELOCITY;
+            bubble.velocity[0] = Math.random() * 0.2 - 0.1;
+            if (Math.abs(bubble.velocity[0]) < 0.05) {
+                bubble.velocity[0] = Math.sign(bubble.velocity[0]) * 0.05;
+            }
         }
     }
     for (let i = 0; i < level.objects["bubble"].length; i++) {
