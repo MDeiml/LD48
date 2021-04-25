@@ -48,19 +48,44 @@ export let level = {
         if (this.objects[type] === undefined) {
             this.objects[type] = [];
         }
-        if (type == "collidable") {
+        if (type == "collidable" || type == "bubbles") {
             let coords = vec2.scale(vec2.create(), obj.position, 1/COLLIDABLE_GRID_SIZE);
             vec2.round(coords, coords);
             if (this.collidables[coords] === undefined) {
                 this.collidables[coords] = [obj]
             } else {
-                this.collidables.push(obj);
+                this.collidables[coords].push(obj);
             }
         }
+        
         this.objects[type].push(obj);
+    },
+    removeObject: function(obj) {
+        let type = obj.type;
+        if (type == "collidable" || type == "bubbles") {
+            let coords = vec2.scale(vec2.create(), obj.position, 1/COLLIDABLE_GRID_SIZE);
+            vec2.round(coords, coords);
+            let objPos = null
+            for (let index in this.collidables[coords]) {
+                if (this.collidables[coords][index].position == obj.position) {//this assumes that the object is static we may need to change that.Or maybe === is the more appropriate check here
+                    objPos = index;
+                    break;
+                }
+            }
+            this.collidables[coords].splice(objPos,1);
+        }
+        let objPos = null
+        for (let index in this.objects[type]) {
+            if (this.objects[type][index].position == obj.position) {//this assumes that the object is static we may need to change that.Or maybe === is the more appropriate check here
+                objPos = index;
+                break;
+            }
+        }
+        this.objects[type].splice(objPos,1);
     }
 
 };
+
 
 export let updateRegistry = {
 	updateList : {},

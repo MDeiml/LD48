@@ -12,7 +12,7 @@ export let Transformation = {
 }
 
 //Abstraction from Sprite to abstract from Transformation to the position and size of the object
-export let GameObject = function(spritePath, position, size, type, scale = vec2.fromValues(1, 1), offset = vec2.fromValues(0, 0), orientation = Transformation.TOP_LEFT) {
+export let GameObject = function(spritePath, position, size, type, parent = null, scale = vec2.fromValues(1, 1), offset = vec2.fromValues(0, 0), orientation = Transformation.TOP_LEFT) {
     this.position = position;
     this.halfSize = vec2.create();
     this.type = type;
@@ -21,18 +21,18 @@ export let GameObject = function(spritePath, position, size, type, scale = vec2.
 	this.offset = offset;
 	this.orientation = orientation;
     this.flip = false;
+    this.parent = parent;
     vec2.scale(this.halfSize, size, 0.5); //use center as reference point for position
-
+    
 	if (spritePath === null) {
 		this.sprite = null;
 	} else {
-		this.sprite = new Sprite(spritePath, this.calculateTransform(), null);
+		this.sprite = new Sprite(spritePath, this.calculateTransform(), this.parent ? this.parent.sprite : null);
 	}
 }
 //compute new transformation for the sprite
 GameObject.prototype.calculateTransform = function() {
     let transform = mat4.create();
-
     let rotation = quat.fromEuler(quat.create(), 0, this.flip ? 180 : 0, this.orientation);
 
     mat4.fromRotationTranslationScale(
@@ -40,6 +40,7 @@ GameObject.prototype.calculateTransform = function() {
         rotation,
         vec3.fromValues(this.position[0] + this.offset[0], this.position[1] + this.offset[1], 0),
         vec3.fromValues(this.halfSize[0] * this.scale[0], this.halfSize[1] * this.scale[1], 1));
+    
     return transform;
 }
 //update scale
@@ -56,22 +57,28 @@ GameObject.prototype.setSize = function(size) {
 		this.sprite.setTransformation(this.calculateTransform());
 }
 GameObject.prototype.setPosition = function(position) {
-    this.position = position;
+    if (this.parent)
+        this.position = vec2.sub(vec2.create(), position, this.parent.getPosition());
+    else
+        this.position = position;
 	if (this.sprite !== null)
 		this.sprite.setTransformation(this.calculateTransform());
+}
+GameObject.prototype.getPosition = function() {
+    if (this.parent)
+        return vec2.add(vec2.create(), this.position, this.parent.getPosition());
+    return vec2.clone(this.position);
 }
 GameObject.prototype.draw = function(shader) {
     if (this.sprite !== null)
 		this.sprite.draw(shader);
 }
 
-GameObject.prototype.onInteract = function(obj) {}
-GameObject.prototype.canInteract = function(obj) {return false;}
 GameObject.prototype.onCollide = function(intersection, other) {}
 GameObject.prototype.isPlayer = function(){return false;}
 
-export let MobileGameObject = function(spritePath, position, size, type, scale = vec2.fromValues(1, 1), offset = vec2.fromValues(0, 0), orientation = Transformation.TOP_LEFT) {
-    GameObject.call(this, spritePath, position, size, type, scale, offset, orientation);
+export let MobileGameObject = function(spritePath, position, size, type, parent = null, scale = vec2.fromValues(1, 1), offset = vec2.fromValues(0, 0), orientation = Transformation.TOP_LEFT) {
+    GameObject.call(this, spritePath, position, size, type, parent, scale, offset, orientation);
 
     this.velocity = vec2.fromValues(0, 0);
 }
@@ -97,8 +104,8 @@ MobileGameObject.prototype.forceTeleport = function(pos) {
 }
 
 
-export let CollidableGameObject = function(spritePath, position, size, shape, scale = vec2.fromValues(1, 1), offset = vec2.fromValues(0, 0), orientation = Transformation.TOP_LEFT) {
-    GameObject.call(this, spritePath, position, size, "collidable", scale, offset, orientation);
+export let CollidableGameObject = function(spritePath, position, size, shape, parent = null, scale = vec2.fromValues(1, 1), offset = vec2.fromValues(0, 0), orientation = Transformation.TOP_LEFT) {
+    GameObject.call(this, spritePath, position, size, "collidable", parent, scale, offset, orientation);
     this.shape = shape;
 }
 CollidableGameObject.prototype = Object.create(GameObject.prototype);
@@ -107,11 +114,16 @@ Object.defineProperty(CollidableGameObject.prototype, 'constructor', {
     enumerable: false, // so that it does not appear in 'for in' loop
     writable: true });
 CollidableGameObject.prototype.onCollide = function(intersection, other) {
+    //let pos = vec2.create();
+    //vec2.add(pos, other.position, intersection);
+    //other.setPosition(pos);
+    
+    vec2.add(other.position, other.position, intersection);
 }
 
 
-export let ForceTeleporter = function(spritePath, position, size, scale = vec2.fromValues(1, 1), offset = vec2.fromValues(0, 0), orientation = Transformation.TOP_LEFT) {
-    GameObject.call(this, spritePath, position, size, "fire", scale, offset, orientation);
+export let ForceTeleporter = function(spritePath, position, size, parent = null, scale = vec2.fromValues(1, 1), offset = vec2.fromValues(0, 0), orientation = Transformation.TOP_LEFT) {
+    GameObject.call(this, spritePath, position, size, "fire", parent, scale, offset, orientation);
 }
 ForceTeleporter.prototype = Object.create(GameObject.prototype);
 Object.defineProperty(ForceTeleporter.prototype, 'constructor', {
@@ -123,8 +135,8 @@ ForceTeleporter.prototype.onCollide = function(intersection, other) {
 }
 
 
-export let VerticalCollidableGameObject = function(spritePath, position, size, scale = vec2.fromValues(1, 1), offset = vec2.fromValues(0, 0), orientation = Transformation.TOP_LEFT) {
-    GameObject.call(this, spritePath, position, size, "xcollidable", scale, offset, orientation);
+export let VerticalCollidableGameObject = function(spritePath, position, size, parent = null, scale = vec2.fromValues(1, 1), offset = vec2.fromValues(0, 0), orientation = Transformation.TOP_LEFT) {
+    GameObject.call(this, spritePath, position, size, "xcollidable", parent, scale, offset, orientation);
 }
 VerticalCollidableGameObject.prototype = Object.create(GameObject.prototype);
 Object.defineProperty(VerticalCollidableGameObject.prototype, 'constructor', {
@@ -139,8 +151,8 @@ VerticalCollidableGameObject.prototype.onCollide = function(intersection, other)
     }
 }
 
-export let AnimatedGameObject = function(spritePath, position, size, type, frames = 1, updateStep = 20, scale = vec2.fromValues(1, 1), offset = vec2.fromValues(0, 0), orientation = Transformation.TOP_LEFT) {
-    GameObject.call(this, spritePath, position, size, type, scale, offset, orientation);
+export let AnimatedGameObject = function(spritePath, position, size, type, frames = 1, updateStep = 20, parent = null, scale = vec2.fromValues(1, 1), offset = vec2.fromValues(0, 0), orientation = Transformation.TOP_LEFT) {
+    GameObject.call(this, spritePath, position, size, type, parent, scale, offset, orientation);
     
     this.sprite.texture.frames = frames;
     this.sprite.texture.currFrame = Math.floor(Math.random() * frames);

@@ -12,7 +12,7 @@ export function updatePhysics(delta) {
 }
 
 function handlePhysics(delta, obj) {
-    let pos = vec2.scaleAndAdd(obj.position, obj.position, obj.velocity, delta);
+    let pos = vec2.scaleAndAdd(vec2.create(), obj.getPosition(), obj.velocity, delta);
     let pmin = vec2.sub(vec2.create(), obj.position, obj.halfSize);
     vec2.scale(pmin, pmin, 1/COLLIDABLE_GRID_SIZE);
     vec2.round(pmin, pmin);
@@ -24,9 +24,9 @@ function handlePhysics(delta, obj) {
             if (level.collidables[vec2.fromValues(x, y)] == undefined) continue;
             for (let other of level.collidables[vec2.fromValues(x, y)]) {
                 for (let line of other.shape) {
-                    let intersection = intersectLineCircle(line[0], line[1], vec2.sub(vec2.create(), pos, other.position), 0.5)
+                    let intersection = intersectLineCircle(line[0], line[1], vec2.sub(vec2.create(), pos, other.getPosition()), 0.5)
                     if (intersection) {
-                        vec2.add(pos, pos, intersection);
+                        other.onCollide(intersection, obj);
                     }
                 }
             }

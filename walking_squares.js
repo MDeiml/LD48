@@ -67,6 +67,7 @@ export function computeSquareMap(map_data) {
                 lastRopePoint,
                 vec2.fromValues(0.3, 1.05 * vec2.length(ropeDir)),
                 "rope",
+                null,
                 vec2.fromValues(1, 1),
                 vec2.fromValues(0, 0),
                 angle
@@ -147,6 +148,7 @@ export function computeSquareMap(map_data) {
                         vec2.fromValues(w * GRID_SIZE - side_offset, -(h * GRID_SIZE + depth_offset)),
                         vec2.fromValues(GRID_SIZE, GRID_SIZE),
                         shape,
+                        null,
                         vec2.fromValues(1, 1),
                         vec2.fromValues(0, 0),
                         transform
@@ -166,6 +168,7 @@ export function computeSquareMap(map_data) {
                                 vec2.fromValues(w * GRID_SIZE - side_offset, -(h * GRID_SIZE + depth_offset)),
                                 vec2.fromValues(GRID_SIZE, GRID_SIZE),
                                 shape,
+                                null,
                                 vec2.fromValues(1, 1),
                                 vec2.fromValues(0, 0),
                                 tl == 1 ? Transformation.TOP_RIGHT : Transformation.TOP_LEFT
@@ -181,6 +184,7 @@ export function computeSquareMap(map_data) {
                                 vec2.fromValues(w * GRID_SIZE - side_offset, -(h * GRID_SIZE + depth_offset)),
                                 vec2.fromValues(GRID_SIZE, GRID_SIZE),
                                 shape,
+                                null,
                                 vec2.fromValues(1, 1),
                                 vec2.fromValues(0, 0),
                                 tl == 0 ? Transformation.TOP_RIGHT : Transformation.TOP_LEFT
@@ -218,6 +222,7 @@ export function computeSquareMap(map_data) {
                             vec2.fromValues(w * GRID_SIZE - side_offset, -(h * GRID_SIZE + depth_offset)),
                             vec2.fromValues(GRID_SIZE, GRID_SIZE),
                             shape,
+                            null,
                             vec2.fromValues(1, 1),
                             vec2.fromValues(0, 0),
                             transform
@@ -268,6 +273,7 @@ export function computeSquareMap(map_data) {
                         vec2.fromValues(w * GRID_SIZE - side_offset, -(h * GRID_SIZE + depth_offset)),
                         vec2.fromValues(GRID_SIZE, GRID_SIZE),
                         shape,
+                        null,
                         vec2.fromValues(1, 1),
                         vec2.fromValues(0, 0),
                         transform
@@ -279,6 +285,7 @@ export function computeSquareMap(map_data) {
                         vec2.fromValues(w * GRID_SIZE - side_offset, -(h * GRID_SIZE + depth_offset)),
                         vec2.fromValues(GRID_SIZE, GRID_SIZE),
                         [],
+                        null,
                         vec2.fromValues(1, 1),
                         vec2.fromValues(0, 0),
                         transform
