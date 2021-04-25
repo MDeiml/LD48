@@ -12,7 +12,7 @@ import {GameObject, AnimatedGameObject} from "./GameObject.js"
 import {updatePhysics} from "./physics.js"
 import {updateBubbles, initBubbles} from "./bubble.js"
 import {updateFish, initFish} from "./fish.js";
-import {set_seed} from "./util.js"
+import {set_seed, pixelToMap} from "./util.js"
 import {updateRopes} from "./rope.js";
 import {createUI} from "./menu.js"
 
@@ -58,6 +58,7 @@ function main() {
         computeSquareMap(map_data);
         generateTutorial();
         setPlayer(new Player());
+        player.setPosition(pixelToMap(vec2.fromValues(0, 0)));
         initFish();
         initBubbles();
 
