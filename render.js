@@ -2,7 +2,7 @@ import {Shader} from "./Shader.js"
 import * as Sprite from "./Sprite.js"
 import {Projection, View} from "./Transform.js"
 import {mat4, vec2, vec3, quat} from "./gl-matrix-min.js"
-import {gl, setGl, level, player} from "./state.js"
+import {gl, setGl, level, player, ui} from "./state.js"
 import {MAP_HEIGHT} from "./generation.js";
 import {GRID_SIZE} from "./walking_squares.js";
 
@@ -91,6 +91,8 @@ export function update() {
 
     //drawBaseShader();
     drawLightShader();
+
+    drawUI();
 }
 
 //RENDER MODES
@@ -153,4 +155,14 @@ function drawLightShader() {
 	//	gl.uniformMatrix4fv(shaders["defaultShader"].getUniform('VP'), false, pvMatrix);
 	//	player.eyeSprite.draw(shaders["defaultShader"]);
 	//}
+}
+
+function drawUI() {
+    //TODO THIS NEEDS TO MOVE
+    shaders["defaultShader"].bind();
+    gl.uniformMatrix4fv(shaders["defaultShader"].getUniform('VP'), false, mat4.create());
+    
+    for (let element of ui.elements) {
+        element.draw(shaders["defaultShader"]);
+    }
 }
