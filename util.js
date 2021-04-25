@@ -5,15 +5,18 @@ export const GRID_SIZE = 4;
 
 export function mapToPixel(point) {
     let res = vec2.scale(vec2.create(), point, 1 / GRID_SIZE);
+    res[1] *= -1;
     res[0] += Math.floor(MAP_WIDTH / 2) + 0.5;
-    res[1] += 0.5;
+    res[1] -= 0.5;
     return res;
 }
 
 export function pixelToMap(point) {
-    let res = vec2.scale(vec2.create(), point, GRID_SIZE);
-    res[0] -= (Math.floor(MAP_WIDTH / 2) + 0.5) * GRID_SIZE;
-    res[1] -= GRID_SIZE / 2;
+    let res = vec2.clone(point);
+    res[0] -= (Math.floor(MAP_WIDTH / 2) + 0.5);
+    res[1] += 0.5;
+    res[1] *= -1;
+    vec2.scale(res, res, GRID_SIZE);;
     return res;
 }
 
