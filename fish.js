@@ -2,13 +2,16 @@ import {level, player, COLLIDABLE_GRID_SIZE} from "./state.js";
 import {GRID_SIZE} from "./walking_squares.js";
 import {MAP_WIDTH} from "./generation.js";
 import { vec2 } from "./gl-matrix-min.js"
-import {AnimatedGameObject} from "./GameObject.js";
+import {AnimatedGameObject, GameObject} from "./GameObject.js";
 
 const BIG_FISH_SPEED = 3;
 const BIG_FISH_ACCEL = 6;
+const NUM_FISH = 30;
+const FISH_RADIUS = 10;
 
 const DEPTHS = [
-    { start: 24 * 4, end: 32 * 4, big_fish: "Assets/fish4/anglerfisch_anim.png"}
+    { start: 0 * 4, end: 8 * 4, big_fish: "Assets/fish4/anglerfisch_anim.png", small_fish: ["Assets/fish1/koi.png", "Assets/fish1/angelfish.png", "Assets/fish1/salmon.png"], small_fish_angle: [110, 0, 0]},
+    { start: 24 * 4, end: 32 * 4, big_fish: "Assets/fish4/anglerfisch_anim.png", small_fish: ["Assets/fish1/koi.png"], small_fish: [180]}
 ];
 
 let big_fish;
@@ -39,6 +42,46 @@ export function initFish() {
 }
 
 export function updateFish(delta) {
+    for (let obj of level.objects["fish"]) {
+        let factor = 4 * Math.max(0, Math.sin(obj.timer / obj.timerPeriod * Math.PI)) + 1;
+        obj.timer += delta;
+        if (obj.timer > obj.timerPeriod) {
+            obj.timer -= obj.timerPeriod;
+        }
+        obj.setPosition(vec2.scaleAndAdd(obj.position, obj.position, obj.velocity, delta * factor));
+    }
+    for (let i = 0; i < level.objects["fish"].length; i++) {
+        let obj = level.objects["fish"][i];
+        let sqDist = vec2.squaredDistance(obj.position, player.position);
+        if (obj.position[1] > 0 || sqDist > FISH_RADIUS * FISH_RADIUS) {
+            level.objects["fish"].splice(i, 1);
+            i--;
+        }
+    }
+    while (level.objects["fish"].length < NUM_FISH) {
+        let pos = vec2.random(vec2.create(), FISH_RADIUS);
+        vec2.add(pos, pos, player.position);
+        let depth = DEPTHS[0];
+        for (let d of DEPTHS) {
+            if (pos[1] < -d.start && pos[1] > -d.end) {
+                depth = d;
+                break;
+            }
+        }
+        let asset_index = Math.floor(Math.random() * depth.small_fish.length)
+        let asset = depth.small_fish[asset_index];
+        let size = Math.random() * 0.3 + 0.3;
+        let obj = new GameObject(asset, pos, vec2.fromValues(size, size), "fish");
+        obj.flip = Math.random() > 0.5;
+        obj.velocity = vec2.fromValues(Math.random() * 0.1 + 0.05, 0);
+        if (!obj.flip) obj.velocity[0] *= -1;
+        obj.orientation = depth.small_fish_angle[asset_index] * (obj.flip ? -1 : 1);
+        obj.timerPeriod = Math.random() * 0.4 + 1.2;
+        obj.timer = Math.random() * obj.timerPeriod;
+        level.addObject(obj);
+    }
+
+    // BIG FISH
     for (let d = 0; d < DEPTHS.length; d++) {
         let depth = DEPTHS[d];
         if (player.position[1] < -depth.start && player.position[1] > -depth.end) {
