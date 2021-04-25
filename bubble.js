@@ -1,4 +1,4 @@
-import {level, player} from "./state.js";
+import {level, player, COLLIDABLE_GRID_SIZE} from "./state.js";
 import {MobileGameObject, AnimatedGameObject, GameObject} from "./GameObject.js";
 import {vec2} from "./gl-matrix-min.js";
 
@@ -8,6 +8,7 @@ const MAX_BUBBLES = 100;
 const NUM_RANDOM_SHIT = 100;
 const RANDOM_SHIT_RADIUS = 10;
 const BUBBLE_BUBBLE_SPAWN_PER_SECOND = 2;
+const ANGLER_DEPTH = 16 * 4;
 
 var var_MAX_BUBBLES = 1* MAX_BUBBLES;
 var var_PLAYER_BUBBLE_SPAWN_PER_SECOND = PLAYER_BUBBLE_SPAWN_PER_SECOND;
@@ -98,5 +99,28 @@ export function updateBubbles(delta) {
         obj.timerPeriod = isAnimal ? Math.random() * 0.4 + 1.2 : 0;
         obj.timer = Math.random() * obj.timerPeriod;
         level.addObject(obj);
+    }
+
+    if (player.position[1] < -ANGLER_DEPTH && level.objects["angler"].length == 0) {
+        let coords = vec2.scale(vec2.create(), player.getPosition(), 1/COLLIDABLE_GRID_SIZE);
+        vec2.round(coords, coords);
+        for (let i = 0; i < 100; i++) {
+            let pos = vec2.fromValues(Math.random() * 9 - 4, Math.random() * 9 - 4);
+            vec2.floor(pos, pos);
+            vec2.add(pos, pos, coords);
+            if (!level.collidables[pos] || level.collidables[pos].length == 0) {
+                vec2.scale(pos, pos, COLLIDABLE_GRID_SIZE);
+                level.addObject(new AnimatedGameObject("Assets/animationen/anglerfisch_anim.png", pos, vec2.fromValues(3, 2), "angler", 4));
+                console.log(pos);
+                console.log(player.position);
+                break;
+            }
+        }
+    }
+
+    if (level.objects["angler"].length >= 1) {
+        let angler = level.objects["angler"][0];
+        level.updateLight(2, [0.3, 1, 0.5], [angler.position[0] - 1.2, angler.position[1] + 0.4],[0, 1], -1.0, 1);
+        level.lightCnt = 3;
     }
 }

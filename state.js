@@ -21,7 +21,8 @@ export let level = {
         "collidable": [],
         "random_shit": [],
         "jelly": [],
-        "player": []
+        "player": [],
+        "angler": []
     },
 	lights: new Array(180), //TODO move
     lightCnt: 2,
