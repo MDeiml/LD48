@@ -13,6 +13,7 @@ import {updatePhysics} from "./physics.js"
 import {updateBubbles} from "./bubble.js"
 import {set_seed} from "./util.js"
 import {updateRopes} from "./rope.js";
+import {createUI} from "./menu.js"
 
 //timekeeper
 var lastTick = null;
@@ -42,6 +43,7 @@ function main() {
         //         "background_surface"
         //     ));
         // }
+        createUI()
         let map_data = generateLevel();
         computeSquareMap(map_data);
         setPlayer(new Player());

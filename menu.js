@@ -12,3 +12,15 @@ Object.defineProperty(Menu.prototype, 'constructor', {
     enumerable: false, // so that it does not appear in 'for in' loop
     writable: true });
 
+export function createUI() {
+    //create tank
+    let tank = new Menu("Assets/tank+barometer.png", vec2.fromValues( 0.75, -0.6), vec2.fromValues(0.4, 0.8));
+    
+    
+    
+    //create barometer
+    //add updates
+    
+    
+    
+}

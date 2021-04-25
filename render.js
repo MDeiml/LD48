@@ -154,12 +154,10 @@ function drawLightShader() {
 
 function drawUI() {
     //TODO THIS NEEDS TO MOVE
-    if (Menu.current !== null) {
-        shaders["defaultShader"].bind();
-        gl.uniformMatrix4fv(shaders["defaultShader"].getUniform('VP'), false, mat4.create());
-        
-        for (element of ui.elements) {
-            element.draw(shaders["defaultShader"]);
-        }
+    shaders["defaultShader"].bind();
+    gl.uniformMatrix4fv(shaders["defaultShader"].getUniform('VP'), false, mat4.create());
+    
+    for (let element of ui.elements) {
+        element.draw(shaders["defaultShader"]);
     }
 }
