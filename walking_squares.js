@@ -4,8 +4,9 @@ import {MAP_WIDTH, MAP_HEIGHT} from "./generation.js"
 import {vec2} from "./gl-matrix-min.js"
 import {Coral} from "./interactable.js"
 import {Rope} from "./rope.js";
+import {GRID_SIZE as U_GRID_SIZE} from "./util.js";
 
-export const GRID_SIZE = 4; // when changing also check state.js COLLIDABLE_GRID_SIZE
+export const GRID_SIZE = U_GRID_SIZE; // when changing also check state.js COLLIDABLE_GRID_SIZE
 const COLLISION_SHAPES = {
     tl : [[vec2.fromValues(-0.5 * GRID_SIZE, 0), vec2.fromValues(0, 0.5 * GRID_SIZE)]],
     tr : [[vec2.fromValues(0, 0.5 * GRID_SIZE), vec2.fromValues(0.5 * GRID_SIZE, 0)]],

@@ -1,3 +1,21 @@
+import {vec2} from "./gl-matrix-min.js";
+import {MAP_WIDTH} from "./generation.js";
+
+export const GRID_SIZE = 4;
+
+export function mapToPixel(point) {
+    let res = vec2.scale(vec2.create(), point, 1 / GRID_SIZE);
+    res[0] += Math.floor(MAP_WIDTH / 2);
+    res[1] += 1;
+    return res;
+}
+
+export function pixelToMap(point) {
+    let res = vec2.scale(vec2.create(), point, GRID_SIZE);
+    res[0] -= Math.floor(MAP_WIDTH / 2) * GRID_SIZE;
+    res[1] -= GRID_SIZE;
+    return res;
+}
 
 //reads content from an element ID
 export function readElements(id) {
