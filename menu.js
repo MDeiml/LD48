@@ -19,7 +19,7 @@ Object.defineProperty(Menu.prototype, 'constructor', {
 
 function updateOxygen() {
     let ratio = player.breath / MAX_BREATH;
-    this.setOrientation((MIN_ORIENTATION - MAX_ORIENTATION) * ratio + MAX_ORIENTATION);
+    this.setOrientation((MIN_ORIENTATION - MAX_ORIENTATION) * (1 - ratio) + MAX_ORIENTATION);
 }
 
 export function createUI() {
