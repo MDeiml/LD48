@@ -44,20 +44,19 @@ Rope.prototype.update = function(delta) {
     let updateLast = false;
     for (let i = 0; i < this.points.length; i++) {
         let updateCurrent = vec2.squaredDistance(this.points[i], player.position) < 15 * 15;
+        if (i < 1 || i >= this.points.length - 1) {
+            updateCurrent = false;
+        }
         if (updateCurrent) {
             let dir = vec2.create();
-            if (i != 0) {
-                vec2.sub(dir, this.points[i - 1], this.points[i]);
-                let dirLen = vec2.length(dir);
-                vec2.scale(dir, dir, dirLen - 1);
-                vec2.scaleAndAdd(this.points_velocity[i], this.points_velocity[i], dir, delta * 0.1);
-            }
-            if (i != this.points.length - 1) {
-                vec2.sub(dir, this.points[i + 1], this.points[i]);
-                let dirLen = vec2.length(dir);
-                vec2.scale(dir, dir, dirLen - 1);
-                vec2.scaleAndAdd(this.points_velocity[i], this.points_velocity[i], dir, delta * 0.1);
-            }
+            vec2.sub(dir, this.points[i - 1], this.points[i]);
+            let dirLen = vec2.length(dir);
+            vec2.scale(dir, dir, dirLen - 1);
+            vec2.scaleAndAdd(this.points_velocity[i], this.points_velocity[i], dir, delta * 0.1);
+            vec2.sub(dir, this.points[i + 1], this.points[i]);
+            dirLen = vec2.length(dir);
+            vec2.scale(dir, dir, dirLen - 1);
+            vec2.scaleAndAdd(this.points_velocity[i], this.points_velocity[i], dir, delta * 0.1);
             vec2.scaleAndAdd(this.points[i], this.points[i], this.points_velocity[i], delta);
             this.points[i][1] = Math.min(this.points[i][1], 0);
         }
