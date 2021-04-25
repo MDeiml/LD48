@@ -13,8 +13,8 @@ const FISH_RADIUS = 10;
 
 const DEPTHS = [
     { start: 0, end: 8, big_fish: "Assets/fish1/pussy_anim.png", big_fish_frames: 4, flip_big_fish: true, small_fish: ["Assets/fish1/koi.png", "Assets/fish1/angelfish.png", "Assets/fish1/salmon.png"], small_fish_angle: [110, 0, 0], flip_small_fish: [false, false, false]},
-    { start: 8, end: 16, big_fish: "Assets/fish2/shark_anim.png", big_fish_frames: 4, flip_big_fish: true, small_fish: ["Assets/fish2/guppy.png", "Assets/fish2/wels.png", "Assets/fish2/clownfish.png"], small_fish_angle: [0, -20, 0], flip_small_fish: [true, false, false]},
-    { start: 24, end: 32, big_fish: "Assets/fish4/anglerfisch_anim.png", big_fish_frames: 4, small_fish: ["Assets/fish1/koi.png"], small_fish_angle: [180], flip_small_fish: [false]}
+    { start: 8, end: 20, big_fish: "Assets/fish2/shark_anim.png", big_fish_frames: 4, flip_big_fish: true, small_fish: ["Assets/fish2/guppy.png", "Assets/fish2/wels.png", "Assets/fish2/clownfish.png"], small_fish_angle: [0, -20, 0], flip_small_fish: [true, false, false]},
+    { start: 20, end: 32, big_fish: "Assets/fish4/anglerfisch_anim.png", big_fish_frames: 4, small_fish: ["Assets/fish3/pirania.png", "Assets/fish3/eel.png", "Assets/fish3/blobfish.png"], small_fish_angle: [0, 0, 0], flip_small_fish: [false, false, false]}
 ];
 
 let big_fish;
