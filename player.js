@@ -82,6 +82,7 @@ Player.prototype.handleInput = function(delta) {
     }
 
     vec2.scaleAndAdd(this.velocity, this.velocity, vel, delta * 2);
+    this.velocity[1] = Math.min(this.velocity[1], -this.position[1] * 2);
     let velLength = vec2.length(this.velocity);
     if (velLength > speed) {
         vec2.scale(this.velocity, this.velocity, speed / velLength);
