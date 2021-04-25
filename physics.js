@@ -29,13 +29,7 @@ function handlePhysics(delta, obj) {
                     if (intersection) {
                         if (other.type == "bubbles") {
                             if (obj.type == "player" && !other.collected) {
-                                obj.breath += 10 //add function to clamp it to 100
-                                other.collected = true;
-                                Bubble.COLLECT_SOUND.moveTo(other.getPosition())
-                                Bubble.COLLECT_SOUND.play()
-
-                                other.update_name = "bubble_deletion_" + Math.random();
-                                updateRegistry.registerUpdate(other.update_name, other.par.clearBubble.bind(other.par));
+                                other.collect()
                             }
                         } else {
                             vec2.add(pos, pos, intersection);

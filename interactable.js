@@ -1,6 +1,6 @@
 import {CollidableGameObject, AnimatedGameObject, GameObject, Transformation} from "./GameObject.js"
 import {vec2} from "./gl-matrix-min.js"
-import {level, updateRegistry} from "./state.js"
+import {level, player, updateRegistry} from "./state.js"
 import {PositionalAudio} from "./audio.js"
 
 
@@ -23,6 +23,16 @@ Object.defineProperty(Bubble.prototype, 'constructor', {
 Bubble.COLLECT_SOUND = new PositionalAudio(vec2.fromValues(0,0), "Assets/audio/bubble_pop.wav", false)
 Bubble.prototype.cleanup = function() {
     updateRegistry.unregisterUpdate(this.update_name);
+}
+Bubble.prototype.collect = function() {
+    if (this.collected)
+        return 
+    player.breath += 10 //add function to clamp it to 100
+    this.collected = true;
+    Bubble.COLLECT_SOUND.moveTo(this.getPosition())
+    Bubble.COLLECT_SOUND.play()
+    this.update_name = "bubble_deletion_" + Math.random();
+    updateRegistry.registerUpdate(this.update_name, this.par.clearBubble.bind(this.par));
 }
 
 
