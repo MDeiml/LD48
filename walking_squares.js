@@ -41,18 +41,23 @@ const tutorial_map = [[
 ]]
 
 export function generateTutorial() {
-    computeSquareMap(tutorial_map, 5, 6, (MAP_WIDTH + 7) * GRID_SIZE/2, GRID_SIZE, true);
-    let collision_coords = vec2.fromValues(-MAP_WIDTH/2, -1);
+    computeSquareMap(tutorial_map, 5, 6, (MAP_WIDTH + 7) * GRID_SIZE/2, GRID_SIZE, false, 0);
+    let collision_coords = vec2.fromValues(-(MAP_WIDTH + 1)/2, -2);
     vec2.round(collision_coords, collision_coords);
     //console.log(Object.keys(level.collidables))
-    //console.log(collision_coords)
-    //for (obj of level.collidables[collision_coords])
-    //{
-    //    console.log("test")
-    //    obj.sprite.visible = false;
+    
+    //for (let x = 0; x <= 1; x++) {
+        //for (let y = 0; y <= 1; y++) {
+            //for (let obj of level.collidables[vec2.fromValues(collision_coords[0] - x, collision_coords[1] - y)])
+            //{
+                //if (obj.type == "collidable")
+                //{
+                    //The Edge Objects
+                //}
+            //}
+        //}
     //}
-
-    //pos: -35.5, -10.188363075256348
+    //Collision Boxes: (-9, -3); (-9, -2)
 }
 
 export function generateRopePath(map_data) {
@@ -89,7 +94,7 @@ export function generateRopePath(map_data) {
 
 }
 
-export function computeSquareMap(map_data, width = MAP_WIDTH, height = MAP_HEIGHT, side_off = 0, depth_off = 0) {
+export function computeSquareMap(map_data, width = MAP_WIDTH, height = MAP_HEIGHT, side_off = 0, depth_off = 0, genHoleLeft = true, hole_height = 1) {
     let scanlineArr = map_data[0];
     let side_offset = Math.floor(width / 2) * GRID_SIZE + side_off; //offset cube objects so that they start at the middle
     let depth_offset = GRID_SIZE + depth_off;
@@ -101,19 +106,37 @@ export function computeSquareMap(map_data, width = MAP_WIDTH, height = MAP_HEIGH
 
             let tr = 1;
             let br = 1;
-
+            
             if (w >= 0)
-            {
+            {   
                 tl = scanlineArr[w + h * width] ? 1 : 0;
                 if (h < height - 1)
                     bl = scanlineArr[w + (h + 1) * width] ? 1 : 0;
             }
-
+            else if(genHoleLeft)
+            {
+                if (h == hole_height) {
+                    bl = 0;
+                }
+                else if (h == hole_height + 1) {
+                    tl = 0;
+                }
+            }
+            
             if (w < width - 1)
             {
                 tr = scanlineArr[w + 1 + h * width] ? 1 : 0;
                 if (h < height - 1)
                     br = scanlineArr[w + 1 + (h + 1) * width] ? 1 : 0;
+            }
+            else if (!genHoleLeft)
+            {
+                if (h == hole_height) {
+                    br = 0;
+                }
+                else if (h == hole_height + 1) {
+                    tr = 0;
+                }
             }
 
             let type = tl + tr + bl + br;
