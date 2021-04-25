@@ -10,7 +10,7 @@ import {computeSquareMap, generateRopePath, generateTutorial, GRID_SIZE} from ".
 import {init as initResource} from "./resource.js"
 import {GameObject, AnimatedGameObject} from "./GameObject.js"
 import {updatePhysics} from "./physics.js"
-import {updateBubbles} from "./bubble.js"
+import {updateBubbles, initBubbles} from "./bubble.js"
 import {updateFish, initFish} from "./fish.js";
 import {set_seed} from "./util.js"
 import {updateRopes} from "./rope.js";
@@ -32,7 +32,6 @@ function main() {
     initGraphics(document.getElementById('glCanvas'));
     initInput();
     initAudio();
-    initFish();
     updateRegistry.registerUpdate("bubbles", updateBubbles);
     updateRegistry.registerUpdate("ropes", updateRopes);
     updateRegistry.registerUpdate("fish", updateFish);
@@ -58,7 +57,9 @@ function main() {
         computeSquareMap(map_data);
         generateTutorial();
         setPlayer(new Player());
-
+        initFish();
+        initBubbles();
+        
         window.running = true;
         requestAnimationFrame(update);
         
