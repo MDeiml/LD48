@@ -76,6 +76,11 @@ Player.prototype.handleInput = function(delta) {
         vel[1] -= speed;
     }
 
+    if (level.upsideDown) {
+        vel[0] *= -1;
+        vel[1] *= -1;
+    }
+
     if (vel[0] == 0 && vel[1] == 0) {
         vec2.scale(this.velocity, this.velocity, Math.pow(0.1, delta));
     }
@@ -89,7 +94,7 @@ Player.prototype.handleInput = function(delta) {
     }
     if (velLength > 0.01) {
         this.orientation = 90-Math.atan2(this.velocity[0], this.velocity[1]) / Math.PI * 180;
-        if ((this.orientation > 90) && (this.orientation < 270))
+        if (((this.orientation > 90) && (this.orientation < 270)) ^ level.upsideDown)
         {
             this.orientation = (180 + this.orientation) % 360
             this.flip = true

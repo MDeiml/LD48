@@ -14,6 +14,7 @@ export function setPlayer(obj) {
 }
 
 export let level = {
+    upsideDown: false,
     collidables: {},
     objects: {
         "bubble": [],
