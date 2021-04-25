@@ -119,10 +119,10 @@ function drawLightShader() {
     }
 
     let draw_order = [
-        { ambientLight: 0.8 - 0.799 * Math.min(1, 1 * -player.position[1] / MAP_HEIGHT / GRID_SIZE), types: ["background"] },
-        { ambientLight: 1 - 0.5 * Math.min(1, 1 * -player.position[1] / MAP_HEIGHT / GRID_SIZE), types: ["bubble", "bubbles"] },
+        { ambientLight: 0.8 - 0.799 * Math.min(1, 1 * -player.position[1] / MAP_HEIGHT / 2 / GRID_SIZE), types: ["background"] },
+        { ambientLight: 1 - 0.5 * Math.min(1, 1 * -player.position[1] / MAP_HEIGHT / 2 / GRID_SIZE), types: ["bubble", "bubbles"] },
         { ambientLight: 1, types: ["jelly"] },
-        { ambientLight: 0.8 - 0.799 * Math.min(1, 3 * -player.position[1] / MAP_HEIGHT / GRID_SIZE), types: ["rope", "plant"] }
+        { ambientLight: 0.8 - 0.799 * Math.min(1, 3 * -player.position[1] / MAP_HEIGHT / 2 / GRID_SIZE), types: ["rope", "plant"] }
     ];
     let drawn = { background_surface: true };
 
@@ -161,7 +161,7 @@ function drawUI() {
     //TODO THIS NEEDS TO MOVE
     shaders["defaultShader"].bind();
     gl.uniformMatrix4fv(shaders["defaultShader"].getUniform('VP'), false, mat4.create());
-    
+
     for (let element of ui.elements) {
         element.draw(shaders["defaultShader"]);
     }
