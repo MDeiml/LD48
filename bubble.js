@@ -54,16 +54,16 @@ export function updateBubbles(delta) {
         level.objects["bubble"].splice(0, level.objects["bubble"].length - MAX_BUBBLES);
     }
 
-    for (let obj of level.objects["random_shit"]) {
-        let factor = 1;
-        if (obj.timerPeriod != 0) {
-            factor = 4 * Math.max(0, Math.sin(obj.timer / obj.timerPeriod * Math.PI)) + 1;
-            obj.timer += delta;
-            if (obj.timer > obj.timerPeriod) {
-                obj.timer -= obj.timerPeriod;
-            }
+    for (let obj of level.objects["jelly"]) {
+        let factor = 4 * Math.max(0, Math.sin(obj.timer / obj.timerPeriod * Math.PI)) + 1;
+        obj.timer += delta;
+        if (obj.timer > obj.timerPeriod) {
+            obj.timer -= obj.timerPeriod;
         }
         obj.setPosition(vec2.scaleAndAdd(obj.position, obj.position, obj.velocity, delta * factor));
+    }
+    for (let obj of level.objects["random_shit"]) {
+        obj.setPosition(vec2.scaleAndAdd(obj.position, obj.position, obj.velocity, delta));
     }
     for (let i = 0; i < level.objects["random_shit"].length; i++) {
         let obj = level.objects["random_shit"][i];
@@ -73,14 +73,22 @@ export function updateBubbles(delta) {
             i--;
         }
     }
-    while (level.objects["random_shit"].length < NUM_RANDOM_SHIT) {
+    for (let i = 0; i < level.objects["jelly"].length; i++) {
+        let obj = level.objects["jelly"][i];
+        let sqDist = vec2.squaredDistance(obj.position, player.position);
+        if (obj.position[1] > 0 || sqDist > RANDOM_SHIT_RADIUS * RANDOM_SHIT_RADIUS) {
+            level.objects["jelly"].splice(i, 1);
+            i--;
+        }
+    }
+    while (level.objects["random_shit"].length + level.objects["jelly"].length < NUM_RANDOM_SHIT) {
         let pos = vec2.random(vec2.create(), RANDOM_SHIT_RADIUS);
         vec2.add(pos, pos, player.position);
         let isAnimal = Math.random() < 0.1;
         let size = isAnimal ? (Math.random() * 0.3 + 0.1) : (Math.random() * 0.05 + 0.1);
         let obj = null
         if (isAnimal) {
-            obj = new AnimatedGameObject("./Assets/animationen/qualle_anim.png", pos, vec2.fromValues(size, size), "random_shit", 4);
+            obj = new AnimatedGameObject("./Assets/animationen/qualle_anim.png", pos, vec2.fromValues(size, size), "jelly", 4);
         }
         else {
             obj = new GameObject("./Assets/bubble-alt.png", pos, vec2.fromValues(size, size), "random_shit");
