@@ -147,3 +147,7 @@ AnimatedGameObject.prototype.updateAnimation = function() {
         this.cntr = this.cntr % this.updateStep;
     }
 }
+
+AnimatedGameObject.prototype.remove = function() {
+    updateRegistry.unregisterUpdate(this.updateName)
+}
