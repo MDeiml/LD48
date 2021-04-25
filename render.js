@@ -111,38 +111,31 @@ function drawLightShader() {
         sprite.draw(shaders["defaultShader"]);
     }
 
+    let draw_order = [
+        { ambientLight: 0.8 - 0.799 * Math.min(1, 1 * -player.position[1] / MAP_HEIGHT / GRID_SIZE), types: ["background"] },
+        { ambientLight: 1 - 0.5 * Math.min(1, 1 * -player.position[1] / MAP_HEIGHT / GRID_SIZE), types: ["bubble", "bubbles"] },
+        { ambientLight: 1, types: ["jelly"] },
+        { ambientLight: 0.8 - 0.799 * Math.min(1, 3 * -player.position[1] / MAP_HEIGHT / GRID_SIZE), types: ["rope", "plant"] }
+    ];
+    let drawn = {};
+
 	shaders["lightShader"].bind();
 	gl.uniform1f(shaders["lightShader"].getUniform('lightCount'), level.lightCnt)
 	gl.uniform1fv(shaders["lightShader"].getUniform('lights'), level.lights)
 	gl.uniformMatrix4fv(shaders["lightShader"].getUniform('VP'), false, pvMatrix);
 
-	gl.uniform1f(shaders["lightShader"].getUniform('ambientLight'), 0.8 - 0.799 * Math.min(1, 1 * -player.position[1] / MAP_HEIGHT / GRID_SIZE));
-    for (let sprite of level.objects["background"]) {
-        sprite.draw(shaders["lightShader"]);
-    }
-	gl.uniform1f(shaders["lightShader"].getUniform('ambientLight'), 1 - 0.5 * Math.min(1, 1 * -player.position[1] / MAP_HEIGHT / GRID_SIZE));
-    for (let sprite of level.objects["bubble"]) {
-        if (vec2.squaredDistance(sprite.position, player.position) > 15 * 15) continue;
-        sprite.draw(shaders["lightShader"]);
-    }
-    for (let sprite of level.objects["bubbles"]) {
-        sprite.draw(shaders["lightShader"]);
-    }
-	gl.uniform1f(shaders["lightShader"].getUniform('ambientLight'), 0.8 - 0.799 * Math.min(1, 3 * -player.position[1] / MAP_HEIGHT / GRID_SIZE))
-    for (let sprite of level.objects["random_shit"]) {
-        if (vec2.squaredDistance(sprite.position, player.position) > 15 * 15) continue;
-        sprite.draw(shaders["lightShader"]);
-    }
-    for (let sprite of level.objects["rope"]) {
-        if (vec2.squaredDistance(sprite.position, player.position) > 15 * 15) continue;
-        sprite.draw(shaders["lightShader"]);
-    }
-    for (let sprite of level.objects["plant"]) {
-        if (vec2.squaredDistance(sprite.position, player.position) > 15 * 15) continue;
-        sprite.draw(shaders["lightShader"]);
+    for (let stage of draw_order) {
+        gl.uniform1f(shaders["lightShader"].getUniform('ambientLight'), stage.ambientLight);
+        for (let type of stage.types) {
+            drawn[type] = true;
+            for (let sprite of level.objects[type]) {
+                if (type != "background" && vec2.squaredDistance(sprite.getPosition(), player.position) > 15 * 15) continue;
+                sprite.draw(shaders["lightShader"]);
+            }
+        }
     }
     for (let type in level.objects) {
-        if (type == "background_surface" || type == "background" || type == "random_shit" || type == "rope" || type == "plant" || type == "bubble" || type == "bubbles") continue;
+        if (drawn[type]) continue;
         for (let sprite of level.objects[type]) {
             if (vec2.squaredDistance(sprite.position, player.position) > 15 * 15) continue;
             sprite.draw(shaders["lightShader"]);

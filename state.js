@@ -19,6 +19,7 @@ export let level = {
         "bubble": [],
         "collidable": [],
         "random_shit": [],
+        "jelly": [],
         "player": []
     },
 	lights: new Array(180), //TODO move
@@ -57,7 +58,7 @@ export let level = {
                 this.collidables[coords].push(obj);
             }
         }
-        
+
         this.objects[type].push(obj);
     },
     removeObject: function(obj) {
