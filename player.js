@@ -5,6 +5,7 @@ import {swimmingLeft, swimmingRight, swimmingUp, swimmingDown, swimmingAccelerat
 import {level, updateRegistry} from "./state.js"
 import {PositionalAudio, walk_wood} from "./audio.js"
 import {heartbeat} from "./util.js"
+import {Rope} from "./rope.js";
 
 const PLAYER_SPEED = 2.5;
 const FRAME_TIME = 1000/60;
@@ -26,10 +27,10 @@ export let Player = function() {
     this.effect_strength = 0;
     this.rate = 0
 
-    this.lastRopePoint = vec2.clone(this.position);
-    this.rope = new GameObject("./Assets/rope.png", this.position, vec2.fromValues(0.3, 1.05), "rope");
+    this.rope = new Rope("./Assets/rope.png");
+    this.rope.addPoint(vec2.clone(this.position));
+    this.rope.addPoint(vec2.clone(this.position));
     this.lookDirection = vec2.fromValues(-1, 0);
-    level.addObject(this.rope);
 }
 Player.prototype = Object.create(MobileGameObject.prototype);
 Object.defineProperty(Player.prototype, 'constructor', {
@@ -47,23 +48,15 @@ Player.prototype.handleInput = function(delta) {
         return
     }
 
-    let ropeDir = vec2.sub(vec2.create(), this.position, this.lastRopePoint);
+    let ropeDir = vec2.sub(vec2.create(), this.position, this.rope.points[this.rope.points.length - 2]);
     let ropeDirLength = vec2.length(ropeDir);
     if (ropeDirLength > 1) {
-        let angle = -Math.atan2(ropeDir[0], ropeDir[1]) / Math.PI * 180;
-        let nextRopePoint = vec2.scaleAndAdd(ropeDir, this.lastRopePoint, ropeDir, 1 / ropeDirLength);
-        let ropeMid = vec2.add(this.lastRopePoint, this.lastRopePoint, nextRopePoint);
-        vec2.scale(ropeMid, ropeMid, 0.5);
-        level.addObject(new GameObject("./Assets/rope.png", ropeMid, vec2.fromValues(0.3, 1.05), "rope", vec2.fromValues(1, 1), vec2.fromValues(0, 0), angle));
-        this.lastRopePoint = nextRopePoint;
+        let nextRopePoint = vec2.scaleAndAdd(ropeDir, this.rope.points[this.rope.points.length - 2], ropeDir, 1 / ropeDirLength);
+        this.rope.addPoint(nextRopePoint);
     } else {
-        let angle = -Math.atan2(ropeDir[0], ropeDir[1]) / Math.PI * 180;
-        let nextRopePoint = vec2.add(ropeDir, this.lastRopePoint, ropeDir);
-        let ropeMid = vec2.add(vec2.create(), this.lastRopePoint, nextRopePoint);
-        vec2.scale(ropeMid, ropeMid, 0.5);
-        this.rope.halfSize[1] = ropeDirLength / 2 * 1.05;
-        this.rope.orientation = angle;
-        this.rope.setPosition(ropeMid);
+        let nextRopePoint = vec2.add(ropeDir, this.rope.points[this.rope.points.length - 2], ropeDir);
+        this.rope.points[this.rope.points.length - 1] = nextRopePoint;
+        this.rope.updateSegment(this.rope.points.length - 2);
     }
 
     let vel = vec2.fromValues(0, 0);
