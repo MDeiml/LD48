@@ -24,10 +24,12 @@ const FRAME_TIME = 1000/60;
 let dir = true
 
 function removeOpening() {
-    document.getElementById("loadingAnimation").remove()
+    document.getElementById("loadingAnimation").style.display = "none"
 }
 
-function main() {
+function setup() {
+    document.getElementById("startImage").style.display = "none"
+    
     set_seed(Math.floor(Math.random() * 256))
     initGraphics(document.getElementById('glCanvas'));
     initInput();
@@ -69,6 +71,11 @@ function main() {
 
     });
 }
+
+function main() {
+    setTimeout(setup, 5000)
+}
+
 
 function update(now) {
     if (!lastTick) {

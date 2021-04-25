@@ -14,9 +14,19 @@ body{
 
 img{width:32.2%;}
 
-#overlay{
+#startImage{
   position:fixed;
-  z-index:99999;
+  z-index:200;
+  top:0;
+  left:0;
+  bottom:0;
+  right:0;
+  background:rgba(0,0,0,0.9);
+  transition: 1s 0.4s;
+}
+#loadingAnimation{
+  position:fixed;
+  z-index:100;
   top:0;
   left:0;
   bottom:0;
@@ -202,6 +212,7 @@ img{width:32.2%;}
 	</head>
 
 	<body>
+	<img id="startImage" src="/Assets/sitzende_taucher.png" >
 	<img id="loadingAnimation" src="/Assets/loading.gif" >
 	
 	<canvas id="glCanvas" width="800" height="600">
