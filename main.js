@@ -12,6 +12,7 @@ import {GameObject} from "./GameObject.js"
 import {updatePhysics} from "./physics.js"
 import {updateBubbles} from "./bubble.js"
 import {set_seed} from "./util.js"
+import {updateRopes} from "./rope.js";
 
 //timekeeper
 var lastTick = null;
@@ -26,6 +27,7 @@ function main() {
     initInput();
     initAudio();
     updateRegistry.registerUpdate("bubbles", updateBubbles);
+    updateRegistry.registerUpdate("ropes", updateRopes);
 
     initResource(function() {
         level.addObject(new GameObject("Assets/background_blue.png", vec2.fromValues(-0.5 * GRID_SIZE, -MAP_HEIGHT * GRID_SIZE / 2), vec2.fromValues( MAP_WIDTH * GRID_SIZE, MAP_HEIGHT * GRID_SIZE), "background" ))
