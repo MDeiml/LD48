@@ -107,5 +107,5 @@ export function updateFish(delta) {
         }
     }
     let angler = big_fish[2];
-    level.updateLight(2, [0.3, 1, 0.5], [angler.position[0] - (angler.flip ? -1.2 : 1.2), angler.position[1] + 0.4],[0, 1], -1.0, 1);
+    level.updateLight(2, [1, 0.4, 0.3], [angler.position[0] - (angler.flip ? -1.2 : 1.2), angler.position[1] + 0.4],[0, 1], -1.0, 0.3);
 }
