@@ -1,6 +1,7 @@
-import {level, COLLIDABLE_GRID_SIZE} from "./state.js";
+import {level, COLLIDABLE_GRID_SIZE, updateRegistry} from "./state.js";
 import {MobileGameObject, CollidableGameObject} from "./GameObject.js";
 import {vec2} from "./gl-matrix-min.js";
+import {Bubble} from "./interactable.js";
 
 export function updatePhysics(delta) {
     for (let obj of level.objects["player"]) {
@@ -19,7 +20,6 @@ function handlePhysics(delta, obj) {
     let pmax = vec2.add(vec2.create(), obj.position, obj.halfSize);
     vec2.scale(pmax, pmax, 1/COLLIDABLE_GRID_SIZE);
     vec2.round(pmax, pmax);
-    obj.setPosition(pos);
     for (let x = pmin[0]; x <= pmax[0]; x++) {
         for (let y = pmin[1]; y <= pmax[1]; y++) {
             if (level.collidables[vec2.fromValues(x, y)] == undefined) continue;
@@ -27,12 +27,25 @@ function handlePhysics(delta, obj) {
                 for (let line of other.shape) {
                     let intersection = intersectLineCircle(line[0], line[1], vec2.sub(vec2.create(), pos, other.getPosition()), 0.5)
                     if (intersection) {
-                        other.onCollide(intersection, obj);
+                        if (other.type == "bubbles") {
+                            if (obj.type == "player" && !other.collected) {
+                                obj.breath += 10 //add function to clamp it to 100
+                                other.collected = true;
+                                Bubble.COLLECT_SOUND.moveTo(other.getPosition())
+                                Bubble.COLLECT_SOUND.play()
+
+                                other.update_name = "bubble_deletion_" + Math.random();
+                                updateRegistry.registerUpdate(other.update_name, other.par.clearBubble.bind(other.par));
+                            }
+                        } else {
+                            vec2.add(pos, pos, intersection);
+                        }
                     }
                 }
             }
         }
     }
+    obj.setPosition(pos);
 }
 
 function intersectLineCircle(a, b, m, r) {

@@ -4,7 +4,7 @@ import {level, updateRegistry} from "./state.js"
 import {PositionalAudio} from "./audio.js"
 
 
-let Bubble = function(parent, size) {
+export let Bubble = function(parent, size) {
     let halfSize = size / 2;
     let p1 = vec2.fromValues(-halfSize, -halfSize);
     let p2 = vec2.fromValues(halfSize, -halfSize);
@@ -48,17 +48,4 @@ Coral.prototype.clearBubble = function() {
     this.bubble.cleanup();
     level.removeObject(this.bubble);
     delete this.bubble;
-}
-Bubble.prototype.onCollide = function(intersection, other) {
-    if (other.type == "player" && !this.collected) {
-        other.breath += 10 //add function to clamp it to 100
-        console.log(other.breath)
-        this.collected = true;
-        Bubble.COLLECT_SOUND.moveTo(this.getPosition())
-        Bubble.COLLECT_SOUND.play()
-        
-        //have parent remove bubble
-        this.update_name = "bubble_deletion_" + Math.random();
-        updateRegistry.registerUpdate(this.update_name, this.par.clearBubble.bind(this.par));
-    }
 }
