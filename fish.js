@@ -8,7 +8,7 @@ const BIG_FISH_SPEED = 3;
 const BIG_FISH_ACCEL = 6;
 
 const DEPTHS = [
-    { start: 24 * 4, end: 32 * 4, big_fish: "Assets/animationen/anglerfisch_anim.png"}
+    { start: 24 * 4, end: 32 * 4, big_fish: "Assets/fish4/anglerfisch_anim.png"}
 ];
 
 let big_fish;
