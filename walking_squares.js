@@ -41,6 +41,7 @@ const tutorial_map = [[
 ]]
 
 export function generateTutorial() {
+    level.addObject(new GameObject("Assets/background_blue.png", vec2.fromValues(-(MAP_WIDTH + 7)/2 * GRID_SIZE, -5 * GRID_SIZE), vec2.fromValues( 5 * GRID_SIZE, 7 * GRID_SIZE), "background" ))
     computeSquareMap(tutorial_map, 5, 6, (MAP_WIDTH + 7) * GRID_SIZE/2, GRID_SIZE, false, 0);
     let collision_coords = vec2.fromValues(-(MAP_WIDTH + 1)/2, -2);
     vec2.round(collision_coords, collision_coords);
