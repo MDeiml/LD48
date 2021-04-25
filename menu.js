@@ -24,8 +24,9 @@ function updateOxygen() {
 
 export function createUI() {
     //create tank
-    let tank = new Menu("Assets/tank+barometer.png", vec2.fromValues( 0.75, -0.6), vec2.fromValues(0.4, 0.8));
+    let tank = new Menu("Assets/tank+barometer.png", vec2.fromValues( 6, -2.5), vec2.fromValues(3, 3));
     let pfeil = new Menu("Assets/anzeigepfeil.png", vec2.fromValues(-0.75,  -0.02), vec2.fromValues(0.18, 0.18), tank);
+    tank.base_pos = vec2.clone(tank.position)
     pfeil.setOrientation(MIN_ORIENTATION);
     updateRegistry.registerUpdate("oxygen_scale", updateOxygen.bind(pfeil))
     //create barometer
