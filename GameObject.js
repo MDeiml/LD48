@@ -130,19 +130,20 @@ export let AnimatedGameObject = function(spritePath, position, size, type, frame
     this.cntr = Math.floor(Math.random() * 20);
     this.updateStep = updateStep;
     this.updateName = "GameObj_anim" + Math.random()
-    updateRegistry.registerUpdate(this.updateName, function() {
-        this.cntr = this.cntr + 1;
-        if (this.cntr >= this.updateStep){
-            this.sprite.texture.nextFrame();
-            this.cntr = this.cntr - this.updateStep;
-            this.cntr = this.cntr % this.updateStep;
-        }
-    }.bind(this))
-
+    updateRegistry.registerUpdate(this.updateName, this.updateAnimation.bind(this))
 }
+
 AnimatedGameObject.prototype = Object.create(GameObject.prototype);
 Object.defineProperty(AnimatedGameObject.prototype, 'constructor', {
     value: AnimatedGameObject,
     enumerable: false, // so that it does not appear in 'for in' loop
     writable: true });
 
+AnimatedGameObject.prototype.updateAnimation = function() {
+    this.cntr = this.cntr + 1;
+    if (this.cntr >= this.updateStep){
+        this.sprite.texture.nextFrame();
+        this.cntr = this.cntr - this.updateStep;
+        this.cntr = this.cntr % this.updateStep;
+    }
+}

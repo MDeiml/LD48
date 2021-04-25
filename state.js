@@ -22,7 +22,8 @@ export let level = {
         "random_shit": [],
         "jelly": [],
         "player": [],
-        "angler": []
+        "angler": [],
+        "background_surface": []
     },
 	lights: new Array(180), //TODO move
     lightCnt: 3,

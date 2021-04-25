@@ -89,7 +89,6 @@ export function update() {
 		updateViewMat = false;
 	}
 
-    //drawBaseShader();
     drawLightShader();
 
     drawUI();

@@ -50,10 +50,10 @@ function main() {
         let map_data = generateLevel();
         computeSquareMap(map_data);
         setPlayer(new Player());
+
         window.running = true;
         requestAnimationFrame(update);
     });
-
 }
 
 function update(now) {
