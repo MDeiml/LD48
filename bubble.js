@@ -86,8 +86,7 @@ export function updateBubbles(delta) {
             obj = new GameObject("./Assets/bubble-alt.png", pos, vec2.fromValues(size, size), "random_shit");
         }
         obj.velocity = vec2.random(vec2.create(), 0.1);
-        if (obj.velocity[0] < 0)
-            obj.flip = true
+        obj.orientation = -Math.atan2(obj.velocity[0], obj.velocity[1]) / Math.PI * 180 + 30;
         obj.timerPeriod = isAnimal ? Math.random() * 0.4 + 1.2 : 0;
         obj.timer = Math.random() * obj.timerPeriod;
         level.addObject(obj);
