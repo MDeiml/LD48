@@ -184,7 +184,8 @@ Player.prototype.updateBreathing = function(delta) {
     if (this.breath == 0)
     {
         Death = true;
-        console.log("YOU DIED.")
+        console.log("YOU DIED.");
+        new Audio("./Assets/audio/death_short.wav").play();
     }
 }
 
