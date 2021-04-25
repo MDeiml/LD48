@@ -44,8 +44,10 @@ Player.prototype.isPlayer = function(){return true;}
 
 Player.prototype.handleInput = function(delta) {
 	//TOD???
-    if (this.breath == 0) {
-        vec2.copy(this.velocity, vec2.fromValues(0, 0));
+    if (this.breath <= 0) {
+        vec2.copy(this.velocity, vec2.fromValues(0, -0.2));
+        this.flip = true;
+        this.orientation = 135;
         return
     }
 
