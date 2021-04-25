@@ -66,7 +66,7 @@ export function computeSquareMap(map_data) {
         current = prev[current];
     }
 
-    for (let h = 0; h < MAP_HEIGHT - 1; h++) {
+    for (let h = 0; h < MAP_HEIGHT; h++) {
         for (let w = -1; w < MAP_WIDTH; w++) {
             let tl = 1;
             let bl = 1;
@@ -77,13 +77,15 @@ export function computeSquareMap(map_data) {
             if (w >= 0)
             {
                 tl = scanlineArr[w + h * MAP_WIDTH] ? 1 : 0;
-                bl = scanlineArr[w + (h + 1) * MAP_WIDTH] ? 1 : 0;
+                if (h < MAP_HEIGHT - 1)
+                    bl = scanlineArr[w + (h + 1) * MAP_WIDTH] ? 1 : 0;
             }
 
             if (w < MAP_WIDTH - 1)
             {
                 tr = scanlineArr[w + 1 + h * MAP_WIDTH] ? 1 : 0;
-                br = scanlineArr[w + 1 + (h + 1) * MAP_WIDTH] ? 1 : 0;
+                if (h < MAP_HEIGHT - 1)
+                    br = scanlineArr[w + 1 + (h + 1) * MAP_WIDTH] ? 1 : 0;
             }
 
             let type = tl + tr + bl + br;
