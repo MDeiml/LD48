@@ -6,7 +6,7 @@ import {updateAudio, initAudio} from "./audio.js"
 import {updateRegistry, player, setPlayer, level} from "./state.js"
 import {generateLevel, MAP_WIDTH, MAP_HEIGHT} from "./generation.js"
 import {Player} from "./player.js"
-import {computeSquareMap, GRID_SIZE} from "./walking_squares.js"
+import {computeSquareMap, generateRopePath, generateTutorial, GRID_SIZE} from "./walking_squares.js"
 import {init as initResource} from "./resource.js"
 import {GameObject, AnimatedGameObject} from "./GameObject.js"
 import {updatePhysics} from "./physics.js"
@@ -54,7 +54,9 @@ function main() {
         // }
         createUI()
         let map_data = generateLevel();
+        generateRopePath(map_data);
         computeSquareMap(map_data);
+        generateTutorial();
         setPlayer(new Player());
 
         window.running = true;

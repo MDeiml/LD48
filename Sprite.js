@@ -199,7 +199,8 @@ export let Sprite = function(spritePath, transformation, parent) {
 	}
 	this.transform = typeof(transformation) === "undefined" ? mat4.create() : mat4.clone(transformation);
 	this.m = mat4.create();
-	this.parent = parent
+	this.parent = parent;
+    this.visible = true;
 }
 Sprite.prototype.getTransformation = function() {
 	if (this.parent) {
@@ -215,7 +216,8 @@ Sprite.prototype.setTransformation = function(transformation) {
 Sprite.prototype.draw = function(shader) {
 	if (this.texture === null) //should this also be inheriting?
 		return;
-    
+    if (!this.visible)
+        return;
     //render the own texture
 	this.texture.bindTo(shader, gl.TEXTURE0);
 
