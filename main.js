@@ -53,6 +53,8 @@ function main() {
 
         window.running = true;
         requestAnimationFrame(update);
+		document.getElementById("loadingAnimation").remove();
+		
     });
 }
 
