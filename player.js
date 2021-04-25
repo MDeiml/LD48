@@ -4,7 +4,7 @@ import {mat4, vec2, vec3, quat} from "./gl-matrix-min.js"
 import {swimmingLeft, swimmingRight, swimmingUp, swimmingDown, swimmingAccelerate} from "./input.js"
 import {level, updateRegistry} from "./state.js"
 import {heartbeat} from "./util.js"
-import {Rope} from "./rope.js";
+import {Rope, cutRopes} from "./rope.js";
 import {updateView, setFlicker} from "./render.js";
 
 const PLAYER_SPEED = 2.5;
@@ -117,8 +117,8 @@ Player.prototype.handleInput = function(delta) {
         this.velocity[0] *= -0.1;
         updateView();
         level.upsideDown = true;
+        cutRopes();
     }
-    console.log(this.flickerTimer);
     let flicker = 1;
     if (this.flickerTimer <= -2) {
         this.flickerTimer = -2;

@@ -42,7 +42,7 @@ export function computeSquareMap(map_data) {
     let side_offset = Math.floor(MAP_WIDTH / 2) * GRID_SIZE; //offset cube objects so that they start at the middle
     let depth_offset = GRID_SIZE;
 
-    let current = 0 + MAP_WIDTH * MAP_HEIGHT - Math.floor(MAP_WIDTH / 2) - 1;
+    let current = 0 + MAP_WIDTH * Math.floor(MAP_HEIGHT / 2) - Math.floor(MAP_WIDTH / 2) - 1;
     let x = current % MAP_WIDTH;
     let y = Math.floor(current / MAP_WIDTH);
     let target_pos = vec2.fromValues(x * GRID_SIZE - 0.5 * GRID_SIZE - side_offset, -(y * GRID_SIZE - 0.5 * GRID_SIZE + depth_offset));

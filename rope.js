@@ -5,6 +5,36 @@ import {handlePhysics} from "./physics.js";
 
 let ropes = [];
 
+export function cutRopes() {
+    for (let rope of ropes) {
+        if (rope.points[0][1] > -5) { // is player rope
+            for (let i = rope.points.length - 1; i >= 0; i--) {
+                if (vec2.squaredDistance(rope.points[i], player.position) > 10 * 10) {
+                    rope.points.splice(0, i);
+                    rope.points_velocity.splice(0, i);
+                    for (let j = 0; j < i; j++) {
+                        level.removeObject(rope.segments[j]);
+                    }
+                    rope.segments.splice(0, i);
+                    break;
+                }
+            }
+        } else {
+            for (let i = 0; i < rope.points.length; i++) {
+                if (vec2.squaredDistance(rope.points[i], player.position) > 10 * 10) {
+                    rope.points.splice(i + 1, rope.points.length - i - 1);
+                    rope.points_velocity.splice(i + 1, rope.points.length - i - 1);
+                    for (let j = i; j < rope.segments.length; j++) {
+                        level.removeObject(rope.segments[j]);
+                    }
+                    rope.segments.splice(i, rope.points.length - i - 1);
+                    break;
+                }
+            }
+        }
+    }
+}
+
 export function updateRopes(delta) {
     for (let rope of ropes) {
         rope.update(delta);
