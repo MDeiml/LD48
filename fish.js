@@ -23,7 +23,7 @@ function spawnFishAtDistance(distance = FISH_RADIUS) {
     vec2.add(pos, pos, player.position);
     let depth = DEPTHS[0];
     for (let d of DEPTHS) {
-        if (pos[1] < -d.start && pos[1] > -d.end) {
+        if (pos[1] < -d.start * GRID_SIZE && pos[1] > -d.end * GRID_SIZE) {
             depth = d;
             break;
         }
