@@ -148,7 +148,6 @@ Player.prototype.handleInput = function(delta) {
     }
     setFlicker(flicker);
 
-    //stupid pointlight
     this.rate += delta * 2
     if (this.rate > 4)
         this.rate -= 4

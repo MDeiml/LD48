@@ -98,6 +98,7 @@ export function updateFish(delta) {
         if (player.position[1] < -depth.start * GRID_SIZE && player.position[1] > -depth.end * GRID_SIZE) {
             let vel = vec2.sub(vec2.create(), player.position, big_fish[d].position);
             vec2.scaleAndAdd(big_fish[d].velocity, big_fish[d].velocity, vel, delta * BIG_FISH_ACCEL);
+            
             let velLength = vec2.length(big_fish[d].velocity);
             vec2.scale(big_fish[d].velocity, big_fish[d].velocity, BIG_FISH_SPEED / velLength);
             big_fish[d].flip = big_fish[d].velocity[0] > 0;
