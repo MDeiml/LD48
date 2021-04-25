@@ -23,6 +23,10 @@ var unprocessed = 0;
 const FRAME_TIME = 1000/60;
 let dir = true
 
+function removeOpening() {
+    document.getElementById("loadingAnimation").remove()
+}
+
 function main() {
     set_seed(Math.floor(Math.random() * 256))
     initGraphics(document.getElementById('glCanvas'));
@@ -32,7 +36,9 @@ function main() {
     updateRegistry.registerUpdate("bubbles", updateBubbles);
     updateRegistry.registerUpdate("ropes", updateRopes);
     updateRegistry.registerUpdate("fish", updateFish);
-
+    
+    var startDate = new Date(); 
+    
     initResource(function() {
         level.addObject(new GameObject("Assets/background_blue.png", vec2.fromValues(-0.5 * GRID_SIZE, -MAP_HEIGHT * GRID_SIZE / 4), vec2.fromValues( (MAP_WIDTH + 1) * GRID_SIZE, MAP_HEIGHT / 2 * GRID_SIZE), "background" ))
         level.addObject(new GameObject("Assets/hintergrund-boot-leer.png", vec2.fromValues(-0.5 * GRID_SIZE, 3 * GRID_SIZE), vec2.fromValues((MAP_WIDTH + 1) * GRID_SIZE, 6 * GRID_SIZE), "background_surface" ))
@@ -53,7 +59,9 @@ function main() {
 
         window.running = true;
         requestAnimationFrame(update);
-		document.getElementById("loadingAnimation").remove();
+        
+        var seconds = ((new Date()).getTime() - startDate.getTime());
+		setTimeout(removeOpening, 3000 - seconds); //should handle interrupt so any key can skip this
 		
     });
 }
