@@ -9,6 +9,7 @@ import {updateView, setFlicker} from "./render.js";
 
 const PLAYER_SPEED = 2.5;
 const FRAME_TIME = 1000/60;
+const BREATH_RATE = 4.33;
 var FrameCounter = 0;
 export const MAX_BREATH = 30;
 export var Death = false;
@@ -33,6 +34,20 @@ export let Player = function() {
     this.rope.addPoint(vec2.clone(this.position));
     this.lookDirection = vec2.fromValues(-1, 0);
     this.flickerTimer = -2;
+    this.breathTimer = 0;
+	this.breatheOutSounds = [
+        new Audio("./Assets/audio/blubbles_breath1.wav"),
+        new Audio("./Assets/audio/blubbles_breath2.wav"),
+        new Audio("./Assets/audio/blubbles_breath3.wav")
+    ];
+    for (let sound of this.breatheOutSounds) {
+        sound.volume = 0.5;
+    }
+	this.breatheInSounds = [
+        new Audio("./Assets/audio/breath1.wav"),
+        new Audio("./Assets/audio/breath2.wav"),
+        new Audio("./Assets/audio/breath3.wav")
+    ];
 }
 Player.prototype = Object.create(MobileGameObject.prototype);
 Object.defineProperty(Player.prototype, 'constructor', {
@@ -139,6 +154,15 @@ Player.prototype.handleInput = function(delta) {
         this.rate -= 4
     level.updateLight(0, [0.3, 0.8, 0.5], [this.position[0], this.position[1]],[0, 1], -1.0,  (2  - this.effect_strength * heartbeat(this.rate)) / 3 * flicker);
     level.updateLight(1, [0.6, 0.3, 0.3], vec2.scaleAndAdd(vec2.create(), this.position, this.lookDirection, -0.4), this.lookDirection, 0.7, this.position[1] - this.lookDirection[1] > -1.5 ? 0 : 3 * flicker);
+
+    this.breathTimer += delta;
+    if (this.breathTimer >= BREATH_RATE) {
+        this.breathTimer -= BREATH_RATE;
+        this.breatheOutSounds[Math.floor(Math.random() * this.breatheOutSounds.length)].play();
+    }
+    if (this.breathTimer >= 2.33 && this.breathTimer - delta < 2.33) {
+        this.breatheInSounds[Math.floor(Math.random() * this.breatheInSounds.length)].play();
+    }
 }
 
 Player.prototype.updateBreathing = function(delta) {
