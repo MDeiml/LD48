@@ -11,6 +11,7 @@ const PLAYER_SPEED = 2.5;
 const FRAME_TIME = 1000/60;
 var FrameCounter = 0;
 export const MAX_BREATH = 30;
+export var Death = false;
 
 export let Player = function() {
     MobileGameObject.call(this, "./Assets/animationen/taucher-animation.png", vec2.fromValues( 0, 0), vec2.fromValues(1, 1), "player", null, vec2.fromValues(1, 1), vec2.fromValues(0, 0));
@@ -158,7 +159,7 @@ Player.prototype.updateBreathing = function(delta) {
 
     if (this.breath == 0)
     {
-        //handle death
+        Death = true;
         console.log("YOU DIED.")
     }
 }
