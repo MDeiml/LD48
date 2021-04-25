@@ -45,7 +45,7 @@ Rope.prototype.update = function(delta) {
     let updateLast = false;
     for (let i = 0; i < this.points.length; i++) {
         let updateCurrent = vec2.squaredDistance(this.points[i], player.position) < 15 * 15;
-        if (i < 1 || i >= this.points.length - 1) {
+        if (i < 1 || i >= this.points.length - 2) {
             updateCurrent = false;
         }
         if (updateCurrent) {

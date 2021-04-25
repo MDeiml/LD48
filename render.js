@@ -117,7 +117,7 @@ function drawLightShader() {
         { ambientLight: 1, types: ["jelly"] },
         { ambientLight: 0.8 - 0.799 * Math.min(1, 3 * -player.position[1] / MAP_HEIGHT / GRID_SIZE), types: ["rope", "plant"] }
     ];
-    let drawn = {};
+    let drawn = { background_surface: true };
 
 	shaders["lightShader"].bind();
 	gl.uniform1f(shaders["lightShader"].getUniform('lightCount'), level.lightCnt)
