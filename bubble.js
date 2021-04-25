@@ -1,6 +1,7 @@
 import {level, player, COLLIDABLE_GRID_SIZE} from "./state.js";
 import {MobileGameObject, AnimatedGameObject, GameObject} from "./GameObject.js";
 import {vec2} from "./gl-matrix-min.js";
+import {isInMap} from "./util.js"
 
 const BUBBLE_VELOCITY = 0.1;
 const PLAYER_BUBBLE_SPAWN_PER_SECOND = 3;
@@ -16,6 +17,10 @@ var var_Death_delta_Time = 0;
 function spawnAtRadius(distance = RANDOM_SHIT_RADIUS) {
     let pos = vec2.random(vec2.create(), distance);
     vec2.add(pos, pos, player.position);
+    
+    if (!isInMap(pos))
+        return false
+    
     let isAnimal = Math.random() < 0.1;
     let size = isAnimal ? (Math.random() * 0.3 + 0.1) : (Math.random() * 0.05 + 0.1);
     let obj = null
@@ -30,11 +35,13 @@ function spawnAtRadius(distance = RANDOM_SHIT_RADIUS) {
     obj.timerPeriod = isAnimal ? Math.random() * 0.4 + 1.2 : 0;
     obj.timer = Math.random() * obj.timerPeriod;
     level.addObject(obj);
+    return true
 }
 
 export function initBubbles() {
     while (level.objects["random_shit"].length + level.objects["jelly"].length < NUM_RANDOM_SHIT) {
-        spawnAtRadius(RANDOM_SHIT_RADIUS * Math.random() * 2)
+        if (!spawnAtRadius(RANDOM_SHIT_RADIUS * Math.random() * 2))
+            break
     }
 }
 
@@ -109,7 +116,8 @@ export function updateBubbles(delta) {
     }
 
     while (level.objects["random_shit"].length + level.objects["jelly"].length < NUM_RANDOM_SHIT) {
-        spawnAtRadius();
+        if (!spawnAtRadius())
+            break
     }
 
 }
