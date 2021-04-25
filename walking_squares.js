@@ -42,6 +42,17 @@ const tutorial_map = [[
 
 export function generateTutorial() {
     computeSquareMap(tutorial_map, 5, 6, (MAP_WIDTH + 7) * GRID_SIZE/2, GRID_SIZE, true);
+    let collision_coords = vec2.fromValues(-MAP_WIDTH/2, -1);
+    vec2.round(collision_coords, collision_coords);
+    //console.log(Object.keys(level.collidables))
+    //console.log(collision_coords)
+    //for (obj of level.collidables[collision_coords])
+    //{
+    //    console.log("test")
+    //    obj.sprite.visible = false;
+    //}
+
+    //pos: -35.5, -10.188363075256348
 }
 
 export function generateRopePath(map_data) {
@@ -78,7 +89,7 @@ export function generateRopePath(map_data) {
 
 }
 
-export function computeSquareMap(map_data, width = MAP_WIDTH, height = MAP_HEIGHT, side_off = 0, depth_off = 0, debug = false) {
+export function computeSquareMap(map_data, width = MAP_WIDTH, height = MAP_HEIGHT, side_off = 0, depth_off = 0) {
     let scanlineArr = map_data[0];
     let side_offset = Math.floor(width / 2) * GRID_SIZE + side_off; //offset cube objects so that they start at the middle
     let depth_offset = GRID_SIZE + depth_off;
