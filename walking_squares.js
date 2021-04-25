@@ -45,6 +45,8 @@ export function computeSquareMap(map_data) {
     let current = 0 + MAP_WIDTH * MAP_HEIGHT - Math.floor(MAP_WIDTH / 2) - 1;
     let x = current % MAP_WIDTH;
     let y = Math.floor(current / MAP_WIDTH);
+    let target_pos = vec2.fromValues(x * GRID_SIZE - 0.5 * GRID_SIZE - side_offset, -(y * GRID_SIZE - 0.5 * GRID_SIZE + depth_offset));
+    level.addObject(new GameObject("./Assets/animationen/taucher-1.png", target_pos, vec2.fromValues(1, 1), "target"));
     let rope = new Rope("./Assets/rope_g.png");
     rope.addPoint(vec2.fromValues(x * GRID_SIZE - 0.5 * GRID_SIZE - side_offset, -(y * GRID_SIZE - 0.5 * GRID_SIZE + depth_offset)));
     let randomOffset = vec2.create();
