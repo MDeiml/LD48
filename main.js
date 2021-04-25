@@ -29,10 +29,11 @@ function removeOpening() {
 
 function setup() {
     document.getElementById("startImage").style.display = "none"
+    document.getElementById("message").style.display = "none"
+    document.getElementById("loadingAnimation").style.display = "unset"
     
     set_seed(Math.floor(Math.random() * 256))
     initGraphics(document.getElementById('glCanvas'));
-    initInput();
     initAudio();
     updateRegistry.registerUpdate("bubbles", updateBubbles);
     updateRegistry.registerUpdate("ropes", updateRopes);
@@ -73,6 +74,7 @@ function setup() {
 }
 
 function main() {
+    initInput();
     setTimeout(setup, 5000)
 }
 

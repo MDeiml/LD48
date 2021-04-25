@@ -14,17 +14,40 @@ body{
 
 img{width:32.2%;}
 
+.object {
+  animation-name: MoveDown;
+  animation-duration: 2s;
+  animation-timing-function: ease-out;
+  animation-fill-mode: forwards;
+  position: relative;
+  z-index:300;
+  top:-100%;
+  padding: 10px;
+}
+
+@keyframes MoveDown {
+  0% {
+    transform: translateY(0%);
+  }
+  30% {
+    transform: translateY(0%);
+  }
+  100% {
+    transform: translateY(30%);
+  }
+}
+
 #startImage{
-  position:fixed;
+  display: block;
   z-index:200;
-  top:0;
-  left:0;
-  bottom:0;
-  right:0;
+  top: 0;
+  max-width: 100%;
+  height: auto;
   background:rgba(0,0,0,0.9);
   transition: 1s 0.4s;
 }
 #loadingAnimation{
+  display: none
   position:fixed;
   z-index:100;
   top:0;
@@ -212,6 +235,7 @@ img{width:32.2%;}
 	</head>
 
 	<body>
+	<img id="message" class="object" src="/Assets/hintergrund-boot-leer.png" >
 	<img id="startImage" src="/Assets/sitzende_taucher.png" >
 	<img id="loadingAnimation" src="/Assets/loading.gif" >
 	
