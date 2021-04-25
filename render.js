@@ -105,15 +105,17 @@ function drawBaseShader() {
 
 function drawLightShader() {
 
+	shaders["defaultShader"].bind();
+	gl.uniformMatrix4fv(shaders["defaultShader"].getUniform('VP'), false, pvMatrix);
+    for (let sprite of level.objects["background_surface"]) {
+        sprite.draw(shaders["defaultShader"]);
+    }
+
 	shaders["lightShader"].bind();
 	gl.uniform1f(shaders["lightShader"].getUniform('lightCount'), level.lightCnt)
 	gl.uniform1fv(shaders["lightShader"].getUniform('lights'), level.lights)
 	gl.uniformMatrix4fv(shaders["lightShader"].getUniform('VP'), false, pvMatrix);
 
-	gl.uniform1f(shaders["lightShader"].getUniform('ambientLight'), 1);
-    for (let sprite of level.objects["background_surface"]) {
-        sprite.draw(shaders["lightShader"]);
-    }
 	gl.uniform1f(shaders["lightShader"].getUniform('ambientLight'), 0.8 - 0.799 * Math.min(1, 1 * -player.position[1] / MAP_HEIGHT / GRID_SIZE));
     for (let sprite of level.objects["background"]) {
         sprite.draw(shaders["lightShader"]);
