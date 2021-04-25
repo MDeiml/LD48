@@ -3,7 +3,6 @@ import {Sprite} from "./Sprite.js"
 import {mat4, vec2, vec3, quat} from "./gl-matrix-min.js"
 import {swimmingLeft, swimmingRight, swimmingUp, swimmingDown, swimmingAccelerate} from "./input.js"
 import {level, updateRegistry} from "./state.js"
-import {PositionalAudio, walk_wood} from "./audio.js"
 import {heartbeat} from "./util.js"
 import {Rope} from "./rope.js";
 

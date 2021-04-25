@@ -1,6 +1,5 @@
 import {Sprite} from "./Sprite.js"
 import {mat4, vec2, vec3, quat} from "./gl-matrix-min.js"
-import {PositionalAudio, walk_wood} from "./audio.js"
 import {updateRegistry} from "./state.js"
 
 //Preset Rotations of the object.
@@ -117,7 +116,7 @@ CollidableGameObject.prototype.onCollide = function(intersection, other) {
     //let pos = vec2.create();
     //vec2.add(pos, other.position, intersection);
     //other.setPosition(pos);
-    console.log("test");
+    
     vec2.add(other.position, other.position, intersection);
 }
 
