@@ -88,6 +88,9 @@ export let level = {
 
 };
 
+export let ui = {
+    elements: []
+}
 
 export let updateRegistry = {
 	updateList : {},
