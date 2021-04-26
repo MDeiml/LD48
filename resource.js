@@ -3,8 +3,8 @@ import {Texture2D} from "./Sprite.js"
 // ls -1 assets/* | xargs printf "%s",\n
 let preload_textures = [
     //segments
-    "Segments/0010.png",
-    "Segments/0011.png",
+    "Segments/1000.png",
+    "Segments/1100.png",
     "Segments/0101_e.png",
     "Segments/1010_f.png",
     "Segments/1111.png",
@@ -15,8 +15,8 @@ let preload_textures = [
     "Assets/bubble-alt.png",
     "Assets/bubble.png",
     "Assets/luftblase_koralle.png",
-    "Assets/koralle_anim.png",
-    "Assets/alge_anim.png",
+    "Assets/animationen/koralle_anim.png",
+    "Assets/animationen/alge_anim.png",
     "Assets/leiche.png",
     "Assets/rope_g.png",
     
@@ -37,7 +37,7 @@ let preload_textures = [
     "Assets/fish4/anglerfisch_anim.png",
     "Assets/fish3/pirania.png",
     "Assets/fish3/eel.png",
-    "Assets/fish3/blobfish.png"
+    "Assets/fish3/blobfish.png",
 
     //background
     "Assets/background_blue.png",
@@ -52,14 +52,14 @@ let preload_textures = [
     
     
     //sounds
-    "Assets/audio/bubble_pop.wav",
-    "Assets/audio/blubbles_breath1.wav",
-    "Assets/audio/blubbles_breath2.wav",
-    "Assets/audio/blubbles_breath3.wav",
-    "Assets/audio/breath1.wav",
-    "Assets/audio/breath2.wav",
-    "Assets/audio/breath3.wav",
-    "Assets/audio/death_short1.wav"
+    //"Assets/audio/bubble_pop.wav",
+    //"Assets/audio/blubbles_breath1.wav",
+    //"Assets/audio/blubbles_breath2.wav",
+    //"Assets/audio/blubbles_breath3.wav",
+    //"Assets/audio/breath1.wav",
+    //"Assets/audio/breath2.wav",
+    //"Assets/audio/breath3.wav",
+    //"Assets/audio/death_short1.wav"
 ]
 
 
