@@ -90,7 +90,7 @@ export function generateRopePath(map_data) {
     let x;
     let start;
     let current;
-    while (true) {
+    for (let i = 0; i < 100; i++) {
         x = Math.floor(Math.random() * MAP_WIDTH);
         x += x % 2;
         start = x + MAP_WIDTH * y;
