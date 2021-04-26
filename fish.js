@@ -243,6 +243,16 @@ export function updateFish(delta) {
                             vec2.set(big_fish[d].velocity, 0, 0);
                         }
                     }
+                    if (big_fish[d].cooldown >= 0) {
+                        // isLeft is inverted here
+                        if (
+                            (!big_fish[d].isLeft && big_fish[d].position[0] > player.position[0] - 5 && big_fish[d].position[0] < player.position[0] - 4) ||
+                            (big_fish[d].isLeft && big_fish[d].position[0] < player.position[0] + 5 && big_fish[d].position[0] > player.position[0] + 4)) {
+                            vec2.set(big_fish[d].velocity, !big_fish[d].isLeft ? depth.big_fish_speed / 4 : -depth.big_fish_speed / 4, 0); //scale up and down with position on screen
+                        } else {
+                            vec2.set(big_fish[d].velocity, !big_fish[d].isLeft ? depth.big_fish_speed : -depth.big_fish_speed, 0); //scale up and down with position on screen
+                        }
+                    }
                 }
                 else if (d == 2) { //needs to be behind the player likely
                     let lastRope = null
