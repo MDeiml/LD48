@@ -98,12 +98,13 @@ export function generateRopePath(map_data) {
 
         const MAX_DEPTH = MAP_HEIGHT / 2 + 3;
 
-        while (prev[current]) { //stuck
+        while (prev[current]) { //stuck. Terminates when 0
             let y = Math.floor(current / MAP_WIDTH);
             if (y > MAX_DEPTH) {
                 start = prev[current];
             }
             current = prev[current];
+            console.log(current)
         }
         if (pixels[start + MAP_WIDTH]) {
             break;
