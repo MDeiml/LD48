@@ -8,13 +8,16 @@ import {generateLevel, MAP_WIDTH, MAP_HEIGHT} from "./generation.js"
 import {Player} from "./player.js"
 import {computeSquareMap, generateRopePath, generateTutorial, GRID_SIZE} from "./walking_squares.js"
 import {init as initResource} from "./resource.js"
-import {GameObject, AnimatedGameObject} from "./GameObject.js"
+import {GameObject, AnimatedGameObject, ParallaxGameObject} from "./GameObject.js"
 import {updatePhysics} from "./physics.js"
 import {updateBubbles, initBubbles} from "./bubble.js"
 import {updateFish, initFish} from "./fish.js";
 import {set_seed} from "./util.js"
 import {updateRopes} from "./rope.js";
 import {createUI} from "./menu.js"
+
+
+const SPAWN_COORDS = vec2.fromValues(-(MAP_WIDTH + 14)/2 * GRID_SIZE, 0)
 
 //timekeeper
 var lastTick = null;
@@ -43,7 +46,9 @@ function setup() {
 
     initResource(function() {
         level.addObject(new GameObject("Assets/background_blue.png", vec2.fromValues(-0.5 * GRID_SIZE, -MAP_HEIGHT * GRID_SIZE / 4), vec2.fromValues( (MAP_WIDTH + 1) * GRID_SIZE, MAP_HEIGHT / 2 * GRID_SIZE), "background" ))
+        level.addObject(new GameObject("Assets/background2.png", vec2.fromValues(-0.5 * GRID_SIZE, (-MAP_HEIGHT * GRID_SIZE / 4) - MAP_HEIGHT), vec2.fromValues( (MAP_WIDTH + 1) * GRID_SIZE, MAP_HEIGHT / 2 * GRID_SIZE), "background" ))
         level.addObject(new GameObject("Assets/hintergrund-boot-leer.png", vec2.fromValues(-0.5 * GRID_SIZE, 3 * GRID_SIZE), vec2.fromValues((MAP_WIDTH + 1) * GRID_SIZE, 6 * GRID_SIZE), "background_surface" ))
+        
         // level.addObject(new GameObject("Assets/hintergrund-leer.png", vec2.fromValues(-0.5 * GRID_SIZE, GRID_SIZE), vec2.fromValues( MAP_WIDTH * GRID_SIZE, 2 * GRID_SIZE), "background_surface" ))
         // for (let i = 0; i < MAP_WIDTH; i++) {
         //     let h = GRID_SIZE * 920 / 1323;
@@ -60,7 +65,7 @@ function setup() {
         generateRopePath(map_data);
         computeSquareMap(map_data);
         generateTutorial();
-        setPlayer(new Player());
+        setPlayer(new Player(SPAWN_COORDS));
         initFish();
         initBubbles();
 

@@ -21,6 +21,7 @@ export function updatePhysics(delta) {
 
 export function handlePhysics(delta, pos, vel, halfSize, obj = null) {
     vec2.scaleAndAdd(pos, pos, vel, delta);
+    if (obj && obj.type == "big_fish" && obj.depth == 1) return pos;
     let pmin = vec2.sub(vec2.create(), pos, halfSize);
     vec2.scale(pmin, pmin, 1/COLLIDABLE_GRID_SIZE);
     vec2.round(pmin, pmin);
