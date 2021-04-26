@@ -78,35 +78,44 @@ export function generateTutorial() {
 
 export function generateRopePath(map_data) {
     let prev = map_data[1];
+    let pixels = map_data[0];
 
     let side_offset = Math.floor(MAP_WIDTH / 2) * GRID_SIZE; //offset cube objects so that they start at the middle
     let depth_offset = GRID_SIZE;
 
-    let x = Math.floor(MAP_WIDTH / 2);
-    x += x % 2;
     let y = Math.floor(MAP_HEIGHT / 2);
     y += y % 2;
-    let start = x + MAP_WIDTH * y;
-    let current = start
+    let x;
+    let start;
+    let current;
+    while (true) {
+        x = Math.floor(Math.random() * MAP_WIDTH);
+        x += x % 2;
+        start = x + MAP_WIDTH * y;
+        current = start;
 
-    const MAX_DEPTH = MAP_HEIGHT / 2 + 3;
+        const MAX_DEPTH = MAP_HEIGHT / 2 + 3;
 
-    while (prev[current]) {
-        let y = Math.floor(current / MAP_WIDTH);
-        if (y > MAX_DEPTH) {
-            start = prev[current];
+        while (prev[current]) {
+            let y = Math.floor(current / MAP_WIDTH);
+            if (y > MAX_DEPTH) {
+                start = prev[current];
+            }
+            current = prev[current];
         }
-        current = prev[current];
+        if (pixels[start + MAP_WIDTH]) {
+            break;
+        }
     }
     current = start;
     x = current % MAP_WIDTH;
     y = Math.floor(current / MAP_WIDTH);
 
-    let target_pos = vec2.fromValues(x * GRID_SIZE - 0.5 * GRID_SIZE - side_offset, -(y * GRID_SIZE - 0.5 * GRID_SIZE + depth_offset));
-    level.addObject(new GameObject("./Assets/animationen/taucher-1.png", target_pos, vec2.fromValues(1, 1), "target"));
+    let target_pos = vec2.fromValues(x * GRID_SIZE - 0.5 * GRID_SIZE - side_offset, -(y * GRID_SIZE - 0.5 * GRID_SIZE + depth_offset) - 1.5);
+    level.addObject(new GameObject("./Assets/leiche.png", target_pos, vec2.fromValues(1, 1), "target"));
     let rope = new Rope("./Assets/rope_g.png");
-    rope.addPoint(vec2.fromValues(x * GRID_SIZE - 0.5 * GRID_SIZE - side_offset, -(y * GRID_SIZE - 0.5 * GRID_SIZE + depth_offset)));
-    let randomOffset = vec2.create();
+    rope.addPoint(vec2.fromValues(x * GRID_SIZE - 0.5 * GRID_SIZE - side_offset, -(y * GRID_SIZE - 0.5 * GRID_SIZE + depth_offset) - 1.5));
+    let randomOffset = vec2.fromValues(0, -1.5);
     while (prev[current]) {
         let x = current % MAP_WIDTH;
         let y = Math.floor(current / MAP_WIDTH);

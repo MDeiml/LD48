@@ -31,7 +31,7 @@ function setup() {
     document.getElementById("startImage").style.display = "none"
     document.getElementById("message").style.display = "none"
     document.getElementById("loadingAnimation").style.display = "unset"
-    
+
     set_seed(Math.floor(Math.random() * 256))
     initGraphics(document.getElementById('glCanvas'));
     initAudio();
