@@ -14,8 +14,8 @@ var FrameCounter = 0;
 export const MAX_BREATH = 30;
 export var Death = false;
 
-export let Player = function() {
-    MobileGameObject.call(this, "./Assets/animationen/taucher-animation.png", vec2.fromValues( 0, 0), vec2.fromValues(1, 1), "player", null, vec2.fromValues(1, 1), vec2.fromValues(0, 0));
+export let Player = function(spawn) {
+    MobileGameObject.call(this, "./Assets/animationen/taucher-animation.png", spawn, vec2.fromValues(1, 1), "player", null, vec2.fromValues(1, 1), vec2.fromValues(0, 0));
 
     this.idleState = new AnimatedGameObject("./Assets/animationen/idle_anim.png", vec2.fromValues( 0, 0), vec2.fromValues(2, 2), "rope", 2, 20, this);
     level.addObject(this.idleState)

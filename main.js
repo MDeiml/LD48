@@ -16,6 +16,9 @@ import {set_seed} from "./util.js"
 import {updateRopes} from "./rope.js";
 import {createUI} from "./menu.js"
 
+
+const SPAWN_COORDS = vec2.fromValues(-(MAP_WIDTH + 14)/2 * GRID_SIZE, 0)
+
 //timekeeper
 var lastTick = null;
 var unprocessed = 0;
@@ -61,7 +64,7 @@ function setup() {
         generateRopePath(map_data);
         computeSquareMap(map_data);
         generateTutorial();
-        setPlayer(new Player());
+        setPlayer(new Player(SPAWN_COORDS));
         initFish();
         initBubbles();
 
