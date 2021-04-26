@@ -25,6 +25,7 @@ const DEPTHS = [
         big_fish_frames: 4,
         big_fish_speed: 3,
         big_fish_accel: 12,
+        big_fish_audio: new Audio("Assets/audio/ocotpus.wav"),
         flip_big_fish: true,
         small_fish: [
             new SmallFish("Assets/fish1/koi_anim.png", 4, 110),
@@ -38,6 +39,7 @@ const DEPTHS = [
         big_fish_speed: 10,
         big_fish_accel: 12,
         big_fish: "Assets/fish2/shark_anim.png",
+        big_fish_audio: new Audio("Assets/audio/shark_charge.wav"),
         big_fish_frames: 4,
         flip_big_fish: true,
         small_fish: [
@@ -108,6 +110,7 @@ export function initFish() {
                 pos = pixelToMap(pos);
                 let obj = new AnimatedGameObject(depth.big_fish, pos, vec2.fromValues(3, 2), "big_fish", depth.big_fish_frames);
                 obj.depth = d;
+                obj.audioTimer = 0;
                 if (d == 1) {
                     obj.cooldown = 0;
                     obj.isLeft = Math.random() * 0.5;
@@ -158,6 +161,8 @@ export function updateFish(delta) {
     // BIG FISH
     if (player.position[0] > -MAP_WIDTH/2 * GRID_SIZE) {
         for (let d = 0; d < DEPTHS.length; d++) {
+            big_fish[d].audioTimer -= delta;
+            if (big_fish[d].audioTimer < 0) big_fish[d].audioTimer = 0;
             let depth = DEPTHS[d];
             let hunting = player.position[1] < -depth.start * GRID_SIZE && player.position[1] > -depth.end * GRID_SIZE;
             hunting &= player.breath > 0;
@@ -175,6 +180,10 @@ export function updateFish(delta) {
                 }
                 let accel = vec2.sub(vec2.create(), player.position, big_fish[d].position);
                 let accelLength = vec2.length(accel);
+                if (accelLength <= 4 && big_fish[d].audioTimer <= 0) {
+                    depth.big_fish_audio.play();
+                    big_fish[d].audioTimer = 5;
+                }
                 if (accelLength - preferred_range > 25 && d != 1) {
                     // TELEPORT FISH
                     for (let i = 0; i < 100; i++) {
