@@ -144,13 +144,16 @@ export function updateFish(delta) {
         }
         obj.setPosition(vec2.scaleAndAdd(obj.position, obj.position, obj.velocity, delta * factor));
     }
+    let clearArr = []
     for (let i = 0; i < level.objects["fish"].length; i++) {
         let obj = level.objects["fish"][i];
         let sqDist = vec2.squaredDistance(obj.position, player.position);
-        if (obj.position[1] > 0 || sqDist > FISH_RADIUS * FISH_RADIUS) {
-            level.objects["fish"].splice(i, 1);
-            i--;
+        if (obj.position[1] > 0 || sqDist > FISH_RADIUS * FISH_RADIUS || obj.position[0] < -(MAP_WIDTH + 1)/2 * GRID_SIZE || obj.position[0] > (MAP_WIDTH - 1)/2 * GRID_SIZE) {
+            clearArr.push(i)
         }
+    }
+    for (let pos of clearArr.reverse()) {
+        level.objects["fish"].splice(pos, 1);
     }
     while (level.objects["fish"].length < NUM_FISH) {
         if (!spawnFishAtDistance())
