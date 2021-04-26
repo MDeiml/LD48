@@ -1,6 +1,6 @@
 import {level, player, COLLIDABLE_GRID_SIZE} from "./state.js";
 import {GRID_SIZE} from "./walking_squares.js";
-import {MAP_WIDTH} from "./generation.js";
+import {MAP_WIDTH, MAP_HEIGHT} from "./generation.js";
 import { vec2 } from "./gl-matrix-min.js"
 import {AnimatedGameObject, GameObject} from "./GameObject.js";
 import {pixelToMap, mapToPixel} from "./util.js";
@@ -51,8 +51,8 @@ const DEPTHS = [
     {
         start: 40,
         end: 70,
-        big_fish_speed: 8,
-        big_fish_accel: 100,
+        big_fish_speed: 5,
+        big_fish_accel: 8,
         big_fish: "Assets/fish4/anglerfisch_anim.png",
         big_fish_frames: 4,
         small_fish: [
@@ -176,7 +176,7 @@ export function updateFish(delta) {
                         preferred_range = 5;
                     }
                 } else if (d == 2) {
-                    preferred_range = 2; // angler hunts never REALLY catches up
+                    preferred_range = 8 - 6 * Math.min(1, 1 * -player.position[1] / MAP_HEIGHT * 2 / GRID_SIZE); // angler hunts, never reaches the player but comes closer as he goes deeper
                 }
                 let accel = vec2.sub(vec2.create(), player.position, big_fish[d].position);
                 let accelLength = vec2.length(accel);
@@ -188,6 +188,8 @@ export function updateFish(delta) {
                     // TELEPORT FISH
                     for (let i = 0; i < 100; i++) {
                         let pos = vec2.random(vec2.create(), 20);
+                        if (pos[0] > 0 ^ player.lookDirection[0] > 0)
+                            pos[0] -= pos[0]
                         vec2.add(pos, pos, player.position);
                         if (pos[1] > 0) continue;
                         pos = mapToPixel(pos);
@@ -217,7 +219,7 @@ export function updateFish(delta) {
                         if (success) {
                             pos[0] += big_fish[d].isLeft ? -2 : 2;
                             big_fish[d].setPosition(pixelToMap(pos));
-                            vec2.set(big_fish[d].velocity, big_fish[d].isLeft ? depth.big_fish_speed : -depth.big_fish_speed, 0);
+                            vec2.set(big_fish[d].velocity, big_fish[d].isLeft ? depth.big_fish_speed : -depth.big_fish_speed, 0); //scale up and down with position on screen
                             big_fish[d].isLeft = !big_fish[d].isLeft;
                             big_fish[d].cooldown = SHARK_COOLDOWN;
                         } else {
@@ -225,6 +227,14 @@ export function updateFish(delta) {
                             vec2.set(big_fish[d].velocity, 0, 0);
                         }
                     }
+                }
+                else if (d == 2) { //needs to be behind the player likely
+                    if (accelLength != 0) {
+                        vec2.scale(accel, accel, Math.max(-1, Math.min(1, accelLength - preferred_range)) / (accelLength * accelLength));
+                    }
+                    vec2.scaleAndAdd(big_fish[d].velocity, big_fish[d].velocity, accel, delta * depth.big_fish_accel);
+                    let velLength = vec2.length(big_fish[d].velocity);
+                    vec2.scale(big_fish[d].velocity, big_fish[d].velocity, depth.big_fish_speed / velLength);
                 }
 
                 big_fish[d].flip = big_fish[d].velocity[0] > 0;

@@ -118,6 +118,7 @@ export function generateRopePath(map_data) {
     let rope = new Rope("./Assets/rope_g.png");
     rope.addPoint(vec2.fromValues(x * GRID_SIZE - 0.5 * GRID_SIZE - side_offset, -(y * GRID_SIZE - 0.5 * GRID_SIZE + depth_offset) - 1.5));
     let randomOffset = vec2.fromValues(0, -1.5);
+    let lastPoint = null
     while (prev[current]) {
         let x = current % MAP_WIDTH;
         let y = Math.floor(current / MAP_WIDTH);
@@ -129,10 +130,28 @@ export function generateRopePath(map_data) {
             vec2.add(randomOffset, randomOffset, vec2.fromValues(Math.random() - 0.5, Math.random() -  0.5));
             vec2.scale(randomOffset, randomOffset, 0.5);
             vec2.add(nextRopePoint, nextRopePoint, randomOffset);
+            lastPoint = nextRopePoint
             rope.addPoint(nextRopePoint);
         }
         current = prev[current];
     }
+    let end = vec2.fromValues(-0.5 * GRID_SIZE, 0.5);
+    
+    while (vec2.distance(end, lastPoint) > 1)
+    {
+        console.log(lastPoint)
+        console.log(vec2.distance(end, lastPoint))
+        let randOffset = vec2.fromValues(Math.random() - 0.5, Math.random() -  0.5)
+        let newPos = vec2.create()
+        vec2.sub(newPos, end, lastPoint)
+        vec2.scaleAndAdd(newPos, newPos, randOffset, 0.3)
+        vec2.normalize(newPos, newPos)
+        vec2.add(newPos, newPos, lastPoint)
+        lastPoint = newPos
+        rope.addPoint(newPos);
+    }
+    
+    rope.addPoint(end);
 
 }
 
