@@ -3,7 +3,7 @@ import {Sprite} from "./Sprite.js"
 import {mat4, vec2, vec3, vec4, quat} from "./gl-matrix-min.js"
 import {swimmingLeft, swimmingRight, swimmingUp, swimmingDown, swimmingAccelerate} from "./input.js"
 import {level, updateRegistry} from "./state.js"
-import {heartbeat} from "./util.js"
+import {heartbeat, showStartImage} from "./util.js"
 import {Rope, cutRopes} from "./rope.js";
 import {updateView, setFlicker} from "./render.js";
 
@@ -31,6 +31,7 @@ export let Player = function(spawn) {
     this.breath = MAX_BREATH;
     this.effect_strength = 0;
     this.rate = 0
+    this.collectedDead = false;
 
     this.rope = new Rope("./Assets/rope.png");
     this.rope.addPoint(vec2.clone(this.position));
@@ -140,6 +141,7 @@ Player.prototype.handleInput = function(delta) {
     if (this.flickerTimer < 0 && this.flickerTimer + delta >= 0) {
         this.velocity[0] *= -0.1;
         level.removeObject(level.objects["target"][0]);
+        this.collectedDead = true;
         cutRopes();
     }
     let flicker = 1;
@@ -174,20 +176,27 @@ Player.prototype.updateBreathing = function(delta) {
 
     if (this.position[1] > -0.2) //above water
     {
+        if (collectedDead) {
+            Death = true;
+            console.log("YOU WON.");
+            console.log(this.position);
+            showStartImage("Assets/hintergrund-leer.png"); //implement fail screen
+        }
         this.breath = this.breath + delta * MAX_BREATH;
     }
     else {
         this.breath = this.breath - delta * (swimmingAccelerate() ? 2 : 1);
     }
     this.breath = Math.min(Math.max(this.breath, 0), MAX_BREATH);
-
+    
     this.effect_strength = 1 - (this.breath / 100);
-
+    
     if (this.breath == 0)
     {
         Death = true;
         console.log("YOU DIED.");
         console.log(this.position);
+        showStartImage("Assets/hintergrund-leer.png"); //implement fail screen
         this.deathSound.play();
     }
 }
