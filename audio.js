@@ -1,4 +1,7 @@
+import {player } from './state.js';
 import { vec2 } from './gl-matrix-min.js'
+import { GRID_SIZE } from './walking_squares.js';
+import { MAP_WIDTH } from './generation.js';
 
 //the global collection of sounds
 let sounds = {}
@@ -37,10 +40,23 @@ PositionalAudio.prototype.move = function(trans) { vec2.add(this.pos, this.pos, 
 
 //create ambient audio
 export function initAudio() {
+    music = [new Audio("./music/chords.ogg"), new Audio("./music/lead.ogg"), new Audio("./music/bass.ogg")];
+    for (let i = 0; i < 3; i++) {
+        music[i].loop = true;
+        if (i != 0) music[i].volume = 0;
+    }
+}
+
+export function playMusic() {
+    for (let i = 0; i < 3; i++) {
+        music[i].play();
+    }
 }
 
 //update volume of all positional sounds.
 export function updateAudio(listener) {
+    music[1].volume = player.position[0] > - MAP_WIDTH * GRID_SIZE / 2 ? 1 : 0;
+    music[2].volume = player.position[1] < - 32 * GRID_SIZE / 2 ? 1 : 0;
 	for (let soundID in sounds)
 		if (typeof sounds[soundID].update === "function")
 			sounds[soundID].update(listener);
