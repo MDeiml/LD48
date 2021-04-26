@@ -34,7 +34,9 @@ function removeOpening() {
 
 function setup() {
     document.getElementById("startImage").style.display = "none"
+    document.getElementById("startImage").onclick = null
     document.getElementById("message").style.display = "none"
+    document.getElementById("message").onclick = null
     document.getElementById("loadingAnimation").style.display = "unset"
 
     set_seed(Math.floor(Math.random() * 256))
