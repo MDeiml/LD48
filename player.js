@@ -154,7 +154,8 @@ Player.prototype.handleInput = function(delta) {
     if (this.rate > 4)
         this.rate -= 4
     level.updateLight(0, [0.3, 0.8, 0.5], [this.position[0], this.position[1]],[0, 1], -1.0,  (2  - this.effect_strength * heartbeat(this.rate)) / 3 * flicker);
-    level.updateLight(1, [0.6, 0.3, 0.3], vec2.scaleAndAdd(vec2.create(), this.position, this.lookDirection, -0.4), this.lookDirection, 0.7, this.position[1] - this.lookDirection[1] > -1.5 ? 0 : 3 * flicker);
+    
+    level.updateLight(1, [0.6, 0.3, 0.3], this.getHeadPosition(), this.lookDirection, 0.7, this.position[1] - this.lookDirection[1] > -1.5 ? 0 : 3 * flicker);
 
     this.breathTimer += delta;
     if (this.breathTimer >= BREATH_RATE && this.position[1] < -0.1) {
@@ -188,6 +189,18 @@ Player.prototype.updateBreathing = function(delta) {
         console.log("YOU DIED.");
         this.deathSound.play();
     }
+}
+
+Player.prototype.isIdle = function() {
+    return this.idleState.sprite.visible
+}
+
+Player.prototype.getHeadPosition = function() {
+    let spawn_pos = vec2.scaleAndAdd(vec2.create(), this.position, this.lookDirection, -0.4);
+    if (this.isIdle()) {
+        spawn_pos = vec2.scaleAndAdd(vec2.create(), this.position, vec2.fromValues(this.lookDirection[1], -this.lookDirection[0]), 0.3 * (this.flip ? -1 : 1))
+    }
+    return spawn_pos
 }
 
 Player.prototype.updatePlayerAnimation = function() {
