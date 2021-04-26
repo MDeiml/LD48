@@ -123,7 +123,7 @@ function drawLightShader() {
         { ambientLight: 0.8 - 0.799 * Math.min(1, 1 * -player.position[1] / MAP_HEIGHT * 2 / GRID_SIZE), types: ["background"] },
         { ambientLight: 1 - 0.5 * Math.min(1, 1 * -player.position[1] / MAP_HEIGHT * 2 / GRID_SIZE), types: ["bubble", "bubbles"] },
         { ambientLight: 1, types: ["jelly"] },
-        { ambientLight: 0.8 - 0.5 * Math.min(1, 1 * -player.position[1] / MAP_HEIGHT * 2 / GRID_SIZE), types: ["fish"] },
+        { ambientLight: 0.8 - 0.5 * Math.min(1, 1 * -player.position[1] / MAP_HEIGHT * 2 / GRID_SIZE), types: ["fish", "plant-coral"] },
         { ambientLight: 0.8 - 0.799 * Math.min(1, 3 * -player.position[1] / MAP_HEIGHT * 2 / GRID_SIZE), types: ["rope", "plant"] }
     ];
     let drawn = { background_surface: true };

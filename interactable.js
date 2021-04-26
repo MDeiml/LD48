@@ -40,7 +40,7 @@ export let Coral = function(position, size) {
     AnimatedGameObject.call(this, "./Assets/animationen/koralle_anim.png",
         position,
         vec2.fromValues(size, size),
-        "plant",
+        "plant-coral",
         2,
         50 + Math.floor(Math.random(30))
     );
