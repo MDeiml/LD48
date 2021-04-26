@@ -187,9 +187,11 @@ export function updateFish(delta) {
                 if (accelLength - preferred_range > 25 && d != 1) {
                     // TELEPORT FISH
                     for (let i = 0; i < 100; i++) {
-                        let pos = vec2.random(vec2.create(), 20);
+                        let pos = vec2.random(vec2.create(), 2 * preferred_range);
                         if (pos[0] > 0 ^ player.lookDirection[0] > 0)
-                            pos[0] -= pos[0]
+                            pos[0] = -pos[0]
+                        if (pos[1] > 0 ^ player.lookDirection[1] > 0)
+                            pos[1] = -pos[1]
                         vec2.add(pos, pos, player.position);
                         if (pos[1] > 0) continue;
                         pos = mapToPixel(pos);
@@ -198,6 +200,7 @@ export function updateFish(delta) {
                         let index = pos[0] + pos[1] * MAP_WIDTH;
                         if (!level.map_data[0][index]) {
                             big_fish[d].setPosition(pixelToMap(pos));
+                            break
                         }
                     }
                 }
