@@ -181,14 +181,14 @@ export function updateFish(delta) {
                 } else if (d == 2) {
                     preferred_range = 8 - 6 * Math.min(1, 1 * -player.position[1] / MAP_HEIGHT * 2 / GRID_SIZE); // angler hunts, never reaches the player but comes closer as he goes deeper
                 }
-                if (big_fish[d].hurtTimer >= 0) {
+                if (big_fish[d].hurtTimer > 0) {
                     preferred_range = Math.max(preferred_range, 5);
                 }
                 let accel = vec2.sub(vec2.create(), player.position, big_fish[d].position);
                 let accelLength = vec2.length(accel);
                 if (accelLength < 1.5 && big_fish[d].hurtTimer <= 0) {
                     player.breath -= 5;
-                    big_fish[d].hurtTimer = 10;
+                    big_fish[d].hurtTimer = 20;
                 }
                 if (accelLength <= 4 && big_fish[d].audioTimer <= 0) {
                     if (depth.big_fish_audio) depth.big_fish_audio.play();
