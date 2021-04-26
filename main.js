@@ -75,9 +75,9 @@ function setup() {
         // setPlayer(new Player(vec2.sub(vec2.create(), level.objects["target"][0].position, vec2.fromValues(4, 0))));
         initFish();
         initBubbles();
-
-
-
+        
+        
+        
         var seconds = ((new Date()).getTime() - startDate.getTime());
 		setTimeout(removeOpening, 3000 - seconds); //should handle interrupt so any key can skip this
         playMusic();

@@ -210,9 +210,11 @@ img{width:32.2%;}
 
 			uniform sampler2D texture;
 			uniform vec2 texRes;
-			
+            
+            uniform float threshhold;
+            
 			vec4 getTexFromOffset(float x, float y) {
-				return texture2D(texture, vec2( vTexCoord.x + (x * 2.0)/texRes.x, vTexCoord.y + (y * 2.0)/texRes.y));
+				return texture2D(texture, vec2( (vTexCoord.x + (x * 2.0)/texRes.x), (vTexCoord.y + (y * 2.0)/texRes.y)));
 			}
 			
 			uniform float gaussian[225];
@@ -221,15 +223,22 @@ img{width:32.2%;}
 				
 				vec4 color = vec4(0, 0, 0, 0);
 				
-				for (int i = -8; i <= 8; i++)
-				{
-					for (int j = -8; j <= 8; j++)
-					{
-						float i1 = float(i);
-						float j1 = float(j);
-						color += getTexFromOffset(i1, j1) * gaussian[(i + 8) * 15 + j + 8];
-					}
-				}
+                if (length(vec2((vTexCoord.x - 0.5) * 2.0, (vTexCoord.y - 0.5) * 2.0)) > threshhold) {
+                    float divisor = 0.0;
+                    for (int i = -8; i <= 8; i++)
+                    {
+                        for (int j = -8; j <= 8; j++)
+                        {
+                            float i1 = float(i);
+                            float j1 = float(j);
+                            color += getTexFromOffset(i1, j1) * gaussian[(i + 8) * 15 + j + 8];
+                            divisor += gaussian[(i + 8) * 15 + j + 8];
+                        }
+                    }
+                    color = color / divisor;
+                }
+                else
+                    color = texture2D(texture, vTexCoord);
 				
 				gl_FragColor = color;
 			}

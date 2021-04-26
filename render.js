@@ -18,6 +18,12 @@ let pvMatrix = mat4.create();
 //move to global state in some way
 let aspct = 1;
 
+let renderContainer = null;
+let sigma = 1
+let gauss = []
+let sigmaChanged = true
+let minDist = 1
+
 export function aspect() {
     return aspct;
 }
@@ -42,7 +48,12 @@ export function init(c) {
     aspct = w/h;
 	projection = new Projection(w/h);
 	updateViewMat = true;
-
+    
+    
+	renderContainer = new Sprite.Sprite(null, mat4.create(), null)
+	renderContainer.texture = new Sprite.DynamicTexture2D() //hackery but static, don't judge me
+    
+    
     //handle window resizing
     window.addEventListener('resize', updateProjection);
     window.addEventListener('orientationchange', updateProjection);
@@ -61,6 +72,51 @@ function initShaders() {
     gl.enableVertexAttribArray(defaultPositionAttribute);
     gl.enableVertexAttribArray(defaultTexCoordAttribute);
 
+}
+
+export function setSigma(s) {
+    sigma = s
+    sigmaChanged = true
+}
+
+export function setMinDist(d) {
+    minDist = d
+}
+
+function hypotenuse(x1, y1, x2, y2) {
+  var xSquare = Math.pow(x1 - x2, 2);
+  var ySquare = Math.pow(y1 - y2, 2);
+  return Math.sqrt(xSquare + ySquare);
+}
+
+function computeGauss() {
+    if (!sigmaChanged)
+        return gauss;
+    
+    var kernel = [];
+
+    var twoSigmaSquare = 2 * sigma * sigma;
+    var centre = 8;
+
+    for (let i = 0; i < 15; i++) {
+        for (let j = 0; j < 15; j++) {
+            var distance = hypotenuse(i, j, centre, centre);
+
+            // The following is an algorithm that came from the gaussian blur
+            // wikipedia page [1].
+            //
+            // http://en.wikipedia.org/w/index.php?title=Gaussian_blur&oldid=608793634#Mechanics
+            var gaussian = (1 / Math.sqrt(
+            Math.PI * twoSigmaSquare
+            )) * Math.exp((-1) * (Math.pow(distance, 2) / twoSigmaSquare));
+
+            kernel.push(gaussian);
+        }
+    }
+    
+    gauss = kernel
+    
+    return gauss
 }
 
 let flicker = 1;
@@ -100,9 +156,17 @@ export function update() {
 		mat4.mul(pvMatrix, projection.get(), camera.get());
 		updateViewMat = false;
 	}
-
+    renderContainer.texture.bindFramebuffer()
     drawLightShader();
-
+    renderContainer.texture.unbindFramebuffer()
+    
+	shaders["blurShader"].bind();
+    //gl.uniformMatrix4fv(shaders["blurShader"].getUniform('VP'), false, mat4.create());
+    gl.uniformMatrix4fv(shaders["blurShader"].getUniform('VP'), false, mat4.fromQuat(mat4.create(), quat.fromEuler(quat.create(), 180, 0, 0)));
+    gl.uniform1fv(shaders["blurShader"].getUniform('gaussian'), computeGauss())
+    gl.uniform1f(shaders["blurShader"].getUniform('threshhold'), minDist)
+    renderContainer.draw(shaders["blurShader"]);
+    
     drawUI();
 }
 

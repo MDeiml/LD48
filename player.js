@@ -9,6 +9,7 @@ import {updateView, setFlicker} from "./render.js";
 import {stopMusic} from "./audio.js";
 import {MAP_WIDTH} from "./generation.js";
 import {GRID_SIZE} from "./walking_squares.js";
+import {setSigma, setMinDist} from "./render.js"
 
 const PLAYER_SPEED = 2;
 const FRAME_TIME = 1000/60;
@@ -229,7 +230,7 @@ Player.prototype.handleInput = function(delta) {
 }
 
 Player.prototype.updateBreathing = function(delta) {
-
+    
     if (this.breath == 0)
         return
 
@@ -249,8 +250,11 @@ Player.prototype.updateBreathing = function(delta) {
         this.breath = this.breath - delta;
     }
     this.breath = Math.min(Math.max(this.breath, 0), MAX_BREATH);
-
+    
+    
     this.effect_strength = 1 - (this.breath / 100);
+    setSigma(2 * this.effect_strength)
+    setMinDist(this.breath / 100);
 
     if (this.breath == 0)
     {
