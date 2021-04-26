@@ -19,7 +19,7 @@ Object.defineProperty(Bubble.prototype, 'constructor', {
     value: Bubble,
     enumerable: false, // so that it does not appear in 'for in' loop
     writable: true });
-Bubble.COLLECT_SOUND = new PositionalAudio(vec2.fromValues(0,0), "Assets/audio/bubble_pop.wav", false)
+Bubble.COLLECT_SOUND = new PositionalAudio(vec2.fromValues(0,0), "Assets/audio/zisch_v3.wav", false)
 Bubble.prototype.cleanup = function() {
     updateRegistry.unregisterUpdate(this.update_name);
 }
