@@ -40,8 +40,9 @@ export function readElements(id) {
 	return source
 }
 
-export function showStartImage(newsMessage) {
+export function showStartImage(newsMessage, allowReset=false) {
     document.getElementById("glCanvas").style.display = "none"
+    document.getElementById("reset").style.display = "unset"
     document.getElementById("message").src = newsMessage
     document.getElementById("message").style.display = "unset"
 }

@@ -181,7 +181,7 @@ Player.prototype.updateBreathing = function(delta) {
             Death = true;
             console.log("YOU WON.");
             console.log(this.position);
-            showStartImage(null, "Assets/hintergrund-leer.png"); //implement fail screen
+            showStartImage("Assets/hintergrund-leer.png"); //implement fail screen
         }
         this.breath = this.breath + delta * MAX_BREATH;
     }
@@ -200,7 +200,7 @@ Player.prototype.updateBreathing = function(delta) {
         if (this.collectedDead)
             setTimeout(showStartImage.bind(null, "Assets/zeitung-tot.png"), 4000); //implement fail screen
         else
-            setTimeout(showStartImage.bind(null, "Assets/zeitung-tot.png"), 4000); //implement fail screen
+            setTimeout(showStartImage.bind(null, "Assets/zeitung-tot.png", true), 4000); //implement fail screen
         this.deathSound.play();
     }
 }
