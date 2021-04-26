@@ -229,7 +229,7 @@ Player.prototype.updateBreathing = function(delta) {
             Death = true;
             console.log("YOU WON.");
             console.log(this.position);
-            showStartImage("Assets/hintergrund-leer.png"); //implement fail screen
+            showStartImage("Assets/zeitung-happyend.png"); //implement fail screen
         }
         this.breath = this.breath + delta * MAX_BREATH;
     }
