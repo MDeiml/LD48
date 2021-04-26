@@ -55,14 +55,18 @@ export function playMusic() {
 }
 
 let lastTime = 0;
+let randomPause = false;
 //update volume of all positional sounds.
 export function updateAudio(listener) {
     if (music[0].paused && (swimmingAccelerate() || swimmingRight() || swimmingUp() || swimmingDown() || swimmingLeft())) {
         playMusic();
     }
     if (music[0].currentTime + 3 * (music[0].currentTime - lastTime) > music[0].duration || music[0].currentTime < lastTime) {
-        music[1].volume = player.position[0] > - (MAP_WIDTH + 1) * GRID_SIZE / 2 ? 0.5 : 0;
+        music[1].volume = (!randomPause && player.position[0] > - (MAP_WIDTH + 1) * GRID_SIZE / 2) ? 0.5 : 0;
         music[2].volume = player.position[1] < - 32 * GRID_SIZE / 2 ? 0.8 : 0;
+    }
+    if (music[0].currentTime < lastTime) {
+        randomPause = Math.random() < 0.2;
     }
     lastTime = music[0].currentTime;
 	for (let soundID in sounds)
