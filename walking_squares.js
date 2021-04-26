@@ -7,6 +7,7 @@ import {Rope} from "./rope.js";
 import {GRID_SIZE as U_GRID_SIZE} from "./util.js";
 
 export const MAX_ALGAE_PER_UNIT = 2
+export const MAX_DECO_PER_UNIT = 1
 export const CORAL_PROBABILITY = 0.6
 export const GRID_SIZE = U_GRID_SIZE; // when changing also check state.js COLLIDABLE_GRID_SIZE
 const COLLISION_SHAPES = {
@@ -34,7 +35,6 @@ function spawnCoralAt(pos, size) {
     level.addObject(new Coral( pos, size));
 }
 function spawnBoatAt(pos, size, flip = false) {
-    console.log(pos)
     let obj = new GameObject(
         "./Assets/wreck.png",
         pos,
@@ -42,6 +42,26 @@ function spawnBoatAt(pos, size, flip = false) {
         "plant")
     obj.flip = flip
     level.addObject(obj);
+}
+
+function spawnStar(pos, size) {
+    let obj = new GameObject(
+        Math.random() > 0.01 ? "./Assets/star.png" : "./Assets/patrick.png",
+        pos,
+        vec2.fromValues(size, size),
+        "plant-deco")
+    obj.setOrientation(Math.random() * 360)
+    level.addObject(obj);
+}
+function spawnClam(pos, size) {
+    let obj = new GameObject(
+        "./Assets/clam.png",
+        pos,
+        vec2.fromValues(size, size),
+        "plant-deco")
+    obj.setOrientation(Math.random() * 360)
+    level.addObject(obj);
+    
 }
 
 const tutorial_map = [[
@@ -165,6 +185,21 @@ export function generateRopePath(map_data) {
 
 }
 
+function generateDecoForNode(segment_pos) {
+    let n = Math.random() * MAX_DECO_PER_UNIT;
+    
+    for (let i = 0; i < n; i++) {
+        let offset_vec = vec2.random(vec2.create());
+        let size = Math.random() * 0.4 + 0.1;
+        let pos = vec2.clone(segment_pos)
+        vec2.scaleAndAdd(pos, pos, offset_vec, 0.5)
+        if (Math.random() > 0.5)
+            spawnStar(pos, size);
+        else
+            spawnClam(pos, size);
+    }
+}
+
 export function computeSquareMap(map_data, width = MAP_WIDTH, height = MAP_HEIGHT, side_off = 0, depth_off = 0, genHoleLeft = true, hole_height = -1, spawn_deco = true) {
     let scanlineArr = map_data[0];
     let side_offset = Math.floor(width / 2) * GRID_SIZE + side_off; //offset cube objects so that they start at the middle
@@ -213,6 +248,19 @@ export function computeSquareMap(map_data, width = MAP_WIDTH, height = MAP_HEIGH
             let type = tl + tr + bl + br;
             let transform = null;
             let shape = null;
+            
+            if (spawn_deco) {
+                if (tl) 
+                    generateDecoForNode(vec2.fromValues(w * GRID_SIZE - side_offset - GRID_SIZE/2, -(h * GRID_SIZE + depth_offset) + GRID_SIZE/2))
+                if (tr) 
+                    generateDecoForNode(vec2.fromValues(w * GRID_SIZE - side_offset + GRID_SIZE/2, -(h * GRID_SIZE + depth_offset) + GRID_SIZE/2))
+                if (bl) 
+                    generateDecoForNode(vec2.fromValues(w * GRID_SIZE - side_offset - GRID_SIZE/2, -(h * GRID_SIZE + depth_offset) - GRID_SIZE/2))
+                if (br)
+                    generateDecoForNode(vec2.fromValues(w * GRID_SIZE - side_offset + GRID_SIZE/2, -(h * GRID_SIZE + depth_offset) - GRID_SIZE/2))
+            }
+            
+            
             switch(type) {
                 case 0:       //open space
                     break;
@@ -245,8 +293,8 @@ export function computeSquareMap(map_data, width = MAP_WIDTH, height = MAP_HEIGH
                         transform = Transformation.BOTTOM_RIGHT;
                         shape = COLLISION_SHAPES.br;
                         if (spawn_deco) {
-                            let n = Math.random() * MAX_ALGAE_PER_UNIT;
-                            for (let i = 0; i < n; i++) {
+                            let m = Math.random() * MAX_ALGAE_PER_UNIT;
+                            for (let i = 0; i < m; i++) {
                                 let size = Math.random() * 0.4 + 0.8;
                                 let x = Math.random() * 0.5;
                                 spawnAlgaeAt(vec2.fromValues(w * GRID_SIZE - side_offset + x * GRID_SIZE, -(h * GRID_SIZE + depth_offset) + size / 2 - (0.5 - x) * GRID_SIZE), size);
@@ -257,7 +305,10 @@ export function computeSquareMap(map_data, width = MAP_WIDTH, height = MAP_HEIGH
                                 let x = Math.random() * 0.5;
                                 spawnCoralAt(vec2.fromValues(w * GRID_SIZE - side_offset + x * GRID_SIZE, -(h * GRID_SIZE + depth_offset) + size / 2 - (0.5 - x) * GRID_SIZE), size);
                             }
+                            
                         }
+                    }
+                    if (spawn_deco) {
                     }
 
                     level.addObject(new CollidableGameObject(
@@ -320,8 +371,8 @@ export function computeSquareMap(map_data, width = MAP_WIDTH, height = MAP_HEIGH
                             transform = Transformation.BOTTOM_RIGHT;
                             shape = COLLISION_SHAPES.hor;
                             if (spawn_deco) {
-                                let n = Math.random() * 1.5 * MAX_ALGAE_PER_UNIT;
-                                for (let i = 0; i < n; i++) {
+                                let m = Math.random() * 1.5 * MAX_ALGAE_PER_UNIT;
+                                for (let i = 0; i < m; i++) {
                                     let size = Math.random() * 0.4 + 0.8;
                                     spawnAlgaeAt(vec2.fromValues(w * GRID_SIZE - side_offset + (Math.random() - 0.5) * GRID_SIZE, -(h * GRID_SIZE + depth_offset) + size / 2), size);
                                 }
@@ -356,8 +407,8 @@ export function computeSquareMap(map_data, width = MAP_WIDTH, height = MAP_HEIGH
                         transform = Transformation.TOP_LEFT
                         shape = COLLISION_SHAPES.tl;
                         if (spawn_deco) {
-                            let n = Math.random() * MAX_ALGAE_PER_UNIT;
-                            for (let i = 0; i < n; i++) {
+                            let m = Math.random() * MAX_ALGAE_PER_UNIT;
+                            for (let i = 0; i < m; i++) {
                                 let size = Math.random() * 0.4 + 0.8;
                                 let x = Math.random() * 0.5;
                                 spawnAlgaeAt(vec2.fromValues(w * GRID_SIZE - side_offset + (x - 0.5) * GRID_SIZE, -(h * GRID_SIZE + depth_offset) + size / 2 + x * GRID_SIZE), size);
@@ -373,8 +424,8 @@ export function computeSquareMap(map_data, width = MAP_WIDTH, height = MAP_HEIGH
                         transform = Transformation.TOP_RIGHT
                         shape = COLLISION_SHAPES.tr;
                         if (spawn_deco) {
-                            let n = Math.random() * MAX_ALGAE_PER_UNIT;
-                            for (let i = 0; i < n; i++) {
+                            let m = Math.random() * MAX_ALGAE_PER_UNIT;
+                            for (let i = 0; i < m; i++) {
                                 let size = Math.random() * 0.4 + 0.8;
                                 let x = Math.random() * 0.5;
                                 spawnAlgaeAt(vec2.fromValues(w * GRID_SIZE - side_offset + x * GRID_SIZE, -(h * GRID_SIZE + depth_offset) + size / 2 - (x - 0.5) * GRID_SIZE), size);

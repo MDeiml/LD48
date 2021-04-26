@@ -161,12 +161,16 @@ function drawLightShader() {
         }
     }
     for (let type in level.objects) {
-        if (drawn[type]) continue;
+        if (drawn[type] || type == "plant-deco") continue;
         for (let sprite of level.objects[type]) {
             if (vec2.squaredDistance(sprite.position, player.position) > 15 * 15) continue;
             sprite.draw(shaders["lightShader"]);
         }
 	}
+    for (let sprite of level.objects["plant-deco"]) {
+        if (vec2.squaredDistance(sprite.position, player.position) > 15 * 15) continue;
+        sprite.draw(shaders["lightShader"]);
+    }
 
     //player.draw(shaders["lightShader"]);
 	//if (player.canInteract) {
