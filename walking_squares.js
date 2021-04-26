@@ -374,13 +374,13 @@ export function computeSquareMap(map_data, width = MAP_WIDTH, height = MAP_HEIGH
                                 let m = Math.random() * 1.5 * MAX_ALGAE_PER_UNIT;
                                 for (let i = 0; i < m; i++) {
                                     let size = Math.random() * 0.4 + 0.8;
-                                    spawnAlgaeAt(vec2.fromValues(w * GRID_SIZE - side_offset + (Math.random() - 0.5) * GRID_SIZE, -(h * GRID_SIZE + depth_offset) + size / 2), size);
+                                    spawnAlgaeAt(vec2.fromValues(w * GRID_SIZE - side_offset + (Math.random() - 0.5) * GRID_SIZE, -(h * GRID_SIZE + depth_offset + 0.1) + size / 2), size);
                                 }
                                 if (Math.random() < CORAL_PROBABILITY)
                                 {
                                     let size = Math.random() * 0.4 + 0.8;
                                     let x = Math.random() * 0.5;
-                                    spawnCoralAt(vec2.fromValues(w * GRID_SIZE - side_offset + (Math.random() - 0.5) * GRID_SIZE, -(h * GRID_SIZE + depth_offset) + size / 2), size);
+                                    spawnCoralAt(vec2.fromValues(w * GRID_SIZE - side_offset + (Math.random() - 0.5) * GRID_SIZE, -(h * GRID_SIZE + depth_offset + 0.1) + size / 2), size);
                                 }
                             }
                         } else if (bl == 1 && tl == 1) {
