@@ -67,8 +67,8 @@ function setup() {
         generateRopePath(map_data);
         computeSquareMap(map_data);
         generateTutorial();
-        //setPlayer(new Player(SPAWN_COORDS));
-        setPlayer(new Player(vec2.fromValues(-(MAP_WIDTH - 9)/2 * GRID_SIZE, -MAP_HEIGHT * GRID_SIZE / 4)))
+        setPlayer(new Player(SPAWN_COORDS));
+        //setPlayer(new Player(vec2.fromValues(-(MAP_WIDTH - 9)/2 * GRID_SIZE, -MAP_HEIGHT * GRID_SIZE / 4)))
         initFish();
         initBubbles();
 
