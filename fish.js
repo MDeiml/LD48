@@ -8,6 +8,7 @@ import {isInMap} from "./util.js"
 
 const NUM_FISH = 30;
 const FISH_RADIUS = 10;
+const SHARK_COOLDOWN = 10;
 
 let SmallFish = function(name, frames = 1, angle = 0, flip = false) {
     this.frames = frames
@@ -107,6 +108,7 @@ export function initFish() {
                 pos = pixelToMap(pos);
                 let obj = new AnimatedGameObject(depth.big_fish, pos, vec2.fromValues(3, 2), "big_fish", depth.big_fish_frames);
                 obj.depth = d;
+                if (d == 1) obj.cooldown = 0;
                 obj.velocity = vec2.fromValues(0, 0);
                 big_fish.push(obj);
                 level.addObject(obj);
@@ -148,6 +150,8 @@ export function updateFish(delta) {
             break
     }
 
+    big_fish[1].cooldown = Math.max(0, big_fish[1].cooldown - delta);
+
     // BIG FISH
     if (player.position[0] > -MAP_WIDTH/2 * GRID_SIZE) {
         for (let d = 0; d < DEPTHS.length; d++) {
@@ -168,7 +172,7 @@ export function updateFish(delta) {
                 }
                 let accel = vec2.sub(vec2.create(), player.position, big_fish[d].position);
                 let accelLength = vec2.length(accel);
-                if (accelLength - preferred_range > 25) {
+                if (accelLength - preferred_range > 25 && d != 1) {
                     // TELEPORT FISH
                     for (let i = 0; i < 100; i++) {
                         let pos = vec2.random(vec2.create(), 20);
@@ -183,13 +187,33 @@ export function updateFish(delta) {
                         }
                     }
                 }
-                if (accelLength != 0) {
-                    vec2.scale(accel, accel, Math.max(-1, Math.min(1, accelLength - preferred_range)) / accelLength);
+                if (d == 0) {
+                    if (accelLength != 0) {
+                        vec2.scale(accel, accel, Math.max(-1, Math.min(1, accelLength - preferred_range)) / accelLength);
+                    }
+                    vec2.scaleAndAdd(big_fish[d].velocity, big_fish[d].velocity, accel, delta * depth.big_fish_accel);
+                    let velLength = vec2.length(big_fish[d].velocity);
+                    vec2.scale(big_fish[d].velocity, big_fish[d].velocity, depth.big_fish_speed / velLength);
+                } else if (d == 1) {
+                    if (big_fish[d].cooldown <= 0) {
+                        let pos = mapToPixel(player.position);
+                        vec2.round(pos, pos);
+                        let success = true;
+                        for (let x = pos[0] - 2; x <= pos[0] + 2; x++) {
+                            success &= !level.map_data[0][x + MAP_WIDTH * pos[1]];
+                        }
+                        if (success) {
+                            pos[0] -= 2;
+                            big_fish[d].setPosition(pixelToMap(pos));
+                            vec2.set(big_fish[d].velocity, depth.big_fish_speed, 0);
+                            big_fish[d].cooldown = SHARK_COOLDOWN;
+                        } else {
+                            big_fish[d].setPosition(vec2.fromValues(0, 100));
+                            vec2.set(big_fish[d].velocity, 0, 0);
+                        }
+                    }
                 }
-                vec2.scaleAndAdd(big_fish[d].velocity, big_fish[d].velocity, accel, delta * depth.big_fish_accel);
 
-                let velLength = vec2.length(big_fish[d].velocity);
-                vec2.scale(big_fish[d].velocity, big_fish[d].velocity, depth.big_fish_speed / velLength);
                 big_fish[d].flip = big_fish[d].velocity[0] > 0;
                 big_fish[d].flip ^= depth.flip_big_fish;
             } else {
