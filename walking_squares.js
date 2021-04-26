@@ -36,9 +36,9 @@ function spawnCoralAt(pos, size) {
 
 const tutorial_map = [[
         true, false, true, true, true, true, true,
-        true, false, true, true, true, true, true,
-        true, false, true, true, true, true, true,
-        true, false, true, false, false, false, false,
+        true, false, true, true, true, false, false,
+        true, false, true, true, false, false, true,
+        true, false, true, false, false, true, true,
         true, false, true, false, true, true, true,
         true, false, true, false, true, true, true,
         true, false, false, false, true, true, true,
@@ -51,7 +51,7 @@ export function generateTutorial() {
     let tut_background = new GameObject("Assets/background_blue.png", vec2.fromValues(-(MAP_WIDTH + 9)/2 * GRID_SIZE, -7 * GRID_SIZE), vec2.fromValues( 15 * GRID_SIZE, 7 * GRID_SIZE), "background")
     tut_background.setOrientation(270)
     level.addObject(tut_background)
-    computeSquareMap(tutorial_map, 7, 10, (MAP_WIDTH + 9) * GRID_SIZE/2, -GRID_SIZE, false, 2, false);
+    computeSquareMap(tutorial_map, 7, 10, (MAP_WIDTH + 9) * GRID_SIZE/2, -GRID_SIZE, false, 0, false);
     let collision_coords = vec2.fromValues(-(MAP_WIDTH + 1)/2, -2);
     vec2.round(collision_coords, collision_coords);
 
@@ -136,7 +136,7 @@ export function generateRopePath(map_data) {
 
 }
 
-export function computeSquareMap(map_data, width = MAP_WIDTH, height = MAP_HEIGHT, side_off = 0, depth_off = 0, genHoleLeft = true, hole_height = 1, spawn_deco = true) {
+export function computeSquareMap(map_data, width = MAP_WIDTH, height = MAP_HEIGHT, side_off = 0, depth_off = 0, genHoleLeft = true, hole_height = -1, spawn_deco = true) {
     let scanlineArr = map_data[0];
     let side_offset = Math.floor(width / 2) * GRID_SIZE + side_off; //offset cube objects so that they start at the middle
     let depth_offset = GRID_SIZE + depth_off;
