@@ -3,7 +3,7 @@ import {GRID_SIZE} from "./walking_squares.js";
 import {MAP_WIDTH} from "./generation.js";
 import { vec2 } from "./gl-matrix-min.js"
 import {AnimatedGameObject, GameObject} from "./GameObject.js";
-import {pixelToMap} from "./util.js";
+import {pixelToMap, mapToPixel} from "./util.js";
 import {isInMap} from "./util.js"
 
 const NUM_FISH = 30;
@@ -26,8 +26,8 @@ const DEPTHS = [
         big_fish_accel: 12,
         flip_big_fish: true,
         small_fish: [
-            new SmallFish("Assets/fish1/koi_anim.png", 4, 110), 
-            new SmallFish("Assets/fish1/angelfish.png"),    
+            new SmallFish("Assets/fish1/koi_anim.png", 4, 110),
+            new SmallFish("Assets/fish1/angelfish.png"),
             new SmallFish("Assets/fish1/salmon.png")
         ]
     },
@@ -40,8 +40,8 @@ const DEPTHS = [
         big_fish_frames: 4,
         flip_big_fish: true,
         small_fish: [
-            new SmallFish("Assets/fish2/guppy.png", 1, 0, true), 
-            new SmallFish("Assets/fish2/wels.png", 1, -20), 
+            new SmallFish("Assets/fish2/guppy.png", 1, 0, true),
+            new SmallFish("Assets/fish2/wels.png", 1, -20),
             new SmallFish("Assets/fish2/clownfish.png", 1, -20)
         ]
     },
@@ -53,8 +53,8 @@ const DEPTHS = [
         big_fish: "Assets/fish4/anglerfisch_anim.png",
         big_fish_frames: 4,
         small_fish: [
-            new SmallFish("Assets/fish3/pirania.png"), 
-            new SmallFish("Assets/fish3/eel.png"), 
+            new SmallFish("Assets/fish3/pirania.png"),
+            new SmallFish("Assets/fish3/eel.png"),
             new SmallFish("Assets/fish3/blobfish.png")
         ]
     }
@@ -149,49 +149,53 @@ export function updateFish(delta) {
     }
 
     // BIG FISH
-    for (let d = 0; d < DEPTHS.length; d++) {
-        let depth = DEPTHS[d];
-        let hunting = player.position[1] < -depth.start * GRID_SIZE && player.position[1] > -depth.end * GRID_SIZE;
-        hunting &= player.breath > 0;
-        if (hunting) {
-            // HUNTING
-            let preferred_range = 0;
-            if (d == 0) {
-                if (player.position[1] > -2 * GRID_SIZE) { // octopus leaves player alone at start
-                    preferred_range = 12;
-                } else if (player.position[1] > -5 * GRID_SIZE) { // gets closer later
-                    preferred_range = 5;
+    if (player.position[0] > -MAP_WIDTH/2 * GRID_SIZE) {
+        for (let d = 0; d < DEPTHS.length; d++) {
+            let depth = DEPTHS[d];
+            let hunting = player.position[1] < -depth.start * GRID_SIZE && player.position[1] > -depth.end * GRID_SIZE;
+            hunting &= player.breath > 0;
+            if (hunting) {
+                // HUNTING
+                let preferred_range = 0;
+                if (d == 0) {
+                    if (player.position[1] > -2 * GRID_SIZE) { // octopus leaves player alone at start
+                        preferred_range = 12;
+                    } else if (player.position[1] > -5 * GRID_SIZE) { // gets closer later
+                        preferred_range = 5;
+                    }
+                } else if (d == 2) {
+                    preferred_range = 2; // angler hunts never REALLY catches up
                 }
-            } else if (d == 2) {
-                preferred_range = 2; // angler hunts never REALLY catches up
-            }
-            let accel = vec2.sub(vec2.create(), player.position, big_fish[d].position);
-            let accelLength = vec2.length(accel);
-            if (accelLength - preferred_range > 25) {
-                // TELEPORT FISH
-                for (let i = 0; i < 100; i++) {
-                    let pos = vec2.random(vec2.create(), 20);
-                    vec2.add(pos, pos, player.position);
-                    if (pos[1] > 0) continue;
-                    vec2.floor(pos, pos);
-                    let index = pos[0] + pos[1] * MAP_WIDTH;
-                    if (!level.map_data[0][index]) {
-                        big_fish[d].setPosition(pos);
+                let accel = vec2.sub(vec2.create(), player.position, big_fish[d].position);
+                let accelLength = vec2.length(accel);
+                if (accelLength - preferred_range > 25) {
+                    // TELEPORT FISH
+                    for (let i = 0; i < 100; i++) {
+                        let pos = vec2.random(vec2.create(), 20);
+                        vec2.add(pos, pos, player.position);
+                        if (pos[1] > 0) continue;
+                        pos = mapToPixel(pos);
+                        vec2.floor(pos, pos);
+                        if (pos[0] < 0 || pos[0] >= MAP_WIDTH) continue;
+                        let index = pos[0] + pos[1] * MAP_WIDTH;
+                        if (!level.map_data[0][index]) {
+                            big_fish[d].setPosition(pixelToMap(pos));
+                        }
                     }
                 }
-            }
-            if (accelLength != 0) {
-                vec2.scale(accel, accel, Math.max(-1, Math.min(1, accelLength - preferred_range)) / accelLength);
-            }
-            vec2.scaleAndAdd(big_fish[d].velocity, big_fish[d].velocity, accel, delta * depth.big_fish_accel);
+                if (accelLength != 0) {
+                    vec2.scale(accel, accel, Math.max(-1, Math.min(1, accelLength - preferred_range)) / accelLength);
+                }
+                vec2.scaleAndAdd(big_fish[d].velocity, big_fish[d].velocity, accel, delta * depth.big_fish_accel);
 
-            let velLength = vec2.length(big_fish[d].velocity);
-            vec2.scale(big_fish[d].velocity, big_fish[d].velocity, depth.big_fish_speed / velLength);
-            big_fish[d].flip = big_fish[d].velocity[0] > 0;
-            big_fish[d].flip ^= depth.flip_big_fish;
-        } else {
-            // WANDER
-            vec2.set(big_fish[d].velocity, 0, 0);
+                let velLength = vec2.length(big_fish[d].velocity);
+                vec2.scale(big_fish[d].velocity, big_fish[d].velocity, depth.big_fish_speed / velLength);
+                big_fish[d].flip = big_fish[d].velocity[0] > 0;
+                big_fish[d].flip ^= depth.flip_big_fish;
+            } else {
+                // WANDER
+                vec2.set(big_fish[d].velocity, 0, 0);
+            }
         }
     }
     let angler = big_fish[2];
