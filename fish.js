@@ -186,8 +186,8 @@ export function updateFish(delta) {
                 }
                 let accel = vec2.sub(vec2.create(), player.position, big_fish[d].position);
                 let accelLength = vec2.length(accel);
-                if (accelLength < 1.5 && big_fish[d].hurtTimer <= 0) {
-                    player.breath -= 5;
+                if (accelLength < 1 && big_fish[d].hurtTimer <= 0) {
+                    player.hurt();
                     big_fish[d].hurtTimer = 20;
                 }
                 if (accelLength <= 4 && big_fish[d].audioTimer <= 0) {

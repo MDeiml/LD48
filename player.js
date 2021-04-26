@@ -53,6 +53,7 @@ export let Player = function(spawn) {
         new Audio("./Assets/audio/breath2.wav"),
         new Audio("./Assets/audio/breath3.wav")
     ];
+    this.damageSound = new Audio("./Assets/audio/Playerdamage.wav");
     this.deathSound = new Audio("./Assets/audio/death_short1.wav");
 }
 Player.prototype = Object.create(MobileGameObject.prototype);
@@ -63,6 +64,11 @@ Object.defineProperty(Player.prototype, 'constructor', {
 
 Player.prototype.isPlayer = function(){return true;}
 // Player.prototype.setInteraction = function(isactive) {this.canInteract = isactive }
+//
+Player.prototype.hurt = function(){
+    this.breath -= 5;
+    this.damageSound.play();
+}
 
 Player.prototype.handleInput = function(delta) {
 	//TOD???
@@ -189,9 +195,9 @@ Player.prototype.updateBreathing = function(delta) {
         this.breath = this.breath - delta * (swimmingAccelerate() ? BOOST_FACTOR : 1);
     }
     this.breath = Math.min(Math.max(this.breath, 0), MAX_BREATH);
-    
+
     this.effect_strength = 1 - (this.breath / 100);
-    
+
     if (this.breath == 0)
     {
         Death = true;
