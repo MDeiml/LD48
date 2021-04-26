@@ -111,6 +111,7 @@ export function initFish() {
                 let obj = new AnimatedGameObject(depth.big_fish, pos, vec2.fromValues(3, 2), "big_fish", depth.big_fish_frames);
                 obj.depth = d;
                 obj.audioTimer = 0;
+                obj.hurtTimer = 0;
                 if (d == 1) {
                     obj.cooldown = 0;
                     obj.isLeft = Math.random() * 0.5;
@@ -163,6 +164,8 @@ export function updateFish(delta) {
         for (let d = 0; d < DEPTHS.length; d++) {
             big_fish[d].audioTimer -= delta;
             if (big_fish[d].audioTimer < 0) big_fish[d].audioTimer = 0;
+            big_fish[d].hurtTimer -= delta;
+            if (big_fish[d].hurtTimer < 0) big_fish[d].hurtTimer = 0;
             let depth = DEPTHS[d];
             let hunting = player.position[1] < -depth.start * GRID_SIZE && player.position[1] > -depth.end * GRID_SIZE;
             hunting &= player.breath > 0;
@@ -178,8 +181,15 @@ export function updateFish(delta) {
                 } else if (d == 2) {
                     preferred_range = 8 - 6 * Math.min(1, 1 * -player.position[1] / MAP_HEIGHT * 2 / GRID_SIZE); // angler hunts, never reaches the player but comes closer as he goes deeper
                 }
+                if (big_fish[d].hurtTimer > 0) {
+                    preferred_range = Math.max(preferred_range, 5);
+                }
                 let accel = vec2.sub(vec2.create(), player.position, big_fish[d].position);
                 let accelLength = vec2.length(accel);
+                if (accelLength < 1 && big_fish[d].hurtTimer <= 0) {
+                    player.hurt();
+                    big_fish[d].hurtTimer = 20;
+                }
                 if (accelLength <= 4 && big_fish[d].audioTimer <= 0) {
                     if (depth.big_fish_audio) depth.big_fish_audio.play();
                     big_fish[d].audioTimer = 5;
