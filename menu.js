@@ -3,7 +3,7 @@ import {GameObject} from "./GameObject.js"
 import {ui, player, updateRegistry} from "./state.js"
 import {MAX_BREATH} from "./player.js";
 import {aspect} from "./render.js";
-import {MAP_HEIGHT} from "./generation.js"
+import {MAP_HEIGHT, MAP_WIDTH} from "./generation.js"
 import {GRID_SIZE} from "./util.js"
 
 
@@ -36,11 +36,11 @@ export function createUI() {
     let pfeil = new Menu("Assets/anzeigepfeil.png", vec2.fromValues(-0.75,  -0.02), vec2.fromValues(0.18, 0.18), tank);
     let return_prompt = new Menu("Assets/prompt.png", vec2.fromValues(0, 1.5), vec2.fromValues(4 * 20/12, 4));
     updateRegistry.registerUpdate("frame_aspect", function() {
-        let scale = 8/((MAP_HEIGHT * GRID_SIZE) / player.position[1])
-        if (player.position[1] > -4) {
+        let scale = 4 * (1 + (player.position[1] + GRID_SIZE) / (4 * GRID_SIZE))
+        if (player.position[0] < -MAP_WIDTH / 2 * GRID_SIZE) {
             frame.halfSize[0] = 0;
         } else {
-            frame.halfSize[1] = Math.max(8 + scale, 8)
+            frame.halfSize[1] = Math.max(4 + scale, 4)
             frame.halfSize[0] = frame.halfSize[1] * aspect();
         }
         frame.setPosition(frame.position);
