@@ -104,7 +104,6 @@ export function generateRopePath(map_data) {
                 start = prev[current];
             }
             current = prev[current];
-            console.log(current)
         }
         if (pixels[start + MAP_WIDTH]) {
             break;
