@@ -387,7 +387,7 @@ export function computeSquareMap(map_data, width = MAP_WIDTH, height = MAP_HEIGH
                             transform = Transformation.BOTTOM_LEFT;
                             shape = COLLISION_SHAPES.vert;
                             if (Math.random() < 0.01)
-                            spawnBoatAt(vec2.fromValues(w * GRID_SIZE - side_offset + 1, -(h * GRID_SIZE + depth_offset)), GRID_SIZE / 2)
+                            spawnBoatAt(vec2.fromValues(w * GRID_SIZE - side_offset + 0.85, -(h * GRID_SIZE + depth_offset)), GRID_SIZE / 2)
                         }
 
                         level.addObject(new CollidableGameObject(
