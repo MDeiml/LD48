@@ -70,6 +70,7 @@ export function setFlicker(f) {
 
 export function updateView() {
     let pos = vec2.clone(player.position);
+    pos[0] += Math.sin(player.screenShake / 0.1 * 2 * Math.PI) * 0.1;
     camera.setPos(pos);
     camera.setUpsideDown(level.upsideDown);
     updateViewMat = true;
@@ -92,7 +93,7 @@ function updateProjection() {
 export function update() {
     let multiplier = 0.8 - 0.799 * Math.min(1, 1 * -player.position[1] / MAP_HEIGHT * 2 / GRID_SIZE)
 	gl.clearColor(CLEAR_COLOR_VEC[0] * multiplier, CLEAR_COLOR_VEC[1] * multiplier, CLEAR_COLOR_VEC[2] * multiplier, 1);
-    
+
     gl.clear(gl.COLOR_BUFFER_BIT);
 
 	if (updateViewMat) {
@@ -153,7 +154,7 @@ function drawLightShader() {
                 gl.uniform1f(shaders["lightShader"].getUniform('alpha'), 0.3)
             else
                 gl.uniform1f(shaders["lightShader"].getUniform('alpha'), 1.0)
-                
+
             for (let sprite of level.objects[type]) {
                 if (type != "background" && type != "background-parallax" && vec2.squaredDistance(sprite.getPosition(), player.position) > 15 * 15) continue;
                 sprite.draw(shaders["lightShader"]);

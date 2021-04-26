@@ -51,6 +51,7 @@ export let Player = function(spawn) {
     this.lookDirection = vec2.fromValues(-1, 0);
     this.flickerTimer = -2;
     this.breathTimer = 0;
+    this.screenShake = 0;
 	this.breatheOutSounds = [
         new Audio("./Assets/audio/blubbles_breath1.wav"),
         new Audio("./Assets/audio/blubbles_breath2.wav"),
@@ -83,6 +84,7 @@ Player.prototype.isPlayer = function(){return true;}
 Player.prototype.hurt = function(){
     this.breath -= 5;
     this.damageSound.play();
+    this.screenShake = 0.1;
 }
 
 Player.prototype.handleInput = function(delta) {
@@ -190,6 +192,10 @@ Player.prototype.handleInput = function(delta) {
         this.breath = MAX_BREATH;
     }
     this.flickerTimer -= delta;
+    this.screenShake -= delta;
+    if (this.screenShake < 0) {
+        this.screenShake = 0;
+    }
     if (!this.foundSafetyRope) {
         for (let segment of level.objects["rope"]) {
             if (segment.sprite.texture.name == "./Assets/rope_g.png" && vec2.squaredDistance(segment.position, this.position) < 4 * 4) {
