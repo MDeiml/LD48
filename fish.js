@@ -57,7 +57,7 @@ const DEPTHS = [
         big_fish_frames: 4,
         small_fish: [
             new SmallFish("Assets/fish3/pirania.png"),
-            new SmallFish("Assets/fish3/eel.png"),
+            new SmallFish("Assets/fish3/eel_anim.png", 5),
             new SmallFish("Assets/fish3/blobfish.png")
         ]
     }

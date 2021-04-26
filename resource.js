@@ -36,7 +36,7 @@ let preload_textures = [
     "Assets/fish2/clownfish.png",
     "Assets/fish4/anglerfisch_anim.png",
     "Assets/fish3/pirania.png",
-    "Assets/fish3/eel.png",
+    "Assets/fish3/eel_anim.png",
     "Assets/fish3/blobfish.png",
 
     //background
