@@ -190,7 +190,7 @@ function generateDecoForNode(segment_pos) {
     
     for (let i = 0; i < n; i++) {
         let offset_vec = vec2.random(vec2.create());
-        let size = Math.random() * 0.4 + 0.1;
+        let size = Math.random() * 0.2 + 0.3;
         let pos = vec2.clone(segment_pos)
         vec2.scaleAndAdd(pos, pos, offset_vec, 0.5)
         if (Math.random() > 0.5)
