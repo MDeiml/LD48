@@ -28,7 +28,7 @@ export let level = {
         "fish": []
     },
 	lights: new Array(180), //TODO move
-    lightCnt: 3,
+    lightCnt: 4,
 	updateLight: function(lightID, color, pos, dir, cutoff, intensity) {
 		let startPos = lightID * 9;
 
