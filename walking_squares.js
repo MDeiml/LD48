@@ -33,6 +33,16 @@ function spawnCoralAt(pos, size) {
 
     level.addObject(new Coral( pos, size));
 }
+function spawnBoatAt(pos, size, flip = false) {
+    console.log(pos)
+    let obj = new GameObject(
+        "./Assets/wreck.png",
+        pos,
+        vec2.fromValues(size, size),
+        "plant")
+    obj.flip = flip
+    level.addObject(obj);
+}
 
 const tutorial_map = [[
         true, false, true, true, true, true, true,
@@ -140,8 +150,6 @@ export function generateRopePath(map_data) {
 
     while (vec2.distance(end, lastPoint) > 1)
     {
-        console.log(lastPoint)
-        console.log(vec2.distance(end, lastPoint))
         let randOffset = vec2.fromValues(Math.random() - 0.5, Math.random() -  0.5)
         let newPos = vec2.create()
         vec2.sub(newPos, end, lastPoint)
@@ -306,6 +314,7 @@ export function computeSquareMap(map_data, width = MAP_WIDTH, height = MAP_HEIGH
                         } else if (tr == 1 && br == 1) {
                             transform = Transformation.TOP_RIGHT;
                             shape = COLLISION_SHAPES.vert;
+                            //spawnBoatAt(vec2.fromValues(w * GRID_SIZE - side_offset - 1, -(h * GRID_SIZE + depth_offset)), GRID_SIZE / 2, true)
                         } else if (br == 1 && bl == 1) {
                             transform = Transformation.BOTTOM_RIGHT;
                             shape = COLLISION_SHAPES.hor;
@@ -325,6 +334,8 @@ export function computeSquareMap(map_data, width = MAP_WIDTH, height = MAP_HEIGH
                         } else if (bl == 1 && tl == 1) {
                             transform = Transformation.BOTTOM_LEFT;
                             shape = COLLISION_SHAPES.vert;
+                            if (Math.random() < 0.01)
+                            spawnBoatAt(vec2.fromValues(w * GRID_SIZE - side_offset + 1, -(h * GRID_SIZE + depth_offset)), GRID_SIZE / 2)
                         }
 
                         level.addObject(new CollidableGameObject(
