@@ -101,6 +101,7 @@ function spawnFishAtDistance(distance = FISH_RADIUS) {
 
 export function initFish() {
     big_fish = [];
+    DEPTHS[0].big_fish_audio.volume = 0.8;
     for (let d = 0; d < DEPTHS.length; d++) {
         let depth = DEPTHS[d];
         for (let i = 0; i < 1000; i++) {
