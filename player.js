@@ -253,7 +253,7 @@ Player.prototype.updateBreathing = function(delta) {
             console.log(this.position);
             stopMusic();
             this.typewriterAudio.play();
-            showStartImage("Assets/zeitung-happyend.png"); //implement fail screen
+            showStartImage("Assets/zeitung-happyend.png", true); //implement fail screen
         }
         this.breath = this.breath + delta * MAX_BREATH;
     }
@@ -280,7 +280,7 @@ Player.prototype.updateBreathing = function(delta) {
             setTimeout(function() {
                 stopMusic();
                 audio.play();
-                showStartImage("Assets/zeitung-tot.png", true); //implement fail screen
+                showStartImage("Assets/zeitung-tot.png"); //implement fail screen
             }, 4000); //implement fail screen
         this.deathSound.play();
     }
