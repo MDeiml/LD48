@@ -28,6 +28,9 @@ Bubble.prototype.collect = function() {
         return
     player.breath += 10 //add function to clamp it to 100
     this.collected = true;
+    if (player.dashState == 2) {
+        player.dashState = 0;
+    }
     Bubble.COLLECT_SOUND.moveTo(this.getPosition())
     Bubble.COLLECT_SOUND.play()
     this.update_name = "bubble_deletion_" + Math.random();
