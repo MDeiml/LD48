@@ -197,10 +197,10 @@ export function updateFish(delta) {
                 if (accelLength - preferred_range > 25 && d != 1) {
                     // TELEPORT FISH
                     for (let i = 0; i < 100; i++) {
-                        let pos = vec2.random(vec2.create(), 2 * preferred_range);
-                        if (pos[0] > 0 ^ player.lookDirection[0] > 0)
+                        let pos = vec2.random(vec2.create(), 20);
+                        if ((pos[0] > 0) ^ (player.lookDirection[0] > 0))
                             pos[0] = -pos[0]
-                        if (pos[1] > 0 ^ player.lookDirection[1] > 0)
+                        if ((pos[1] > 0) ^ (player.lookDirection[1] > 0))
                             pos[1] = -pos[1]
                         vec2.add(pos, pos, player.position);
                         if (pos[1] > 0) continue;
@@ -242,8 +242,14 @@ export function updateFish(delta) {
                     }
                 }
                 else if (d == 2) { //needs to be behind the player likely
+                    let accel = vec2.sub(vec2.create(), player.rope.points[player.rope.points.length - 3], big_fish[d].position);
+                    let accelLength = vec2.length(accel);
                     if (accelLength != 0) {
-                        vec2.scale(accel, accel, Math.max(-1, Math.min(1, accelLength - preferred_range)) / (accelLength * accelLength));
+                        vec2.scale(accel, accel, Math.max(0, Math.min(1, accelLength - preferred_range)) / (accelLength * accelLength));
+                    }
+                    else {
+                        accel = vec2.random(accel)
+                        accelLength = 1;
                     }
                     vec2.scaleAndAdd(big_fish[d].velocity, big_fish[d].velocity, accel, delta * depth.big_fish_accel);
                     let velLength = vec2.length(big_fish[d].velocity);
@@ -254,7 +260,8 @@ export function updateFish(delta) {
                 big_fish[d].flip ^= depth.flip_big_fish;
             } else {
                 // WANDER
-                vec2.set(big_fish[d].velocity, 0, 0);
+                big_fish[d].velocity = vec2.random(big_fish[d].velocity)
+                //vec2.set(big_fish[d].velocity, 0, 0);
             }
         }
     }
