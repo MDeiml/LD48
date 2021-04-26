@@ -1,6 +1,6 @@
-import {MobileGameObject, GameObject} from "./GameObject.js"
+import {MobileGameObject, AnimatedGameObject, GameObject} from "./GameObject.js"
 import {Sprite} from "./Sprite.js"
-import {mat4, vec2, vec3, quat} from "./gl-matrix-min.js"
+import {mat4, vec2, vec3, vec4, quat} from "./gl-matrix-min.js"
 import {swimmingLeft, swimmingRight, swimmingUp, swimmingDown, swimmingAccelerate} from "./input.js"
 import {level, updateRegistry} from "./state.js"
 import {heartbeat} from "./util.js"
@@ -16,7 +16,10 @@ export var Death = false;
 
 export let Player = function() {
     MobileGameObject.call(this, "./Assets/animationen/taucher-animation.png", vec2.fromValues( 0, 0), vec2.fromValues(1, 1), "player", null, vec2.fromValues(1, 1), vec2.fromValues(0, 0));
-
+    
+    this.idleState = new AnimatedGameObject("./Assets/animationen/idle_anim.png", vec2.fromValues( 0, 0), vec2.fromValues(2, 2), "rope", 2, 20, this);
+    level.addObject(this.idleState)
+    this.idleState.sprite.visible = false;
     this.sprite.texture.frames = 4;
 
     updateRegistry.registerUpdate("player_input", this.handleInput.bind(this));
@@ -107,7 +110,7 @@ Player.prototype.handleInput = function(delta) {
     if (vel[0] == 0 && vel[1] == 0) {
         vec2.scale(this.velocity, this.velocity, Math.pow(0.1, delta));
     }
-
+    
     vec2.scaleAndAdd(this.velocity, this.velocity, vel, delta * 2);
     this.velocity[1] = Math.min(this.velocity[1], -this.position[1] * 2);
     let velLength = vec2.length(this.velocity);
@@ -128,11 +131,10 @@ Player.prototype.handleInput = function(delta) {
         }
         vec2.scale(this.lookDirection, this.velocity, -1 / velLength);
     }
-
+    
     if (vec2.squaredDistance(this.position, level.objects["target"][0].position) < 2 * 2 && !level.upsideDown && this.flickerTimer <= -2) {
         this.flickerTimer = 2;
     }
-
     this.flickerTimer -= delta;
     if (this.flickerTimer < 0 && this.flickerTimer + delta >= 0) {
         this.velocity[0] *= -0.1;
@@ -192,10 +194,13 @@ Player.prototype.updatePlayerAnimation = function() {
     if (this.breath == 0)
         return
     if (swimmingDown() || swimmingUp() || swimmingRight() || swimmingLeft()) {
-        FrameCounter++;
+        this.sprite.visible = true
+        this.idleState.sprite.visible = false
     } else {
-        this.sprite.texture.setFrame(1);
+        this.sprite.visible = false
+        this.idleState.sprite.visible = true
     }
+    FrameCounter++;
 	if (FrameCounter >=20){
         this.sprite.texture.nextFrame();
         FrameCounter = 0;
