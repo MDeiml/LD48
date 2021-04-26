@@ -4,6 +4,7 @@ import {MAP_WIDTH} from "./generation.js";
 import { vec2 } from "./gl-matrix-min.js"
 import {AnimatedGameObject, GameObject} from "./GameObject.js";
 import {pixelToMap} from "./util.js";
+import {isInMap} from "./util.js"
 
 const BIG_FISH_SPEED = 3;
 const BIG_FISH_ACCEL = 6;
@@ -12,8 +13,8 @@ const FISH_RADIUS = 10;
 
 const DEPTHS = [
     { start: 0, end: 8, big_fish: "Assets/fish1/pussy_anim.png", big_fish_frames: 4, flip_big_fish: true, small_fish: ["Assets/fish1/koi.png", "Assets/fish1/angelfish.png", "Assets/fish1/salmon.png"], small_fish_angle: [110, 0, 0], flip_small_fish: [false, false, false]},
-    { start: 8, end: 16, big_fish: "Assets/fish2/shark_anim.png", big_fish_frames: 4, flip_big_fish: true, small_fish: ["Assets/fish2/guppy.png", "Assets/fish2/wels.png", "Assets/fish2/clownfish.png"], small_fish_angle: [0, -20, 0], flip_small_fish: [true, false, false]},
-    { start: 24, end: 32, big_fish: "Assets/fish4/anglerfisch_anim.png", big_fish_frames: 4, small_fish: ["Assets/fish1/koi.png"], small_fish_angle: [180], flip_small_fish: [false]}
+    { start: 8, end: 20, big_fish: "Assets/fish2/shark_anim.png", big_fish_frames: 4, flip_big_fish: true, small_fish: ["Assets/fish2/guppy.png", "Assets/fish2/wels.png", "Assets/fish2/clownfish.png"], small_fish_angle: [0, -20, 0], flip_small_fish: [true, false, false]},
+    { start: 20, end: 32, big_fish: "Assets/fish4/anglerfisch_anim.png", big_fish_frames: 4, small_fish: ["Assets/fish3/pirania.png", "Assets/fish3/eel.png", "Assets/fish3/blobfish.png"], small_fish_angle: [0, 0, 0], flip_small_fish: [false, false, false]}
 ];
 
 let big_fish;
@@ -21,6 +22,10 @@ let big_fish;
 function spawnFishAtDistance(distance = FISH_RADIUS) {
     let pos = vec2.random(vec2.create(), distance);
     vec2.add(pos, pos, player.position);
+    
+    if (!isInMap(pos))
+        return false
+    
     let depth = DEPTHS[0];
     for (let d of DEPTHS) {
         if (pos[1] < -d.start * GRID_SIZE && pos[1] > -d.end * GRID_SIZE) {
@@ -40,6 +45,8 @@ function spawnFishAtDistance(distance = FISH_RADIUS) {
     obj.timer = Math.random() * obj.timerPeriod;
     obj.flip ^= depth.flip_small_fish[asset_index];
     level.addObject(obj);
+    
+    return true
 }
 
 export function initFish() {
@@ -66,7 +73,8 @@ export function initFish() {
     }
 
     while (level.objects["fish"].length < NUM_FISH) {
-        spawnFishAtDistance(FISH_RADIUS * Math.random() * 2);
+        if (!spawnFishAtDistance(FISH_RADIUS * Math.random() * 2))
+            break
     }
 
 }
@@ -89,7 +97,8 @@ export function updateFish(delta) {
         }
     }
     while (level.objects["fish"].length < NUM_FISH) {
-        spawnFishAtDistance();
+        if (!spawnFishAtDistance())
+            break
     }
 
     // BIG FISH
@@ -98,6 +107,7 @@ export function updateFish(delta) {
         if (player.position[1] < -depth.start * GRID_SIZE && player.position[1] > -depth.end * GRID_SIZE) {
             let vel = vec2.sub(vec2.create(), player.position, big_fish[d].position);
             vec2.scaleAndAdd(big_fish[d].velocity, big_fish[d].velocity, vel, delta * BIG_FISH_ACCEL);
+            
             let velLength = vec2.length(big_fish[d].velocity);
             vec2.scale(big_fish[d].velocity, big_fish[d].velocity, BIG_FISH_SPEED / velLength);
             big_fish[d].flip = big_fish[d].velocity[0] > 0;

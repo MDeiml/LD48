@@ -11,7 +11,11 @@ export function updatePhysics(delta) {
         obj.setPosition(handlePhysics(delta, obj.getPosition(), obj.velocity, obj.halfSize, obj));
     }
     for (let obj of level.objects["big_fish"]) {
-        obj.setPosition(handlePhysics(delta, obj.getPosition(), obj.velocity, obj.halfSize, obj));
+        let pos = handlePhysics(delta, obj.getPosition(), obj.velocity, obj.halfSize, obj)
+        if (pos[1] > -obj.halfSize[1]) {
+            pos[1] = -obj.halfSize[1]
+        }
+        obj.setPosition(pos);
     }
 }
 

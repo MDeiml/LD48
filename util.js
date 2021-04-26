@@ -16,8 +16,13 @@ export function pixelToMap(point) {
     res[0] -= (Math.floor(MAP_WIDTH / 2) + 0.5);
     res[1] += 0.5;
     res[1] *= -1;
-    vec2.scale(res, res, GRID_SIZE);;
+    vec2.scale(res, res, GRID_SIZE);
     return res;
+}
+
+export function isInMap(pos) {
+    let pixel = mapToPixel(pos)
+    return pixel[0] > 0 && pixel[0] < MAP_WIDTH - 0.5 && pixel[1] > 0;
 }
 
 //reads content from an element ID
