@@ -33,6 +33,12 @@ function removeOpening() {
 }
 
 function setup() {
+    document.getElementById("credits").onclick = function() {
+        document.getElementById("reset").style.display = "none";
+        document.getElementById("credits").style.display = "none";
+        document.getElementById("message").style.display = "none";
+        document.getElementById("credits_img").style.display = "block";
+    }
     document.getElementById("startImage").style.display = "none"
     document.getElementById("startImage").onclick = null
     document.getElementById("message").style.display = "none"

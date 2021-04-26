@@ -28,15 +28,32 @@ img{width:32.2%;}
   right:10%;
 }
 #reset {
-  position: relative;
+  position: absolute;
   z-index:300;
-  bottom:20%;
-  left:20%;
-  width:60%;
+  bottom:0;
+  left:30%;
+  width:20%;
   height:20%;
-  right:20%;
+  right:50%;
   background-color: black;
   background-image: url(./Assets/restart-button.png);
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: contain;
+  border:none;
+  outline:none;
+}
+
+#credits {
+  position: absolute;
+  z-index:300;
+  bottom:0;
+  left:50%;
+  width:20%;
+  height:20%;
+  right:30%;
+  background-color: black;
+  background-image: url(./Assets/exit.png);
   background-repeat: no-repeat;
   background-position: center;
   background-size: contain;
@@ -247,6 +264,12 @@ img{width:32.2%;}
 				width: 100%;
 				height: 100%;
 			}
+            #credits_img {
+                width: unset;
+                position: unset;
+                margin: auto;
+                display: block;
+            }
 			canvas {
 				position: absolute;
 				width: 100%;
@@ -259,6 +282,7 @@ img{width:32.2%;}
 	</head>
 
 	<body style="background-color:black;">
+    <img id="credits_img" style="display: none" src="./Assets/credits.png" >
 	<img id="message" class="object" src="./Assets/news.png" >
 	<img id="startImage" src="./Assets/sitzende_taucher.png" >
 	<img id="loadingAnimation" src="./Assets/loading.gif" >
@@ -267,6 +291,7 @@ img{width:32.2%;}
 	
 	
     <button id="reset" style="display:none" onClick="window.location.href=window.location.href"></button>
+    <button id="credits" style="display:none"></button>
 	
 	<canvas id="glCanvas" width="800" height="600">
 	

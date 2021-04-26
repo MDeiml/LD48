@@ -164,7 +164,7 @@ export function updateFish(delta) {
     big_fish[1].cooldown = Math.max(0, big_fish[1].cooldown - delta);
 
     // BIG FISH
-    if (player.position[0] > -MAP_WIDTH/2 * GRID_SIZE) {
+    if (player.position[0] > -MAP_WIDTH/2 * GRID_SIZE - 1) {
         for (let d = 0; d < DEPTHS.length; d++) {
             big_fish[d].audioTimer -= delta;
             if (big_fish[d].audioTimer < 0) big_fish[d].audioTimer = 0;

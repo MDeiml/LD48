@@ -39,7 +39,7 @@ export function createUI() {
     let tutorial_prompt = new Menu("Assets/prompt_tutorial.png", vec2.fromValues(0, 1.5), vec2.fromValues(4 * 20/12, 4));
     updateRegistry.registerUpdate("frame_aspect", function() {
         let scale = 4 * (1 + (player.position[1] + GRID_SIZE) / (4 * GRID_SIZE))
-        if (player.position[0] < -MAP_WIDTH / 2 * GRID_SIZE) {
+        if (player.position[0] < -MAP_WIDTH / 2 * GRID_SIZE - 1) {
             frame.halfSize[0] = 0;
         } else {
             frame.halfSize[1] = Math.max(4 + scale, 4)
