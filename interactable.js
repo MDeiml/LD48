@@ -5,11 +5,10 @@ import {PositionalAudio} from "./audio.js"
 
 
 export let Bubble = function(parent, size) {
-    let halfSize = size / 2;
-    let p1 = vec2.fromValues(-halfSize, -halfSize);
-    let p2 = vec2.fromValues(halfSize, -halfSize);
-    let p3 = vec2.fromValues(-halfSize, halfSize);
-    let p4 = vec2.fromValues(halfSize, halfSize);
+    let p1 = vec2.fromValues(-size, -size);
+    let p2 = vec2.fromValues(0, -size);
+    let p3 = vec2.fromValues(-size, 0);
+    let p4 = vec2.fromValues(0, 0);
     CollidableGameObject.call(this, "./Assets/luftblase_koralle.png", vec2.fromValues(0, 0), vec2.fromValues(2, 2), [[p1, p2], [p1, p3], [p2, p4], [p3, p4]], parent);
     this.par = parent
     this.type = "bubbles";
