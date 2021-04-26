@@ -2,6 +2,7 @@ import {player } from './state.js';
 import { vec2 } from './gl-matrix-min.js'
 import { GRID_SIZE } from './walking_squares.js';
 import { MAP_WIDTH } from './generation.js';
+import { swimmingAccelerate, swimmingDown, swimmingUp, swimmingLeft, swimmingRight } from './input.js';
 
 //the global collection of sounds
 let sounds = {}
@@ -53,10 +54,17 @@ export function playMusic() {
     }
 }
 
+let lastTime = 0;
 //update volume of all positional sounds.
 export function updateAudio(listener) {
-    music[1].volume = player.position[0] > - MAP_WIDTH * GRID_SIZE / 2 ? 1 : 0;
-    music[2].volume = player.position[1] < - 32 * GRID_SIZE / 2 ? 1 : 0;
+    if (music[0].paused && (swimmingAccelerate() || swimmingRight() || swimmingUp() || swimmingDown() || swimmingLeft())) {
+        playMusic();
+    }
+    if (music[0].currentTime + 3 * (music[0].currentTime - lastTime) > music[0].duration || music[0].currentTime < lastTime) {
+        music[1].volume = player.position[0] > - MAP_WIDTH * GRID_SIZE / 2 ? 0.6 : 0;
+        music[2].volume = player.position[1] < - 32 * GRID_SIZE / 2 ? 0.8 : 0;
+    }
+    lastTime = music[0].currentTime;
 	for (let soundID in sounds)
 		if (typeof sounds[soundID].update === "function")
 			sounds[soundID].update(listener);
