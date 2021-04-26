@@ -242,7 +242,12 @@ export function updateFish(delta) {
                     }
                 }
                 else if (d == 2) { //needs to be behind the player likely
-                    let accel = vec2.sub(vec2.create(), player.rope.points[player.rope.points.length - 3], big_fish[d].position);
+                    let lastRope = null
+                    if (player.rope.points.length > 3)
+                        lastRope = player.rope.points[player.rope.points.length - 3]
+                    else
+                        lastRope = vec2.sub(vec2.create(), player.position, vec2.scale(player.lookDirection, -preferred_range))
+                    let accel = vec2.sub(vec2.create(), lastRope, big_fish[d].position);
                     let accelLength = vec2.length(accel);
                     if (accelLength != 0) {
                         vec2.scale(accel, accel, Math.max(0, Math.min(1, accelLength - preferred_range)) / (accelLength * accelLength));

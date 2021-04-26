@@ -16,7 +16,7 @@ const DASH_TIME = 60;
 const DASH_COOLDOWN = 8 * 60;
 
 var FrameCounter = 0;
-export const MAX_BREATH = 30;
+export const MAX_BREATH = 50;
 export var Death = false;
 
 export let Player = function(spawn) {
@@ -26,6 +26,9 @@ export let Player = function(spawn) {
     level.addObject(this.idleState)
     this.idleState.sprite.visible = false;
     this.sprite.texture.frames = 4;
+    this.deadguy = new GameObject("./Assets/Leichensack.png", vec2.fromValues( 0, 0), vec2.fromValues(2, 2), "rope", this);
+    this.deadguy.sprite.visible = false;
+    level.addObject(this.deadguy)
 
     updateRegistry.registerUpdate("player_input", this.handleInput.bind(this));
     updateRegistry.registerUpdate("player_anim", this.updatePlayerAnimation.bind(this));
@@ -78,16 +81,18 @@ Player.prototype.hurt = function(){
 
 Player.prototype.handleInput = function(delta) {
 	//TOD???
-
-    let ropeDir = vec2.sub(vec2.create(), this.position, this.rope.points[this.rope.points.length - 2]);
-    let ropeDirLength = vec2.length(ropeDir);
-    if (ropeDirLength > 1) {
-        let nextRopePoint = vec2.scaleAndAdd(ropeDir, this.rope.points[this.rope.points.length - 2], ropeDir, 1 / ropeDirLength);
-        this.rope.addPoint(nextRopePoint);
-    } else {
-        let nextRopePoint = vec2.add(ropeDir, this.rope.points[this.rope.points.length - 2], ropeDir);
-        this.rope.points[this.rope.points.length - 1] = nextRopePoint;
-        this.rope.updateSegment(this.rope.points.length - 2);
+    
+    if (!this.collectedDead) {
+        let ropeDir = vec2.sub(vec2.create(), this.position, this.rope.points[this.rope.points.length - 2]);
+        let ropeDirLength = vec2.length(ropeDir);
+        if (ropeDirLength > 1) {
+            let nextRopePoint = vec2.scaleAndAdd(ropeDir, this.rope.points[this.rope.points.length - 2], ropeDir, 1 / ropeDirLength);
+            this.rope.addPoint(nextRopePoint);
+        } else {
+            let nextRopePoint = vec2.add(ropeDir, this.rope.points[this.rope.points.length - 2], ropeDir);
+            this.rope.points[this.rope.points.length - 1] = nextRopePoint;
+            this.rope.updateSegment(this.rope.points.length - 2);
+        }
     }
 
     if (this.breath <= 0) {
@@ -183,6 +188,7 @@ Player.prototype.handleInput = function(delta) {
         this.velocity[0] *= -0.1;
         level.removeObject(level.objects["target"][0]);
         this.collectedDead = true;
+        this.deadguy.sprite.visible = true;
         this.collectCorpseSound.play();
         this.breath = MAX_BREATH;
         cutRopes();
