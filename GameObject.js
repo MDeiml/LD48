@@ -1,6 +1,6 @@
 import {Sprite} from "./Sprite.js"
 import {mat4, vec2, vec3, quat} from "./gl-matrix-min.js"
-import {updateRegistry} from "./state.js"
+import {updateRegistry, player} from "./state.js"
 
 //Preset Rotations of the object.
 export let Transformation = {
@@ -152,3 +152,42 @@ AnimatedGameObject.prototype.updateAnimation = function() {
 AnimatedGameObject.prototype.remove = function() {
     updateRegistry.unregisterUpdate(this.updateName)
 }
+
+export let ParallaxGameObject = function(spritePath, position, size, scroll_dist = vec2.fromValues( 0, 0), parent = null, scale = vec2.fromValues(1, 1), offset = vec2.fromValues(0, 0), orientation = Transformation.TOP_LEFT) {
+    GameObject.call(this, spritePath, position, size, "background", parent, scale, offset, orientation);
+    this.scroll = scroll_dist
+    
+    this.base_pos = position
+    
+    this.updateName = "GameObj_parallax" + Math.random()
+    updateRegistry.registerUpdate(this.updateName, this.updateScroll.bind(this))
+}
+ParallaxGameObject.prototype = Object.create(GameObject.prototype);
+Object.defineProperty(ParallaxGameObject.prototype, 'constructor', {
+    value: ParallaxGameObject,
+    enumerable: false, // so that it does not appear in 'for in' loop
+    writable: true });
+
+ParallaxGameObject.prototype.updateScroll = function() {
+    //compute distance of player to base_pos. 
+    let x = player.position[0] - this.base_pos[0]
+    let y = player.position[1] - this.base_pos[1]
+    
+    x *= 1/this.scroll[0]
+    y *= 1/this.scroll[1]
+    
+    //compute offset of center
+    let offsetX = this.scroll[0] - this.halfSize[0]
+    let offsetY = this.scroll[1] - this.halfSize[1]
+    
+    //clamp
+    x  = Math.min(Math.max( x, -offsetX), offsetX)
+    y  = Math.min(Math.max( y, -offsetY), offsetY)
+    
+    this.setPosition(vec2.fromValues(this.base_pos[0] + x, this.base_pos[1] + y))
+}
+
+ParallaxGameObject.prototype.remove = function() {
+    updateRegistry.unregisterUpdate(this.updateName)
+}
+
