@@ -189,7 +189,7 @@ Player.prototype.handleInput = function(delta) {
         this.breath = MAX_BREATH;
     }
     this.flickerTimer -= delta;
-    if (this.position[0] > - MAP_WIDTH / 2* GRID_SIZE && this.position[0] < (-MAP_WIDTH / 2 + 1) * GRID_SIZE) {
+    if (this.position[0] > - (MAP_WIDTH / 2 + 2)* GRID_SIZE && this.position[0] < -(MAP_WIDTH / 2 + 1) * GRID_SIZE) {
         this.returnPromptTimer = 5;
     }
     this.returnPromptTimer -= delta;
