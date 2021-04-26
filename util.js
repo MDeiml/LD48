@@ -40,6 +40,11 @@ export function readElements(id) {
 	return source
 }
 
+export function showStartImage(newsMessage) {
+    document.getElementById("startImage").style.display = "block"
+    document.getElementById("message").src = newsMessage
+    document.getElementById("message").style.display = "unset"
+}
 //reads json
 export function readJSON(file, callback) {
 	var rawFile = new XMLHttpRequest();

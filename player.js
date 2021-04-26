@@ -7,9 +7,10 @@ import {heartbeat, showStartImage} from "./util.js"
 import {Rope, cutRopes} from "./rope.js";
 import {updateView, setFlicker} from "./render.js";
 
-const PLAYER_SPEED = 2.5;
+const PLAYER_SPEED = 2;
 const FRAME_TIME = 1000/60;
 const BREATH_RATE = 4.33;
+const BOOST_FACTOR = 1.8;
 var FrameCounter = 0;
 export const MAX_BREATH = 30;
 export var Death = false;
@@ -88,7 +89,7 @@ Player.prototype.handleInput = function(delta) {
 
     let vel = vec2.fromValues(0, 0);
     //handle player Speed
-    let speed = swimmingAccelerate() ? PLAYER_SPEED * 2 : PLAYER_SPEED;
+    let speed = swimmingAccelerate() ? PLAYER_SPEED * BOOST_FACTOR : PLAYER_SPEED;
 
     //handle movement
     if (swimmingLeft()) {
@@ -176,7 +177,7 @@ Player.prototype.updateBreathing = function(delta) {
 
     if (this.position[1] > -0.2) //above water
     {
-        if (collectedDead) {
+        if (this.collectedDead) {
             Death = true;
             console.log("YOU WON.");
             console.log(this.position);
@@ -185,7 +186,7 @@ Player.prototype.updateBreathing = function(delta) {
         this.breath = this.breath + delta * MAX_BREATH;
     }
     else {
-        this.breath = this.breath - delta * (swimmingAccelerate() ? 2 : 1);
+        this.breath = this.breath - delta * (swimmingAccelerate() ? BOOST_FACTOR : 1);
     }
     this.breath = Math.min(Math.max(this.breath, 0), MAX_BREATH);
     
