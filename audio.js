@@ -54,6 +54,13 @@ export function playMusic() {
     }
 }
 
+export function stopMusic() {
+    for (let i = 0; i < 3; i++) {
+        music[i].pause();
+        music[i].currentTime = 0;
+    }
+}
+
 let lastTime = 0;
 let randomPause = false;
 //update volume of all positional sounds.

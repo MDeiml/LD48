@@ -6,6 +6,7 @@ import {level, updateRegistry} from "./state.js"
 import {heartbeat, showStartImage} from "./util.js"
 import {Rope, cutRopes} from "./rope.js";
 import {updateView, setFlicker} from "./render.js";
+import {stopMusic} from "./audio.js";
 
 const PLAYER_SPEED = 2;
 const FRAME_TIME = 1000/60;
@@ -64,6 +65,7 @@ export let Player = function(spawn) {
     this.collectCorpseSound = new Audio("./Assets/audio/zipper.wav");
     this.damageSound = new Audio("./Assets/audio/Playerdamage.wav");
     this.deathSound = new Audio("./Assets/audio/death_short1.wav");
+    this.typewriterAudio = new Audio("./Assets/audio/typewriter.wav");
     this.returnPromptTimer = 0;
 }
 Player.prototype = Object.create(MobileGameObject.prototype);
@@ -232,6 +234,8 @@ Player.prototype.updateBreathing = function(delta) {
             Death = true;
             console.log("YOU WON.");
             console.log(this.position);
+            stopMusic();
+            this.typewriterAudio.play();
             showStartImage("Assets/zeitung-happyend.png"); //implement fail screen
         }
         this.breath = this.breath + delta * MAX_BREATH;
@@ -248,10 +252,19 @@ Player.prototype.updateBreathing = function(delta) {
         Death = true;
         console.log("YOU DIED.");
         console.log(this.position);
+        let audio = this.typewriterAudio;
         if (this.collectedDead)
-            setTimeout(showStartImage.bind(null, "Assets/zeitung-tot.png"), 4000); //implement fail screen
+            setTimeout(function() {
+                stopMusic();
+                audio.play();
+                showStartImage("Assets/zeitung-tot.png"); //implement fail screen
+            }, 4000); //implement fail screen
         else
-            setTimeout(showStartImage.bind(null, "Assets/zeitung-tot.png", true), 4000); //implement fail screen
+            setTimeout(function() {
+                stopMusic();
+                audio.play();
+                showStartImage("Assets/zeitung-tot.png", true); //implement fail screen
+            }, 4000); //implement fail screen
         this.deathSound.play();
     }
 }
