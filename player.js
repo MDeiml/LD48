@@ -44,13 +44,14 @@ export let Player = function() {
         new Audio("./Assets/audio/blubbles_breath3.wav")
     ];
     for (let sound of this.breatheOutSounds) {
-        sound.volume = 0.5;
+        sound.volume = 0.1;
     }
 	this.breatheInSounds = [
         new Audio("./Assets/audio/breath1.wav"),
         new Audio("./Assets/audio/breath2.wav"),
         new Audio("./Assets/audio/breath3.wav")
     ];
+    this.deathSound = new Audio("./Assets/audio/death_short1.wav");
 }
 Player.prototype = Object.create(MobileGameObject.prototype);
 Object.defineProperty(Player.prototype, 'constructor', {
@@ -185,7 +186,7 @@ Player.prototype.updateBreathing = function(delta) {
     {
         Death = true;
         console.log("YOU DIED.");
-        new Audio("./Assets/audio/death_short1.wav").play();
+        this.deathSound.play();
     }
 }
 

@@ -6,15 +6,45 @@ import {AnimatedGameObject, GameObject} from "./GameObject.js";
 import {pixelToMap} from "./util.js";
 import {isInMap} from "./util.js"
 
-const BIG_FISH_SPEED = 3;
-const BIG_FISH_ACCEL = 6;
 const NUM_FISH = 30;
 const FISH_RADIUS = 10;
 
 const DEPTHS = [
-    { start: 0, end: 25, big_fish: "Assets/fish1/pussy_anim.png", big_fish_frames: 4, flip_big_fish: true, small_fish: ["Assets/fish1/koi.png", "Assets/fish1/angelfish.png", "Assets/fish1/salmon.png"], small_fish_angle: [110, 0, 0], flip_small_fish: [false, false, false]},
-    { start: 25, end: 50, big_fish: "Assets/fish2/shark_anim.png", big_fish_frames: 4, flip_big_fish: true, small_fish: ["Assets/fish2/guppy.png", "Assets/fish2/wels.png", "Assets/fish2/clownfish.png"], small_fish_angle: [0, -20, 0], flip_small_fish: [true, false, false]},
-    { start: 50, end: 70, big_fish: "Assets/fish4/anglerfisch_anim.png", big_fish_frames: 4, small_fish: ["Assets/fish3/pirania.png", "Assets/fish3/eel.png", "Assets/fish3/blobfish.png"], small_fish_angle: [0, 0, 0], flip_small_fish: [false, false, false]}
+    {
+        start: 0,
+        end: 20,
+        big_fish: "Assets/fish1/pussy_anim.png",
+        big_fish_frames: 4,
+        big_fish_speed: 3,
+        big_fish_accel: 12,
+        flip_big_fish: true,
+        small_fish: ["Assets/fish1/koi.png", "Assets/fish1/angelfish.png", "Assets/fish1/salmon.png"],
+        small_fish_angle: [110, 0, 0],
+        flip_small_fish: [false, false, false]
+    },
+    {
+        start: 20,
+        end: 40,
+        big_fish_speed: 10,
+        big_fish_accel: 12,
+        big_fish: "Assets/fish2/shark_anim.png",
+        big_fish_frames: 4,
+        flip_big_fish: true,
+        small_fish: ["Assets/fish2/guppy.png", "Assets/fish2/wels.png", "Assets/fish2/clownfish.png"],
+        small_fish_angle: [0, -20, 0],
+        flip_small_fish: [true, false, false]
+    },
+    {
+        start: 40,
+        end: 70,
+        big_fish_speed: 8,
+        big_fish_accel: 100,
+        big_fish: "Assets/fish4/anglerfisch_anim.png",
+        big_fish_frames: 4,
+        small_fish: ["Assets/fish3/pirania.png", "Assets/fish3/eel.png", "Assets/fish3/blobfish.png"],
+        small_fish_angle: [0, 0, 0],
+        flip_small_fish: [false, false, false]
+    }
 ];
 
 let big_fish;
@@ -104,15 +134,46 @@ export function updateFish(delta) {
     // BIG FISH
     for (let d = 0; d < DEPTHS.length; d++) {
         let depth = DEPTHS[d];
-        if (player.position[1] < -depth.start * GRID_SIZE && player.position[1] > -depth.end * GRID_SIZE) {
-            let vel = vec2.sub(vec2.create(), player.position, big_fish[d].position);
-            vec2.scaleAndAdd(big_fish[d].velocity, big_fish[d].velocity, vel, delta * BIG_FISH_ACCEL);
+        let hunting = player.position[1] < -depth.start * GRID_SIZE && player.position[1] > -depth.end * GRID_SIZE;
+        hunting &= player.breath > 0;
+        if (hunting) {
+            // HUNTING
+            let preferred_range = 0;
+            if (d == 0) {
+                if (player.position[1] > -2 * GRID_SIZE) { // octopus leaves player alone at start
+                    preferred_range = 12;
+                } else if (player.position[1] > -5 * GRID_SIZE) { // gets closer later
+                    preferred_range = 5;
+                }
+            } else if (d == 2) {
+                preferred_range = 2; // angler hunts never REALLY catches up
+            }
+            let accel = vec2.sub(vec2.create(), player.position, big_fish[d].position);
+            let accelLength = vec2.length(accel);
+            if (accelLength - preferred_range > 25) {
+                // TELEPORT FISH
+                for (let i = 0; i < 100; i++) {
+                    let pos = vec2.random(vec2.create(), 20);
+                    vec2.add(pos, pos, player.position);
+                    if (pos[1] > 0) continue;
+                    vec2.floor(pos, pos);
+                    let index = pos[0] + pos[1] * MAP_WIDTH;
+                    if (!level.map_data[0][index]) {
+                        big_fish[d].setPosition(pos);
+                    }
+                }
+            }
+            if (accelLength != 0) {
+                vec2.scale(accel, accel, Math.max(-1, Math.min(1, accelLength - preferred_range)) / accelLength);
+            }
+            vec2.scaleAndAdd(big_fish[d].velocity, big_fish[d].velocity, accel, delta * depth.big_fish_accel);
 
             let velLength = vec2.length(big_fish[d].velocity);
-            vec2.scale(big_fish[d].velocity, big_fish[d].velocity, BIG_FISH_SPEED / velLength);
+            vec2.scale(big_fish[d].velocity, big_fish[d].velocity, depth.big_fish_speed / velLength);
             big_fish[d].flip = big_fish[d].velocity[0] > 0;
             big_fish[d].flip ^= depth.flip_big_fish;
         } else {
+            // WANDER
             vec2.set(big_fish[d].velocity, 0, 0);
         }
     }
