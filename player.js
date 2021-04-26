@@ -53,6 +53,7 @@ export let Player = function(spawn) {
         new Audio("./Assets/audio/breath2.wav"),
         new Audio("./Assets/audio/breath3.wav")
     ];
+    this.collectCorpseSound = new Audio("./Assets/audio/zipper.wav");
     this.damageSound = new Audio("./Assets/audio/Playerdamage.wav");
     this.deathSound = new Audio("./Assets/audio/death_short1.wav");
 }
@@ -143,12 +144,15 @@ Player.prototype.handleInput = function(delta) {
 
     if (level.objects["target"].length > 0 && vec2.squaredDistance(this.position, level.objects["target"][0].position) < 2 * 2 && this.flickerTimer <= -2) {
         this.flickerTimer = 2;
+        this.breath = MAX_BREATH;
     }
     this.flickerTimer -= delta;
     if (this.flickerTimer < 0 && this.flickerTimer + delta >= 0) {
         this.velocity[0] *= -0.1;
         level.removeObject(level.objects["target"][0]);
         this.collectedDead = true;
+        this.collectCorpseSound.play();
+        this.breath = MAX_BREATH;
         cutRopes();
     }
     let flicker = 1;

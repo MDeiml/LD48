@@ -222,7 +222,7 @@ export function updateFish(delta) {
                     let velLength = vec2.length(big_fish[d].velocity);
                     vec2.scale(big_fish[d].velocity, big_fish[d].velocity, depth.big_fish_speed / velLength);
                 } else if (d == 1) {
-                    if (big_fish[d].cooldown <= 0) {
+                    if (big_fish[d].cooldown <= 0 && big_fish[d].hurtTimer <= 0) {
                         let pos = mapToPixel(player.position);
                         vec2.round(pos, pos);
                         let success = true;
