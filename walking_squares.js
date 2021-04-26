@@ -98,7 +98,7 @@ export function generateRopePath(map_data) {
 
         const MAX_DEPTH = MAP_HEIGHT / 2 + 3;
 
-        while (prev[current]) {
+        while (prev[current]) { //stuck
             let y = Math.floor(current / MAP_WIDTH);
             if (y > MAX_DEPTH) {
                 start = prev[current];
@@ -141,7 +141,7 @@ export function computeSquareMap(map_data, width = MAP_WIDTH, height = MAP_HEIGH
     let side_offset = Math.floor(width / 2) * GRID_SIZE + side_off; //offset cube objects so that they start at the middle
     let depth_offset = GRID_SIZE + depth_off;
 
-    for (let h = -1; h < height; h++) {
+    for (let h = -2; h < height; h++) {
         for (let w = -1; w < width; w++) {
             let tl = 1;
             let bl = 1;
