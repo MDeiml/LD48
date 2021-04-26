@@ -28,6 +28,8 @@ let dir = true
 
 function removeOpening() {
     document.getElementById("loadingAnimation").style.display = "none"
+    window.running = true;
+    requestAnimationFrame(update);
 }
 
 function setup() {
@@ -38,7 +40,6 @@ function setup() {
     set_seed(Math.floor(Math.random() * 256))
     initGraphics(document.getElementById('glCanvas'));
     initAudio();
-    window.playMusic = playMusic;
     updateRegistry.registerUpdate("bubbles", updateBubbles);
     updateRegistry.registerUpdate("ropes", updateRopes);
     updateRegistry.registerUpdate("fish", updateFish);
@@ -74,13 +75,10 @@ function setup() {
         initBubbles();
 
 
-        window.running = true;
-        requestAnimationFrame(update);
-
 
         var seconds = ((new Date()).getTime() - startDate.getTime());
 		setTimeout(removeOpening, 3000 - seconds); //should handle interrupt so any key can skip this
-
+        playMusic();
     });
 }
 

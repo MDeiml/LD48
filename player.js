@@ -64,7 +64,7 @@ export let Player = function(spawn) {
     this.collectCorpseSound = new Audio("./Assets/audio/zipper.wav");
     this.damageSound = new Audio("./Assets/audio/Playerdamage.wav");
     this.deathSound = new Audio("./Assets/audio/death_short1.wav");
-    this.returnPromptTimer = 1;
+    this.returnPromptTimer = 0;
 }
 Player.prototype = Object.create(MobileGameObject.prototype);
 Object.defineProperty(Player.prototype, 'constructor', {
