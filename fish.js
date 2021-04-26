@@ -179,7 +179,7 @@ export function updateFish(delta) {
                     // TELEPORT FISH
                     for (let i = 0; i < 100; i++) {
                         let pos = vec2.random(vec2.create(), 20);
-                        if (pos[0] > 0)
+                        if (pos[0] > 0 ^ player.lookDirection[0] > 0)
                             pos[0] -= pos[0]
                         vec2.add(pos, pos, player.position);
                         if (pos[1] > 0) continue;
