@@ -17,10 +17,10 @@ var var_Death_delta_Time = 0;
 function spawnAtRadius(distance = RANDOM_SHIT_RADIUS) {
     let pos = vec2.random(vec2.create(), distance);
     vec2.add(pos, pos, player.position);
-    
+
     if (!isInMap(pos))
         return false
-    
+
     let isAnimal = Math.random() < 0.1;
     let size = isAnimal ? (Math.random() * 0.3 + 0.1) : (Math.random() * 0.05 + 0.1);
     let obj = null
@@ -64,7 +64,7 @@ export function updateBubbles(delta) {
             bubble.velocity[0] = Math.sign(bubble.velocity[0]) * 0.05;
         }
     }
-    for (let obj of level.objects["plant"]) {
+    for (let obj of level.objects["plant-coral"]) {
         if (obj.bubble && vec2.squaredDistance(obj.position, player.position) < 20 * 20 && Math.random() < delta * BUBBLE_BUBBLE_SPAWN_PER_SECOND) {
             let size = 0.05 + Math.random() * 0.05
             let bubble = new MobileGameObject("./Assets/bubble.png", vec2.clone(obj.position), vec2.fromValues(size, size), "bubble");
