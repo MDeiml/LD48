@@ -72,6 +72,8 @@ function setup() {
         initFish();
         initBubbles();
 
+        player.setPosition(vec2.sub(vec2.create(), level.objects["target"][0].position, vec2.fromValues(4, 0)));
+
 
         window.running = true;
         requestAnimationFrame(update);

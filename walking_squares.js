@@ -115,6 +115,7 @@ export function generateRopePath(map_data) {
 
     let target_pos = vec2.fromValues(x * GRID_SIZE - 0.5 * GRID_SIZE - side_offset, -(y * GRID_SIZE - 0.5 * GRID_SIZE + depth_offset) - 1.5);
     level.addObject(new GameObject("./Assets/leiche.png", target_pos, vec2.fromValues(1, 1), "target"));
+    level.updateLight(3, [0.3, 0.8, 0.5], [target_pos[0], target_pos[1]],[0, 1], -1.0,  0.8);
     let rope = new Rope("./Assets/rope_g.png");
     rope.addPoint(vec2.fromValues(x * GRID_SIZE - 0.5 * GRID_SIZE - side_offset, -(y * GRID_SIZE - 0.5 * GRID_SIZE + depth_offset) - 1.5));
     let randomOffset = vec2.fromValues(0, -1.5);
@@ -136,7 +137,7 @@ export function generateRopePath(map_data) {
         current = prev[current];
     }
     let end = vec2.fromValues(-0.5 * GRID_SIZE, 0.5);
-    
+
     while (vec2.distance(end, lastPoint) > 1)
     {
         console.log(lastPoint)
@@ -150,7 +151,7 @@ export function generateRopePath(map_data) {
         lastPoint = newPos
         rope.addPoint(newPos);
     }
-    
+
     rope.addPoint(end);
 
 }
