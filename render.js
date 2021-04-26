@@ -17,6 +17,10 @@ let pvMatrix = mat4.create();
 let w = 0;
 let h = 0;
 
+export function aspect() {
+    return w/h;
+}
+
 export function init(c) {
 	let canvas = c;
 	w = canvas.clientWidth;
@@ -76,9 +80,9 @@ function updateProjection() {
     gl.canvas.height = h;
     gl.viewport(0, 0, w, h);
     projection.updateAspect(w/ h);
-    
+
     ui.updateAspects(w/h)
-    
+
 	updateViewMat = true;
 }
 
