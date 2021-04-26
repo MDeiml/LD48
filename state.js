@@ -24,6 +24,7 @@ export let level = {
         "player": [],
         "big_fish": [],
         "background_surface": [],
+        "background-parallax": [],
         "fish": []
     },
 	lights: new Array(180), //TODO move

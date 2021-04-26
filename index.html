@@ -107,9 +107,12 @@ img{width:32.2%;}
 
 			uniform sampler2D texture;
 			uniform vec2 texRes;
+            uniform float alpha;
 
 			void main(void) {
-				gl_FragColor = texture2D(texture, vTexCoord);
+                vec4 texCol = texture2D(texture, vTexCoord);
+                texCol *= alpha;
+				gl_FragColor = texCol;
 			}
 		</script>
 		
@@ -125,10 +128,12 @@ img{width:32.2%;}
 			uniform float lights[180];
 			uniform float lightCount;
             uniform float ambientLight;
+            uniform float alpha;
 			
 			void main(void) {
 				
 				vec4 texCol = texture2D(texture, vTexCoord);
+                texCol *= alpha;
 				vec3 resCol = vec3(0.0, 0.0, 0.0);
 				
 				vec3 gamma = vec3(1.0/2.2);

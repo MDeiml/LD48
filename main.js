@@ -49,7 +49,8 @@ function setup() {
         level.addObject(new GameObject("Assets/background2.png", vec2.fromValues(-0.5 * GRID_SIZE, (-MAP_HEIGHT * GRID_SIZE / 4) - MAP_HEIGHT * GRID_SIZE), vec2.fromValues( (MAP_WIDTH + 1) * GRID_SIZE, MAP_HEIGHT / 2 * GRID_SIZE), "background" ))
         level.addObject(new GameObject("Assets/hintergrund-boot-leer.png", vec2.fromValues(-0.5 * GRID_SIZE, 3 * GRID_SIZE), vec2.fromValues((MAP_WIDTH + 1) * GRID_SIZE, 6 * GRID_SIZE), "background_surface" ))
         
-        // level.addObject(new GameObject("Assets/hintergrund-leer.png", vec2.fromValues(-0.5 * GRID_SIZE, GRID_SIZE), vec2.fromValues( MAP_WIDTH * GRID_SIZE, 2 * GRID_SIZE), "background_surface" ))
+        level.addObject(new ParallaxGameObject("Assets/wreck.png", vec2.fromValues(-(MAP_WIDTH - 6)/2 * GRID_SIZE, -MAP_HEIGHT * GRID_SIZE / 4), vec2.fromValues( 16, 12), vec2.fromValues(0, 4*GRID_SIZE)))
+        
         // for (let i = 0; i < MAP_WIDTH; i++) {
         //     let h = GRID_SIZE * 920 / 1323;
         //     level.addObject(new GameObject(
@@ -65,7 +66,8 @@ function setup() {
         generateRopePath(map_data);
         computeSquareMap(map_data);
         generateTutorial();
-        setPlayer(new Player(SPAWN_COORDS));
+        //setPlayer(new Player(SPAWN_COORDS));
+        setPlayer(new Player(vec2.fromValues(-(MAP_WIDTH - 9)/2 * GRID_SIZE, -MAP_HEIGHT * GRID_SIZE / 4)))
         initFish();
         initBubbles();
 

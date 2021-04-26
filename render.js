@@ -111,6 +111,7 @@ export function update() {
 function drawBaseShader() {
 	shaders["defaultShader"].bind();
 
+	gl.uniform1f(shaders["defaultShader"].getUniform('alpha'), 1.0)
 	gl.uniformMatrix4fv(shaders["defaultShader"].getUniform('VP'), false, pvMatrix);
 
     for (let type in level.objects) {
@@ -131,6 +132,7 @@ function drawLightShader() {
 
     let draw_order = [
         { ambientLight: 0.8 - 0.799 * Math.min(1, 1 * -player.position[1] / MAP_HEIGHT * 2 / GRID_SIZE), types: ["background"] },
+        { ambientLight: 0.6 - 0.599 * Math.min(1, 1 * -player.position[1] / MAP_HEIGHT * 2 / GRID_SIZE), types: ["background-parallax"] },
         { ambientLight: 1 - 0.5 * Math.min(1, 1 * -player.position[1] / MAP_HEIGHT * 2 / GRID_SIZE), types: ["bubble", "bubbles"] },
         { ambientLight: 1, types: ["jelly"] },
         { ambientLight: 0.8 - 0.5 * Math.min(1, 1 * -player.position[1] / MAP_HEIGHT * 2 / GRID_SIZE), types: ["fish", "plant-coral"] },
@@ -147,8 +149,13 @@ function drawLightShader() {
         gl.uniform1f(shaders["lightShader"].getUniform('ambientLight'), stage.ambientLight * flicker);
         for (let type of stage.types) {
             drawn[type] = true;
+            if (type == "background-parallax")
+                gl.uniform1f(shaders["lightShader"].getUniform('alpha'), 0.3)
+            else
+                gl.uniform1f(shaders["lightShader"].getUniform('alpha'), 1.0)
+                
             for (let sprite of level.objects[type]) {
-                if (type != "background" && vec2.squaredDistance(sprite.getPosition(), player.position) > 15 * 15) continue;
+                if (type != "background" && type != "background-parallax" && vec2.squaredDistance(sprite.getPosition(), player.position) > 15 * 15) continue;
                 sprite.draw(shaders["lightShader"]);
             }
         }
@@ -172,6 +179,7 @@ function drawLightShader() {
 function drawUI() {
     //TODO THIS NEEDS TO MOVE
     shaders["defaultShader"].bind();
+	gl.uniform1f(shaders["defaultShader"].getUniform('alpha'), 1.0)
     gl.uniformMatrix4fv(shaders["defaultShader"].getUniform('VP'), false, projection.get());
 
     for (let element of ui.elements) {

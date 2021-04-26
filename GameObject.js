@@ -154,7 +154,7 @@ AnimatedGameObject.prototype.remove = function() {
 }
 
 export let ParallaxGameObject = function(spritePath, position, size, scroll_dist = vec2.fromValues( 0, 0), parent = null, scale = vec2.fromValues(1, 1), offset = vec2.fromValues(0, 0), orientation = Transformation.TOP_LEFT) {
-    GameObject.call(this, spritePath, position, size, "background", parent, scale, offset, orientation);
+    GameObject.call(this, spritePath, position, size, "background-parallax", parent, scale, offset, orientation);
     this.scroll = scroll_dist
     
     this.base_pos = position

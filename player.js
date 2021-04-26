@@ -187,6 +187,7 @@ Player.prototype.updateBreathing = function(delta) {
     {
         Death = true;
         console.log("YOU DIED.");
+        console.log(this.position);
         this.deathSound.play();
     }
 }
