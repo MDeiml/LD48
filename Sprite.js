@@ -214,10 +214,12 @@ Sprite.prototype.setTransformation = function(transformation) {
 	mat4.copy(this.transform, transformation);
 }
 Sprite.prototype.draw = function(shader) {
-	if (this.texture === null) //should this also be inheriting?
+	if (this.texture === null) {//should this also be inheriting?
 		return;
-    if (!this.visible)
-        return;
+    }
+    if (!this.visible){
+        return
+    }
     //render the own texture
 	this.texture.bindTo(shader, gl.TEXTURE0);
 
