@@ -54,7 +54,7 @@ export function updateBubbles(delta) {
 		}
 
 	}
-    if (Math.random() < delta * var_PLAYER_BUBBLE_SPAWN_PER_SECOND) {
+    if (Math.random() < delta * var_PLAYER_BUBBLE_SPAWN_PER_SECOND && player.position[1] > -0.1) {
         let size = 0.05 + Math.random() * 0.05
         let bubble = new MobileGameObject("./Assets/bubble.png", vec2.scaleAndAdd(vec2.create(), player.position, player.lookDirection, -0.4), vec2.fromValues(size, size), "bubble");
         level.addObject(bubble);

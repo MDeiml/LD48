@@ -157,11 +157,11 @@ Player.prototype.handleInput = function(delta) {
     level.updateLight(1, [0.6, 0.3, 0.3], vec2.scaleAndAdd(vec2.create(), this.position, this.lookDirection, -0.4), this.lookDirection, 0.7, this.position[1] - this.lookDirection[1] > -1.5 ? 0 : 3 * flicker);
 
     this.breathTimer += delta;
-    if (this.breathTimer >= BREATH_RATE) {
+    if (this.breathTimer >= BREATH_RATE && this.position[1] < -0.1) {
         this.breathTimer -= BREATH_RATE;
         this.breatheOutSounds[Math.floor(Math.random() * this.breatheOutSounds.length)].play();
     }
-    if (this.breathTimer >= 2.33 && this.breathTimer - delta < 2.33) {
+    if (this.breathTimer >= 2.33 && this.breathTimer - delta < 2.33 && this.position[1] < -0.1) {
         this.breatheInSounds[Math.floor(Math.random() * this.breatheInSounds.length)].play();
     }
 }
