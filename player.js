@@ -16,7 +16,7 @@ export var Death = false;
 
 export let Player = function() {
     MobileGameObject.call(this, "./Assets/animationen/taucher-animation.png", vec2.fromValues( 0, 0), vec2.fromValues(1, 1), "player", null, vec2.fromValues(1, 1), vec2.fromValues(0, 0));
-    
+
     this.idleState = new AnimatedGameObject("./Assets/animationen/idle_anim.png", vec2.fromValues( 0, 0), vec2.fromValues(2, 2), "rope", 2, 20, this);
     level.addObject(this.idleState)
     this.idleState.sprite.visible = false;
@@ -110,7 +110,7 @@ Player.prototype.handleInput = function(delta) {
     if (vel[0] == 0 && vel[1] == 0) {
         vec2.scale(this.velocity, this.velocity, Math.pow(0.1, delta));
     }
-    
+
     vec2.scaleAndAdd(this.velocity, this.velocity, vel, delta * 2);
     this.velocity[1] = Math.min(this.velocity[1], -this.position[1] * 2);
     let velLength = vec2.length(this.velocity);
@@ -131,15 +131,14 @@ Player.prototype.handleInput = function(delta) {
         }
         vec2.scale(this.lookDirection, this.velocity, -1 / velLength);
     }
-    
-    if (vec2.squaredDistance(this.position, level.objects["target"][0].position) < 2 * 2 && !level.upsideDown && this.flickerTimer <= -2) {
+
+    if (level.objects["target"].length > 0 && vec2.squaredDistance(this.position, level.objects["target"][0].position) < 2 * 2 && this.flickerTimer <= -2) {
         this.flickerTimer = 2;
     }
     this.flickerTimer -= delta;
     if (this.flickerTimer < 0 && this.flickerTimer + delta >= 0) {
         this.velocity[0] *= -0.1;
-        updateView();
-        level.upsideDown = true;
+        level.removeObject(level.objects["target"][0]);
         cutRopes();
     }
     let flicker = 1;

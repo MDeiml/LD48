@@ -16,13 +16,16 @@ let cameraLeftFixed = true;
 let updateViewMat = false;
 let pvMatrix = mat4.create();
 //move to global state in some way
-let w = 0;
-let h = 0;
+let aspct = 1;
+
+export function aspect() {
+    return aspct;
+}
 
 export function init(c) {
 	let canvas = c;
-	w = canvas.clientWidth;
-	h = canvas.clientHeight;
+	let w = canvas.clientWidth;
+	let h = canvas.clientHeight;
 	canvas.width = w;
 	canvas.height = h;
     setGl(canvas.getContext("webgl"));
@@ -36,6 +39,7 @@ export function init(c) {
     //credits = new Sprite.Sprite("assets/lvl7/credits.png", mat4.create());
 
 	camera = new View(vec2.fromValues(0, 0));
+    aspct = w/h;
 	projection = new Projection(w/h);
 	updateViewMat = true;
 
@@ -74,13 +78,14 @@ export function updateView() {
 function updateProjection() {
     let w = gl.canvas.clientWidth;
     let h = gl.canvas.clientHeight;
+    aspct = w/h;
     gl.canvas.width = w;
     gl.canvas.height = h;
     gl.viewport(0, 0, w, h);
     projection.updateAspect(w/ h);
-    
+
     ui.updateAspects(w/h)
-    
+
 	updateViewMat = true;
 }
 
