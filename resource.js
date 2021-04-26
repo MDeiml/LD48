@@ -19,10 +19,10 @@ let preload_textures = [
     "Assets/animationen/alge_anim.png",
     "Assets/leiche.png",
     "Assets/rope_g.png",
-    
+
     //taucher
     "Assets/animationen/taucher-animation.png",
-    "Assets/animationen/idle_anim.png", 
+    "Assets/animationen/idle_anim.png",
     "Assets/rope.png",
 
     //fishes
@@ -44,13 +44,13 @@ let preload_textures = [
     "Assets/hintergrund-leer.png",
     "Assets/hintergrund-boot-leer.png",
     "Assets/background2.png",
-    
+
     //ui
     "Assets/frame.png",
     "Assets/tank+barometer.png",
     "Assets/anzeigepfeil.png",
-    
-    
+
+
     //sounds
     //"Assets/audio/bubble_pop.wav",
     //"Assets/audio/blubbles_breath1.wav",
