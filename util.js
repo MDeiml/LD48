@@ -41,7 +41,7 @@ export function readElements(id) {
 }
 
 export function showStartImage(newsMessage) {
-    document.getElementById("startImage").style.display = "block"
+    document.getElementById("glCanvas").style.display = "none"
     document.getElementById("message").src = newsMessage
     document.getElementById("message").style.display = "unset"
 }
