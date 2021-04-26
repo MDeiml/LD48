@@ -129,15 +129,14 @@ Player.prototype.handleInput = function(delta) {
         vec2.scale(this.lookDirection, this.velocity, -1 / velLength);
     }
 
-    if (vec2.squaredDistance(this.position, level.objects["target"][0].position) < 2 * 2 && !level.upsideDown && this.flickerTimer <= -2) {
+    if (level.objects["target"].length > 0 && vec2.squaredDistance(this.position, level.objects["target"][0].position) < 2 * 2 && this.flickerTimer <= -2) {
         this.flickerTimer = 2;
     }
 
     this.flickerTimer -= delta;
     if (this.flickerTimer < 0 && this.flickerTimer + delta >= 0) {
         this.velocity[0] *= -0.1;
-        updateView();
-        level.upsideDown = true;
+        level.removeObject(level.objects["target"][0]);
         cutRopes();
     }
     let flicker = 1;

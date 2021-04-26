@@ -61,6 +61,7 @@ function setup() {
         computeSquareMap(map_data);
         generateTutorial();
         setPlayer(new Player());
+        player.setPosition(vec2.add(vec2.create(), level.objects["target"][0].position, vec2.fromValues(-4, 0)));
         initFish();
         initBubbles();
 
