@@ -7,6 +7,8 @@ import {heartbeat, showStartImage} from "./util.js"
 import {Rope, cutRopes} from "./rope.js";
 import {updateView, setFlicker} from "./render.js";
 import {stopMusic} from "./audio.js";
+import {MAP_WIDTH} from "./generation.js";
+import {GRID_SIZE} from "./walking_squares.js";
 
 const PLAYER_SPEED = 2;
 const FRAME_TIME = 1000/60;
@@ -187,6 +189,9 @@ Player.prototype.handleInput = function(delta) {
         this.breath = MAX_BREATH;
     }
     this.flickerTimer -= delta;
+    if (this.position[0] > - MAP_WIDTH / 2* GRID_SIZE && this.position[0] < (-MAP_WIDTH / 2 + 1) * GRID_SIZE) {
+        this.returnPromptTimer = 5;
+    }
     this.returnPromptTimer -= delta;
     if (this.flickerTimer < 0 && this.flickerTimer + delta >= 0) {
         this.velocity[0] *= -0.1;
