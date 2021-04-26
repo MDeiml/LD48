@@ -6,6 +6,8 @@ import {gl, setGl, level, player, ui} from "./state.js"
 import {MAP_HEIGHT} from "./generation.js";
 import {GRID_SIZE} from "./walking_squares.js";
 
+const CLEAR_COLOR_VEC = [22/255, 24/255, 29/255]
+
 let shaders = {};
 
 export let projection = null;
@@ -24,7 +26,7 @@ export function init(c) {
 	canvas.width = w;
 	canvas.height = h;
     setGl(canvas.getContext("webgl"));
-	gl.clearColor(0, 0, 0, 1);
+	gl.clearColor(CLEAR_COLOR_VEC[0], CLEAR_COLOR_VEC[1], CLEAR_COLOR_VEC[2], 1);
 	gl.frontFace(gl.CCW);
 	gl.enable(gl.BLEND);
 	gl.blendFunc(gl.ONE, gl.ONE_MINUS_SRC_ALPHA);
@@ -83,6 +85,9 @@ function updateProjection() {
 }
 
 export function update() {
+    let multiplier = 0.8 - 0.799 * Math.min(1, 1 * -player.position[1] / MAP_HEIGHT * 2 / GRID_SIZE)
+	gl.clearColor(CLEAR_COLOR_VEC[0] * multiplier, CLEAR_COLOR_VEC[1] * multiplier, CLEAR_COLOR_VEC[2] * multiplier, 1);
+    
     gl.clear(gl.COLOR_BUFFER_BIT);
 
 	if (updateViewMat) {
