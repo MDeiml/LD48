@@ -46,7 +46,7 @@ function setup() {
 
     initResource(function() {
         level.addObject(new GameObject("Assets/background_blue.png", vec2.fromValues(-0.5 * GRID_SIZE, -MAP_HEIGHT * GRID_SIZE / 4), vec2.fromValues( (MAP_WIDTH + 1) * GRID_SIZE, MAP_HEIGHT / 2 * GRID_SIZE), "background" ))
-        level.addObject(new GameObject("Assets/background2.png", vec2.fromValues(-0.5 * GRID_SIZE, (-MAP_HEIGHT * GRID_SIZE / 4) - MAP_HEIGHT), vec2.fromValues( (MAP_WIDTH + 1) * GRID_SIZE, MAP_HEIGHT / 2 * GRID_SIZE), "background" ))
+        level.addObject(new GameObject("Assets/background2.png", vec2.fromValues(-0.5 * GRID_SIZE, (-MAP_HEIGHT * GRID_SIZE / 4) - MAP_HEIGHT * GRID_SIZE), vec2.fromValues( (MAP_WIDTH + 1) * GRID_SIZE, MAP_HEIGHT / 2 * GRID_SIZE), "background" ))
         level.addObject(new GameObject("Assets/hintergrund-boot-leer.png", vec2.fromValues(-0.5 * GRID_SIZE, 3 * GRID_SIZE), vec2.fromValues((MAP_WIDTH + 1) * GRID_SIZE, 6 * GRID_SIZE), "background_surface" ))
         
         // level.addObject(new GameObject("Assets/hintergrund-leer.png", vec2.fromValues(-0.5 * GRID_SIZE, GRID_SIZE), vec2.fromValues( MAP_WIDTH * GRID_SIZE, 2 * GRID_SIZE), "background_surface" ))
@@ -80,7 +80,7 @@ function setup() {
 
 function main() {
     initInput();
-    setTimeout(setup, 5000)
+    setTimeout(setup, 8000)
 }
 
 
