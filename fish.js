@@ -181,7 +181,7 @@ export function updateFish(delta) {
                 let accel = vec2.sub(vec2.create(), player.position, big_fish[d].position);
                 let accelLength = vec2.length(accel);
                 if (accelLength <= 4 && big_fish[d].audioTimer <= 0) {
-                    depth.big_fish_audio.play();
+                    if (depth.big_fish_audio) depth.big_fish_audio.play();
                     big_fish[d].audioTimer = 5;
                 }
                 if (accelLength - preferred_range > 25 && d != 1) {
