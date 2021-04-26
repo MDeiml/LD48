@@ -64,6 +64,7 @@ export let Player = function(spawn) {
     this.collectCorpseSound = new Audio("./Assets/audio/zipper.wav");
     this.damageSound = new Audio("./Assets/audio/Playerdamage.wav");
     this.deathSound = new Audio("./Assets/audio/death_short1.wav");
+    this.returnPromptTimer = 0;
 }
 Player.prototype = Object.create(MobileGameObject.prototype);
 Object.defineProperty(Player.prototype, 'constructor', {
@@ -184,6 +185,7 @@ Player.prototype.handleInput = function(delta) {
         this.breath = MAX_BREATH;
     }
     this.flickerTimer -= delta;
+    this.returnPromptTimer -= delta;
     if (this.flickerTimer < 0 && this.flickerTimer + delta >= 0) {
         this.velocity[0] *= -0.1;
         level.removeObject(level.objects["target"][0]);
@@ -191,6 +193,7 @@ Player.prototype.handleInput = function(delta) {
         this.deadguy.sprite.visible = true;
         this.collectCorpseSound.play();
         this.breath = MAX_BREATH;
+        this.returnPromptTimer = 5;
         cutRopes();
     }
     let flicker = 1;

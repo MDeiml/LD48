@@ -25,11 +25,16 @@ function updateOxygen() {
     this.setOrientation((MIN_ORIENTATION - MAX_ORIENTATION) * (1 - ratio) + MAX_ORIENTATION);
 }
 
+function updatePrompt() {
+    this.sprite.visible = player.returnPromptTimer > 0;
+}
+
 export function createUI() {
     //create tank
     let frame = new Menu("Assets/frame.png", vec2.fromValues(0, 0), vec2.fromValues(8 * aspect(), 8));
     let tank = new Menu("Assets/tank+barometer.png", vec2.fromValues( 6, -2.5), vec2.fromValues(3, 3));
     let pfeil = new Menu("Assets/anzeigepfeil.png", vec2.fromValues(-0.75,  -0.02), vec2.fromValues(0.18, 0.18), tank);
+    let return_prompt = new Menu("Assets/prompt.png", vec2.fromValues(0, 1.5), vec2.fromValues(4 * 20/12, 4));
     updateRegistry.registerUpdate("frame_aspect", function() {
         let scale = 8/((MAP_HEIGHT * GRID_SIZE) / player.position[1])
         if (player.position[1] > -4) {
@@ -43,6 +48,7 @@ export function createUI() {
     tank.base_pos = vec2.clone(tank.position)
     pfeil.setOrientation(MIN_ORIENTATION);
     updateRegistry.registerUpdate("oxygen_scale", updateOxygen.bind(pfeil))
+    updateRegistry.registerUpdate("return_prompt", updatePrompt.bind(return_prompt))
     //create barometer
     //add updates
 

@@ -28,6 +28,8 @@ let dir = true
 
 function removeOpening() {
     document.getElementById("loadingAnimation").style.display = "none"
+    window.running = true;
+    requestAnimationFrame(update);
 }
 
 function setup() {
@@ -38,7 +40,6 @@ function setup() {
     set_seed(Math.floor(Math.random() * 256))
     initGraphics(document.getElementById('glCanvas'));
     initAudio();
-    window.playMusic = playMusic;
     updateRegistry.registerUpdate("bubbles", updateBubbles);
     updateRegistry.registerUpdate("ropes", updateRopes);
     updateRegistry.registerUpdate("fish", updateFish);
@@ -68,18 +69,16 @@ function setup() {
         computeSquareMap(map_data);
         generateTutorial();
         setPlayer(new Player(SPAWN_COORDS));
-        //setPlayer(new Player(vec2.fromValues(-0.5 * GRID_SIZE, -MAP_HEIGHT * GRID_SIZE / 2)))
+        // setPlayer(new Player(vec2.fromValues(-0.5 * GRID_SIZE, -MAP_HEIGHT * GRID_SIZE / 2)))
+        // setPlayer(new Player(vec2.sub(vec2.create(), level.objects["target"][0].position, vec2.fromValues(4, 0))));
         initFish();
         initBubbles();
 
 
-        window.running = true;
-        requestAnimationFrame(update);
-
 
         var seconds = ((new Date()).getTime() - startDate.getTime());
 		setTimeout(removeOpening, 3000 - seconds); //should handle interrupt so any key can skip this
-
+        playMusic();
     });
 }
 
