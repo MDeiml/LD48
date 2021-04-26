@@ -10,7 +10,11 @@ import {updateView, setFlicker} from "./render.js";
 const PLAYER_SPEED = 2;
 const FRAME_TIME = 1000/60;
 const BREATH_RATE = 4.33;
-const BOOST_FACTOR = 1.8;
+
+const BOOST_FACTOR = 3;
+const DASH_TIME = 60;
+const DASH_COOLDOWN = 8 * 60;
+
 var FrameCounter = 0;
 export const MAX_BREATH = 30;
 export var Death = false;
@@ -26,9 +30,10 @@ export let Player = function(spawn) {
     updateRegistry.registerUpdate("player_input", this.handleInput.bind(this));
     updateRegistry.registerUpdate("player_anim", this.updatePlayerAnimation.bind(this));
     updateRegistry.registerUpdate("player_breath", this.updateBreathing.bind(this));
-
-
-
+    
+    this.cooldown = 0;
+    this.dashState = 0;
+    
     this.breath = MAX_BREATH;
     this.effect_strength = 0;
     this.rate = 0
@@ -96,8 +101,35 @@ Player.prototype.handleInput = function(delta) {
 
     let vel = vec2.fromValues(0, 0);
     //handle player Speed
-    let speed = swimmingAccelerate() ? PLAYER_SPEED * BOOST_FACTOR : PLAYER_SPEED;
-
+    let speed = PLAYER_SPEED;
+    
+    if (swimmingAccelerate() && this.dashState == 0) {
+        console.log("started boost")
+        this.dashState = 1;
+        this.cooldown = 0;
+    }
+    if (this.dashState == 1) {
+        if (this.cooldown < DASH_TIME) {
+            this.cooldown = this.cooldown + 1;
+            speed = PLAYER_SPEED * BOOST_FACTOR
+        }
+        else {
+            console.log("ended boost")
+            this.dashState = 2;
+            this.cooldown = 0;
+        }
+    }
+    else if (this.dashState == 2) {
+        if (this.cooldown < DASH_COOLDOWN) {
+            this.cooldown = this.cooldown + 1;
+        }
+        else {
+            console.log("coodown ended")
+            this.dashState = 0;
+        }
+        
+    }
+    
     //handle movement
     if (swimmingLeft()) {
         vel[0] -= speed;
@@ -116,7 +148,7 @@ Player.prototype.handleInput = function(delta) {
         vel[0] *= -1;
         vel[1] *= -1;
     }
-
+    
     if (vel[0] == 0 && vel[1] == 0) {
         vec2.scale(this.velocity, this.velocity, Math.pow(0.1, delta));
     }
@@ -196,7 +228,7 @@ Player.prototype.updateBreathing = function(delta) {
         this.breath = this.breath + delta * MAX_BREATH;
     }
     else {
-        this.breath = this.breath - delta * (swimmingAccelerate() ? BOOST_FACTOR : 1);
+        this.breath = this.breath - delta;
     }
     this.breath = Math.min(Math.max(this.breath, 0), MAX_BREATH);
 
