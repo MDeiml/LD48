@@ -108,7 +108,10 @@ export function initFish() {
                 pos = pixelToMap(pos);
                 let obj = new AnimatedGameObject(depth.big_fish, pos, vec2.fromValues(3, 2), "big_fish", depth.big_fish_frames);
                 obj.depth = d;
-                if (d == 1) obj.cooldown = 0;
+                if (d == 1) {
+                    obj.cooldown = 0;
+                    obj.isLeft = Math.random() * 0.5;
+                }
                 obj.velocity = vec2.fromValues(0, 0);
                 big_fish.push(obj);
                 level.addObject(obj);
@@ -203,9 +206,10 @@ export function updateFish(delta) {
                             success &= !level.map_data[0][x + MAP_WIDTH * pos[1]];
                         }
                         if (success) {
-                            pos[0] -= 2;
+                            pos[0] += big_fish[d].isLeft ? -2 : 2;
                             big_fish[d].setPosition(pixelToMap(pos));
-                            vec2.set(big_fish[d].velocity, depth.big_fish_speed, 0);
+                            vec2.set(big_fish[d].velocity, big_fish[d].isLeft ? depth.big_fish_speed : -depth.big_fish_speed, 0);
+                            big_fish[d].isLeft = !big_fish[d].isLeft;
                             big_fish[d].cooldown = SHARK_COOLDOWN;
                         } else {
                             big_fish[d].setPosition(vec2.fromValues(0, 100));
