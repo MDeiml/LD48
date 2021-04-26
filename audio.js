@@ -61,7 +61,7 @@ export function updateAudio(listener) {
         playMusic();
     }
     if (music[0].currentTime + 3 * (music[0].currentTime - lastTime) > music[0].duration || music[0].currentTime < lastTime) {
-        music[1].volume = player.position[0] > - MAP_WIDTH * GRID_SIZE / 2 ? 0.6 : 0;
+        music[1].volume = player.position[0] > - (MAP_WIDTH + 1) * GRID_SIZE / 2 ? 0.6 : 0;
         music[2].volume = player.position[1] < - 32 * GRID_SIZE / 2 ? 0.8 : 0;
     }
     lastTime = music[0].currentTime;
