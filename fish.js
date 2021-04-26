@@ -9,6 +9,13 @@ import {isInMap} from "./util.js"
 const NUM_FISH = 30;
 const FISH_RADIUS = 10;
 
+let SmallFish = function(name, frames = 1, angle = 0, flip = false) {
+    this.frames = frames
+    this.name = name
+    this.angle = angle
+    this.flip = flip
+}
+
 const DEPTHS = [
     {
         start: 0,
@@ -18,9 +25,11 @@ const DEPTHS = [
         big_fish_speed: 3,
         big_fish_accel: 12,
         flip_big_fish: true,
-        small_fish: ["Assets/fish1/koi.png", "Assets/fish1/angelfish.png", "Assets/fish1/salmon.png"],
-        small_fish_angle: [110, 0, 0],
-        flip_small_fish: [false, false, false]
+        small_fish: [
+            new SmallFish("Assets/fish1/koi_anim.png", 4, 110), 
+            new SmallFish("Assets/fish1/angelfish.png"),    
+            new SmallFish("Assets/fish1/salmon.png")
+        ]
     },
     {
         start: 20,
@@ -30,9 +39,11 @@ const DEPTHS = [
         big_fish: "Assets/fish2/shark_anim.png",
         big_fish_frames: 4,
         flip_big_fish: true,
-        small_fish: ["Assets/fish2/guppy.png", "Assets/fish2/wels.png", "Assets/fish2/clownfish.png"],
-        small_fish_angle: [0, -20, 0],
-        flip_small_fish: [true, false, false]
+        small_fish: [
+            new SmallFish("Assets/fish2/guppy.png", 1, 0, true), 
+            new SmallFish("Assets/fish2/wels.png", 1, -20), 
+            new SmallFish("Assets/fish2/clownfish.png", 1, -20)
+        ]
     },
     {
         start: 40,
@@ -41,9 +52,11 @@ const DEPTHS = [
         big_fish_accel: 100,
         big_fish: "Assets/fish4/anglerfisch_anim.png",
         big_fish_frames: 4,
-        small_fish: ["Assets/fish3/pirania.png", "Assets/fish3/eel.png", "Assets/fish3/blobfish.png"],
-        small_fish_angle: [0, 0, 0],
-        flip_small_fish: [false, false, false]
+        small_fish: [
+            new SmallFish("Assets/fish3/pirania.png"), 
+            new SmallFish("Assets/fish3/eel.png"), 
+            new SmallFish("Assets/fish3/blobfish.png")
+        ]
     }
 ];
 
@@ -66,14 +79,18 @@ function spawnFishAtDistance(distance = FISH_RADIUS) {
     let asset_index = Math.floor(Math.random() * depth.small_fish.length)
     let asset = depth.small_fish[asset_index];
     let size = Math.random() * 0.3 + 0.3;
-    let obj = new GameObject(asset, pos, vec2.fromValues(size, size), "fish");
+    let obj = null;
+    if (asset.frames == 1)
+        obj = new GameObject(asset.name, pos, vec2.fromValues(size, size), "fish");
+    else
+        obj = new AnimatedGameObject(asset.name, pos, vec2.fromValues(size, size), "fish", asset.frames);
     obj.flip = Math.random() > 0.5;
     obj.velocity = vec2.fromValues(Math.random() * 0.1 + 0.05, 0);
     if (!obj.flip) obj.velocity[0] *= -1;
-    obj.orientation = depth.small_fish_angle[asset_index] * (obj.flip ? -1 : 1);
+    obj.orientation = asset.angle * (obj.flip ? -1 : 1);
     obj.timerPeriod = Math.random() * 0.4 + 1.2;
     obj.timer = Math.random() * obj.timerPeriod;
-    obj.flip ^= depth.flip_small_fish[asset_index];
+    obj.flip ^= asset.flip;
     level.addObject(obj);
 
     return true
