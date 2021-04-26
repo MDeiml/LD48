@@ -19,10 +19,15 @@ let preload_textures = [
     "Assets/animationen/alge_anim.png",
     "Assets/leiche.png",
     "Assets/rope_g.png",
+    "Assets/wreck.png",
+    "Assets/star.png",
+    "Assets/patrick.png",
+    "Assets/clam.png",
 
     //taucher
     "Assets/animationen/taucher-animation.png",
     "Assets/animationen/idle_anim.png",
+    "Assets/Leichensack.png",
     "Assets/rope.png",
 
     //fishes
@@ -44,13 +49,18 @@ let preload_textures = [
     "Assets/hintergrund-leer.png",
     "Assets/hintergrund-boot-leer.png",
     "Assets/background2.png",
+    "Assets/leiche.png",
 
     //ui
     "Assets/frame.png",
     "Assets/tank+barometer.png",
     "Assets/anzeigepfeil.png",
-
-
+    "Assets/prompt.png",
+    "Assets/prompt_tutorial.png",
+    "Assets/zeitung-happyend.png",
+    "Assets/zeitung-tot.png"
+    
+    
     //sounds
     //"Assets/audio/bubble_pop.wav",
     //"Assets/audio/blubbles_breath1.wav",

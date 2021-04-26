@@ -22,7 +22,7 @@ const COLLISION_SHAPES = {
 }
 function spawnAlgaeAt(pos, size) {
     level.addObject(new AnimatedGameObject(
-        "./Assets/animationen/alge_anim.png",
+        "Assets/animationen/alge_anim.png",
         pos,
         vec2.fromValues(size, size),
         "plant",
@@ -36,7 +36,7 @@ function spawnCoralAt(pos, size) {
 }
 function spawnBoatAt(pos, size, flip = false) {
     let obj = new GameObject(
-        "./Assets/wreck.png",
+        "Assets/wreck.png",
         pos,
         vec2.fromValues(size, size),
         "plant")
@@ -46,7 +46,7 @@ function spawnBoatAt(pos, size, flip = false) {
 
 function spawnStar(pos, size) {
     let obj = new GameObject(
-        Math.random() > 0.01 ? "./Assets/star.png" : "./Assets/patrick.png",
+        Math.random() > 0.01 ? "Assets/star.png" : "Assets/patrick.png",
         pos,
         vec2.fromValues(size, size),
         "plant-deco")
@@ -55,7 +55,7 @@ function spawnStar(pos, size) {
 }
 function spawnClam(pos, size) {
     let obj = new GameObject(
-        "./Assets/clam.png",
+        "Assets/clam.png",
         pos,
         vec2.fromValues(size, size),
         "plant-deco")
