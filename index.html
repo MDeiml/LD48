@@ -30,11 +30,17 @@ img{width:32.2%;}
 #reset {
   position: relative;
   z-index:300;
-  bottom:10%;
+  bottom:25%;
   left:20%;
   width:60%;
-  height:8%;
+  height:25%;
   right:20%;
+  background-color: black;
+  background-image: url(Assets/restart-button.png);
+  background-repeat: no-repeat;
+  background-position: center;
+  border:none;
+  outline:none;
 }
 
 @keyframes MoveDown {
@@ -255,7 +261,11 @@ img{width:32.2%;}
 	<img id="message" class="object" src="./Assets/news.png" >
 	<img id="startImage" src="./Assets/sitzende_taucher.png" >
 	<img id="loadingAnimation" src="./Assets/loading.gif" >
-    <button id="reset" style="display:none" onClick="window.location.href=window.location.href">Restart</button>
+	
+	
+	
+	
+    <button id="reset" style="display:none" onClick="window.location.href=window.location.href"></button>
 	
 	<canvas id="glCanvas" width="800" height="600">
 	
