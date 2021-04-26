@@ -33,10 +33,10 @@ export let Player = function(spawn) {
     updateRegistry.registerUpdate("player_input", this.handleInput.bind(this));
     updateRegistry.registerUpdate("player_anim", this.updatePlayerAnimation.bind(this));
     updateRegistry.registerUpdate("player_breath", this.updateBreathing.bind(this));
-    
+
     this.cooldown = 0;
     this.dashState = 0;
-    
+
     this.breath = MAX_BREATH;
     this.effect_strength = 0;
     this.rate = 0
@@ -81,7 +81,7 @@ Player.prototype.hurt = function(){
 
 Player.prototype.handleInput = function(delta) {
 	//TOD???
-    
+
     if (!this.collectedDead) {
         let ropeDir = vec2.sub(vec2.create(), this.position, this.rope.points[this.rope.points.length - 2]);
         let ropeDirLength = vec2.length(ropeDir);
@@ -107,8 +107,8 @@ Player.prototype.handleInput = function(delta) {
     let vel = vec2.fromValues(0, 0);
     //handle player Speed
     let speed = PLAYER_SPEED;
-    
-    if (swimmingAccelerate() && this.dashState == 0) {
+
+    if (swimmingAccelerate() && this.dashState == 0 && !this.collectedDead) {
         console.log("started boost")
         this.dashState = 1;
         this.cooldown = 0;
@@ -132,9 +132,9 @@ Player.prototype.handleInput = function(delta) {
             console.log("coodown ended")
             this.dashState = 0;
         }
-        
+
     }
-    
+
     //handle movement
     if (swimmingLeft()) {
         vel[0] -= speed;
@@ -153,7 +153,7 @@ Player.prototype.handleInput = function(delta) {
         vel[0] *= -1;
         vel[1] *= -1;
     }
-    
+
     if (vel[0] == 0 && vel[1] == 0) {
         vec2.scale(this.velocity, this.velocity, Math.pow(0.1, delta));
     }

@@ -85,7 +85,8 @@ function setup() {
 
 function main() {
     initInput();
-    setTimeout(setup, 12000)
+    document.getElementById("message").onclick = setup;
+    document.getElementById("startImage").onclick = setup;
 }
 
 
