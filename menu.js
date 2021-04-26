@@ -25,17 +25,17 @@ function updateOxygen() {
 
 export function createUI() {
     //create tank
-    let frame = new Menu("Assets/frame.png", vec2.fromValues(0, 0), vec2.fromValues(8 * aspect(), 8));
+    //let frame = new Menu("Assets/frame.png", vec2.fromValues(0, 0), vec2.fromValues(8 * aspect(), 8));
     let tank = new Menu("Assets/tank+barometer.png", vec2.fromValues( 6, -2.5), vec2.fromValues(3, 3));
     let pfeil = new Menu("Assets/anzeigepfeil.png", vec2.fromValues(-0.75,  -0.02), vec2.fromValues(0.18, 0.18), tank);
-    updateRegistry.registerUpdate("frame_aspect", function() {
-        if (player.position[1] > -4) {
-            frame.halfSize[0] = 0;
-        } else {
-            frame.halfSize[0] = frame.halfSize[1] * aspect();
-        }
-        frame.setPosition(frame.position);
-    })
+    //updateRegistry.registerUpdate("frame_aspect", function() {
+    //    if (player.position[1] > -4) {
+    //        frame.halfSize[0] = 0;
+    //    } else {
+    //        frame.halfSize[0] = frame.halfSize[1] * aspect();
+    //    }
+    //    frame.setPosition(frame.position);
+    //})
     tank.base_pos = vec2.clone(tank.position)
     pfeil.setOrientation(MIN_ORIENTATION);
     updateRegistry.registerUpdate("oxygen_scale", updateOxygen.bind(pfeil))

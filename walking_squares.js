@@ -58,9 +58,10 @@ const tutorial_map = [[
 ]]
 
 export function generateTutorial() {
-    let tut_background = new GameObject("Assets/background_blue.png", vec2.fromValues(-(MAP_WIDTH + 9)/2 * GRID_SIZE, -7 * GRID_SIZE), vec2.fromValues( 15 * GRID_SIZE, 7 * GRID_SIZE), "background")
+    let tut_background = new GameObject("Assets/background_blue.png", vec2.fromValues(-(MAP_WIDTH + 9)/2 * GRID_SIZE, -4 * GRID_SIZE), vec2.fromValues( 8 * GRID_SIZE, 7 * GRID_SIZE), "background")
     tut_background.setOrientation(270)
     level.addObject(tut_background)
+    level.addObject(new GameObject("Assets/hintergrund-leer.png", vec2.fromValues(-(MAP_WIDTH + 14)/2 * GRID_SIZE, GRID_SIZE), vec2.fromValues( 4 * GRID_SIZE, 2 * GRID_SIZE), "background_surface" ))
     computeSquareMap(tutorial_map, 7, 10, (MAP_WIDTH + 9) * GRID_SIZE/2, -GRID_SIZE, false, 0, false);
     let collision_coords = vec2.fromValues(-(MAP_WIDTH + 1)/2, -2);
     vec2.round(collision_coords, collision_coords);

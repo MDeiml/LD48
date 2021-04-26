@@ -85,7 +85,7 @@ function setup() {
 
 function main() {
     initInput();
-    setTimeout(setup, 8000)
+    setTimeout(setup, 12000)
 }
 
 
