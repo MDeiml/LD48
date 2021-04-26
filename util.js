@@ -43,6 +43,7 @@ export function readElements(id) {
 export function showStartImage(newsMessage, allowReset=false) {
     document.getElementById("glCanvas").style.display = "none"
     document.getElementById("reset").style.display = "unset"
+    if (!allowReset) document.getElementById("reset").style.backgroundImage = "url(./Assets/exit.png)";
     document.getElementById("message").src = newsMessage
     document.getElementById("message").style.display = "unset"
 }
