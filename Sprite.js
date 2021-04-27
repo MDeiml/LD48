@@ -13,6 +13,7 @@ const UV_DIM = 2;
 let wireframe = false; //for debugging. should maybe be optimized out for release
 
 let texList = {}; //data cache
+let bindList = {};
 
 export let Texture2D = function(path, frames, callback) {
 	this.name = path;
@@ -30,11 +31,11 @@ export let Texture2D = function(path, frames, callback) {
         if (callback) callback();
 	} else {
 		this.tex = gl.createTexture(); //create new texture
-        
+
         //debug code
 		//gl.bindTexture(gl.TEXTURE_2D, this.tex);
 		//gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, 1, 1, 0, gl.RGBA, gl.UNSIGNED_BYTE, new Uint8Array([0, 0, 255, 255]));
-        
+
         //load image
 		this.image = new Image();
         this.image.onerror = function() {
@@ -73,6 +74,8 @@ Texture2D.prototype.setFrame = function(frame) {
 }
 //bind texture
 Texture2D.prototype.bindTo = function(shader, position) {
+    if (bindList[position] === this) return;
+    bindList[position] = this;
 	gl.activeTexture(position);
 	gl.bindTexture(gl.TEXTURE_2D, this.tex);
 
@@ -107,6 +110,8 @@ export let GradientTexture2D = function(minCol, maxCol, steps) {
 	gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, steps, 1, 0, gl.RGBA, gl.UNSIGNED_BYTE, new Uint8Array(data));
 }
 GradientTexture2D.prototype.bindTo = function(shader, position) {
+    if (bindList[position] === this) return;
+    bindList[position] = this;
 	gl.activeTexture(position);
 	gl.bindTexture(gl.TEXTURE_2D, this.tex);
 	gl.uniform2fv(shader.getUniform('frame_data'), vec2.fromValues(0,1));
@@ -128,7 +133,7 @@ export let DynamicTexture2D = function() {
 	gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST);
 	gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
 	gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
-    
+
 	gl.bindFramebuffer(gl.FRAMEBUFFER, this.framebuffer);
 	gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT0, gl.TEXTURE_2D, this.tex, 0);
 	gl.bindFramebuffer(gl.FRAMEBUFFER, null);
@@ -144,6 +149,8 @@ DynamicTexture2D.prototype.unbindFramebuffer = function() {
 }
 //TODO test waht happens if texture is used to render to framebuffer
 DynamicTexture2D.prototype.bindTo = function(shader, position) {
+    if (bindList[position] === this) return;
+    bindList[position] = this;
 	gl.activeTexture(position);
 	gl.bindTexture(gl.TEXTURE_2D, this.tex);
 	gl.uniform2fv(shader.getUniform('frame_data'), vec2.fromValues(0,1));
@@ -189,7 +196,7 @@ Mesh.prototype.draw = function() {
 export let Sprite = function(spritePath, transformation, parent) {
 	if (typeof(Sprite.MESH) === "undefined")
 		Sprite.MESH = new Mesh([1, 1, 0, -1, 1, 0, 1, -1, 0, -1, -1, 0] , [ 1, 0, 0, 0, 1, 1, 0, 1]); //screen square
-    
+
     //defaults to dummy sprite if no texture is provided
 	if (spritePath === null) {
 		this.texture = null
