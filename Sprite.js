@@ -14,6 +14,7 @@ let wireframe = false; //for debugging. should maybe be optimized out for releas
 
 let texList = {}; //data cache
 let bindList = {};
+let meshBind = null;
 
 export let Texture2D = function(path, frames, callback) {
 	this.name = path;
@@ -178,6 +179,8 @@ let Mesh = function(vertices, uv) {
 }
 //binds the buffers to the data input
 Mesh.prototype.bindVAO = function(shader) {
+    if (meshBind == this) return;
+    meshBind = this;
 	gl.bindBuffer(gl.ARRAY_BUFFER, this.squareBuffer);
 	gl.vertexAttribPointer(shader.getAttrib("position"), VERTEX_DIM, gl.FLOAT, false, 0, 0);
 
