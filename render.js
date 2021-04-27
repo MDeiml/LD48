@@ -89,36 +89,6 @@ function hypotenuse(x1, y1, x2, y2) {
   return Math.sqrt(xSquare + ySquare);
 }
 
-function computeGauss() {
-    if (!sigmaChanged)
-        return gauss;
-
-    var kernel = [];
-
-    var twoSigmaSquare = 2 * sigma * sigma;
-    var centre = 8;
-
-    for (let i = 0; i < 15; i++) {
-        for (let j = 0; j < 15; j++) {
-            var distance = hypotenuse(i, j, centre, centre);
-
-            // The following is an algorithm that came from the gaussian blur
-            // wikipedia page [1].
-            //
-            // http://en.wikipedia.org/w/index.php?title=Gaussian_blur&oldid=608793634#Mechanics
-            var gaussian = (1 / Math.sqrt(
-            Math.PI * twoSigmaSquare
-            )) * Math.exp((-1) * (Math.pow(distance, 2) / twoSigmaSquare));
-
-            kernel.push(gaussian);
-        }
-    }
-
-    gauss = kernel
-
-    return gauss
-}
-
 let flicker = 1;
 export function setFlicker(f) {
     flicker = f;
@@ -164,7 +134,8 @@ export function update() {
     //gl.uniformMatrix4fv(shaders["blurShader"].getUniform('VP'), false, mat4.create());
     gl.uniformMatrix4fv(shaders["blurShader"].getUniform('VP'), false, mat4.fromQuat(mat4.create(), quat.fromEuler(quat.create(), 180, 0, 0)));
     // gl.uniform1fv(shaders["blurShader"].getUniform('gaussian'), computeGauss())
-    gl.uniform1f(shaders["blurShader"].getUniform('threshhold'), minDist)
+    // gl.uniform1f(shaders["blurShader"].getUniform('threshhold'), minDist)
+    gl.uniform1f(shaders["blurShader"].getUniform('time'), level.time)
     renderContainer.draw(shaders["blurShader"]);
 
     drawUI();
@@ -205,7 +176,7 @@ function drawLightShader() {
     let drawn = { background_surface: true };
 
 	shaders["lightShader"].bind();
-	gl.uniform1f(shaders["lightShader"].getUniform('lightCount'), level.lightCnt)
+	// gl.uniform1f(shaders["lightShader"].getUniform('lightCount'), level.lightCnt)
 	gl.uniform1fv(shaders["lightShader"].getUniform('lights'), level.lights)
 	gl.uniformMatrix4fv(shaders["lightShader"].getUniform('VP'), false, pvMatrix);
 
