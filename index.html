@@ -164,7 +164,7 @@ img{width:32.2%;}
 					float intensity = lights[i * 9 + 8];
 					
 					vec2 ray = pos - worldPos.xy;
-					float distanceToLight = length(ray);
+					float distanceToLightSq = dot(ray, ray);
 					ray = normalize(ray);
 					
 					
@@ -175,7 +175,7 @@ img{width:32.2%;}
 						continue;
 					}
 					
-					float attenuation = 1.0 / (1.0 + pow(distanceToLight, 2.0));
+					float attenuation = 1.0 / (1.0 + distanceToLightSq);
 					
 					//linear color (color before gamma correction)
 					
