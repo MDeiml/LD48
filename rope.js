@@ -8,7 +8,7 @@ let ropes = [];
 export function cutRopes() {
     for (let rope of ropes) {
         for (let j = 0; j < rope.segments.length; j++) {
-            level.removeObject(rope.segments[j]);
+            if (Math.random() > 0.1) level.removeObject(rope.segments[j]);
         }
     }
     ropes = [];

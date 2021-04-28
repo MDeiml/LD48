@@ -70,9 +70,9 @@ function setup() {
         generateRopePath(map_data);
         computeSquareMap(map_data);
         generateTutorial();
-        setPlayer(new Player(SPAWN_COORDS));
+        // setPlayer(new Player(SPAWN_COORDS));
         // setPlayer(new Player(vec2.fromValues(-0.5 * GRID_SIZE, -MAP_HEIGHT * GRID_SIZE / 2)))
-        // setPlayer(new Player(vec2.sub(vec2.create(), level.objects["target"][0].position, vec2.fromValues(4, 0))));
+        setPlayer(new Player(vec2.sub(vec2.create(), level.objects["target"][0].position, vec2.fromValues(4, 0))));
         initFish();
         initBubbles();
 
