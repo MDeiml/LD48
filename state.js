@@ -16,6 +16,7 @@ export let level = {
     time: 0,
     upsideDown: false,
     collidables: {},
+    checkpoint: false,
     objects: {
         "bubble": [],
         "collidable": [],

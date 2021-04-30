@@ -212,6 +212,7 @@ Player.prototype.handleInput = function(delta) {
         this.collectCorpseSound.play();
         this.breath = MAX_BREATH;
         this.returnPromptTimer = 5;
+        level.checkpoint = true;
         cutRopes();
     }
     let flicker = 1;

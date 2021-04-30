@@ -230,11 +230,11 @@ img{width:32.2%;}
             uniform float time;
 
             vec2 wave() {
-                float phase = length(vTexCoord - vec2(0.5, 0.5)) * 1.0;
-                phase = phase * phase * phase;
+                float dist = length(vTexCoord - vec2(0.5, 0.5)) * 2.0;
+                float phase = dist * dist * dist;
                 return vec2(
-                    pow(sin(time * 2.0 + phase * 50.0), 2.0) * 0.002,
-                    pow(sin(time * 3.0 + phase * 50.0), 2.0) * 0.003
+                    pow(sin(time * 2.0 + phase * 5.0), 2.0) * 0.002 * dist,
+                    pow(sin(time * 3.0 + phase * 5.0), 2.0) * 0.003 * dist
                 );
             }
             
@@ -302,7 +302,7 @@ img{width:32.2%;}
 	
 	
 	
-    <button id="reset" style="display:none" onClick="window.location.href=window.location.href"></button>
+    <button id="reset" style="display:none" onClick="window.reset()"></button>
     <button id="credits" style="display:none"></button>
 	
 	<canvas id="glCanvas" width="800" height="600">

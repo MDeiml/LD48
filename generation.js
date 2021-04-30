@@ -1,8 +1,8 @@
-import {CollidableGameObject, AnimatedGameObject, GameObject, Transformation} from "./GameObject.js"
-import {level, setPlayer} from "./state.js"
+import {CollidableGameObject, AnimatedGameObject, GameObject, ParallaxGameObject, Transformation} from "./GameObject.js"
+import {level, setPlayer, player} from "./state.js"
 import {vec2} from "./gl-matrix-min.js"
 import {Coral} from "./interactable.js"
-import {Rope} from "./rope.js";
+import {Rope, cutRopes} from "./rope.js";
 import {GRID_SIZE, MAP_WIDTH, MAP_HEIGHT, GEN_WIDTH, GEN_HEIGHT, random, reset_random} from "./util.js";
 import {Player} from "./player.js";
 
@@ -23,6 +23,10 @@ const COLLISION_SHAPES = {
 
 export function reset() {
     window.reset = reset;
+    document.getElementById("reset").style.display = "none";
+    document.getElementById("credits").style.display = "none";
+    document.getElementById("message").style.display = "none";
+    document.getElementById("glCanvas").style.display = "unset";
     level.clear();
     reset_random();
     let map_data = generateMap();
@@ -30,7 +34,21 @@ export function reset() {
     generateRopePath(map_data);
     computeSquareMap(map_data);
     generateTutorial();
-    setPlayer(new Player(SPAWN_COORDS));
+    level.addObject(new GameObject("Assets/background_blue.png", vec2.fromValues(-0.5 * GRID_SIZE, -MAP_HEIGHT * GRID_SIZE / 4), vec2.fromValues( (MAP_WIDTH + 1) * GRID_SIZE, MAP_HEIGHT / 2 * GRID_SIZE), "background" ))
+    level.addObject(new GameObject("Assets/background2.png", vec2.fromValues(-0.5 * GRID_SIZE, (-MAP_HEIGHT * GRID_SIZE / 4) - MAP_HEIGHT * GRID_SIZE / 2), vec2.fromValues( (MAP_WIDTH + 1) * GRID_SIZE, MAP_HEIGHT / 2 * GRID_SIZE), "background" ))
+    level.addObject(new GameObject("Assets/hintergrund-boot-leer.png", vec2.fromValues(-0.5 * GRID_SIZE, 3 * GRID_SIZE), vec2.fromValues((MAP_WIDTH + 1) * GRID_SIZE, 6 * GRID_SIZE), "background_surface" ))
+
+    level.addObject(new ParallaxGameObject("Assets/wreck.png", vec2.fromValues(-(MAP_WIDTH - 6)/2 * GRID_SIZE, -MAP_HEIGHT * GRID_SIZE / 4), vec2.fromValues( 16, 12), vec2.fromValues(0, 4*GRID_SIZE)))
+    if (level.checkpoint) {
+        setPlayer(new Player(level.objects["target"][0].position));
+        level.removeObject(level.objects["target"][0]);
+        player.collectedDead = true;
+        player.deadguy.sprite.visible = true;
+        player.returnPromptTimer = 5;
+        cutRopes();
+    } else {
+        setPlayer(new Player(SPAWN_COORDS));
+    }
 }
 
 export function generateMap() {

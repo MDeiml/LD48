@@ -127,8 +127,16 @@ export function update() {
 		updateViewMat = false;
 	}
     renderContainer.texture.bindFramebuffer()
+	gl.clearColor(0, 0, 0, 0);
+    gl.clear(gl.COLOR_BUFFER_BIT);
     drawLightShader();
     renderContainer.texture.unbindFramebuffer()
+
+	shaders["defaultShader"].bind();
+	gl.uniformMatrix4fv(shaders["defaultShader"].getUniform('VP'), false, pvMatrix);
+    for (let sprite of level.objects["background_surface"]) {
+        sprite.draw(shaders["defaultShader"]);
+    }
 
 	shaders["blurShader"].bind();
     //gl.uniformMatrix4fv(shaders["blurShader"].getUniform('VP'), false, mat4.create());
@@ -163,12 +171,6 @@ function offscreen(obj) {
 }
 
 function drawLightShader() {
-
-	shaders["defaultShader"].bind();
-	gl.uniformMatrix4fv(shaders["defaultShader"].getUniform('VP'), false, pvMatrix);
-    for (let sprite of level.objects["background_surface"]) {
-        sprite.draw(shaders["defaultShader"]);
-    }
 
     let draw_order = [
         { ambientLight: 0.8 - 0.799 * Math.min(1, 1 * -player.position[1] / MAP_HEIGHT * 2 / GRID_SIZE), types: ["background"] },
