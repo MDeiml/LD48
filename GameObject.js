@@ -1,6 +1,6 @@
 import {Sprite} from "./Sprite.js"
 import {mat4, vec2, vec3, quat} from "./gl-matrix-min.js"
-import {updateRegistry, player} from "./state.js"
+import {updateRegistry, player, level} from "./state.js"
 
 //Preset Rotations of the object.
 export let Transformation = {
@@ -21,7 +21,7 @@ export let GameObject = function(spritePath, position, size, type, parent = null
 	this.orientation = orientation;
     this.flip = false;
     this.parent = parent;
-    
+
     vec2.scale(this.halfSize, size, 0.5); //use center as reference point for position
 
 	if (spritePath === null) {
@@ -126,12 +126,9 @@ export let AnimatedGameObject = function(spritePath, position, size, type, frame
     GameObject.call(this, spritePath, position, size, type, parent, scale, offset, orientation);
 
     this.sprite.texture.frames = frames;
-    this.sprite.texture.currFrame = Math.floor(Math.random() * frames);
 
-    this.cntr = Math.floor(Math.random() * 20);
-    this.updateStep = updateStep;
-    this.updateName = "GameObj_anim" + Math.random()
-    updateRegistry.registerUpdate(this.updateName, this.updateAnimation.bind(this))
+    this.frameTime = updateStep / 60;
+    this.phase = level.time + Math.random() * this.frameTime * frames;
 }
 
 AnimatedGameObject.prototype = Object.create(GameObject.prototype);
@@ -140,25 +137,19 @@ Object.defineProperty(AnimatedGameObject.prototype, 'constructor', {
     enumerable: false, // so that it does not appear in 'for in' loop
     writable: true });
 
-AnimatedGameObject.prototype.updateAnimation = function() {
-    this.cntr = this.cntr + 1;
-    if (this.cntr >= this.updateStep){
-        this.sprite.texture.nextFrame();
-        this.cntr = this.cntr - this.updateStep;
-        this.cntr = this.cntr % this.updateStep;
-    }
+AnimatedGameObject.prototype.draw = function(shader) {
+    this.sprite.texture.currFrame = Math.floor((level.time - this.phase) / this.frameTime) % this.sprite.texture.frames;
+    if (this.sprite !== null)
+        this.sprite.draw(shader);
 }
 
-AnimatedGameObject.prototype.remove = function() {
-    updateRegistry.unregisterUpdate(this.updateName)
-}
 
 export let ParallaxGameObject = function(spritePath, position, size, scroll_dist = vec2.fromValues( 0, 0), parent = null, scale = vec2.fromValues(1, 1), offset = vec2.fromValues(0, 0), orientation = Transformation.TOP_LEFT) {
     GameObject.call(this, spritePath, position, size, "background-parallax", parent, scale, offset, orientation);
     this.scroll = scroll_dist
-    
+
     this.base_pos = position
-    
+
     this.updateName = "GameObj_parallax" + Math.random()
     updateRegistry.registerUpdate(this.updateName, this.updateScroll.bind(this))
 }
@@ -169,21 +160,21 @@ Object.defineProperty(ParallaxGameObject.prototype, 'constructor', {
     writable: true });
 
 ParallaxGameObject.prototype.updateScroll = function() {
-    //compute distance of player to base_pos. 
+    //compute distance of player to base_pos.
     let x = player.position[0] - this.base_pos[0]
     let y = player.position[1] - this.base_pos[1]
-    
+
     x *= 1/this.scroll[0]
     y *= 1/this.scroll[1]
-    
+
     //compute offset of center
     let offsetX = this.scroll[0] - this.halfSize[0]
     let offsetY = this.scroll[1] - this.halfSize[1]
-    
+
     //clamp
     x  = Math.min(Math.max( x, -offsetX), offsetX)
     y  = Math.min(Math.max( y, -offsetY), offsetY)
-    
+
     this.setPosition(vec2.fromValues(this.base_pos[0] + x, this.base_pos[1] + y))
 }
 

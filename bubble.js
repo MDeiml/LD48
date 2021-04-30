@@ -107,7 +107,6 @@ export function updateBubbles(delta) {
     }
     for (let i = 0; i < level.objects["jelly"].length; i++) {
         let obj = level.objects["jelly"][i];
-        obj.remove(); // Fix for memory leak
         let sqDist = vec2.squaredDistance(obj.position, player.position);
         if (obj.position[1] > 0 || sqDist > RANDOM_SHIT_RADIUS * RANDOM_SHIT_RADIUS) {
             level.objects["jelly"].splice(i, 1);

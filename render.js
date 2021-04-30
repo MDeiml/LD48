@@ -157,6 +157,10 @@ function drawBaseShader() {
     }
 }
 
+function offscreen(obj) {
+    return Math.abs(obj.position[0] - player.position[0]) > 15 || Math.abs(obj.position[1] - player.position) > 15;
+}
+
 function drawLightShader() {
 
 	shaders["defaultShader"].bind();
@@ -190,7 +194,7 @@ function drawLightShader() {
                 gl.uniform1f(shaders["lightShader"].getUniform('alpha'), 1.0)
 
             for (let sprite of level.objects[type]) {
-                if (type != "background" && type != "background-parallax" && vec2.squaredDistance(sprite.getPosition(), player.position) > 15 * 15) continue;
+                if (type != "background" && type != "background-parallax" && offscreen(sprite)) continue;
                 sprite.draw(shaders["lightShader"]);
             }
         }
@@ -198,12 +202,12 @@ function drawLightShader() {
     for (let type in level.objects) {
         if (drawn[type] || type == "plant-deco") continue;
         for (let sprite of level.objects[type]) {
-            if (vec2.squaredDistance(sprite.position, player.position) > 15 * 15) continue;
+            if (offscreen(sprite)) continue;
             sprite.draw(shaders["lightShader"]);
         }
 	}
     for (let sprite of level.objects["plant-deco"]) {
-        if (vec2.squaredDistance(sprite.position, player.position) > 15 * 15) continue;
+        if (offscreen(sprite)) continue;
         sprite.draw(shaders["lightShader"]);
     }
 

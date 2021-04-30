@@ -32,11 +32,14 @@ export function handlePhysics(delta, pos, vel, halfSize, obj = null) {
         for (let y = pmin[1]; y <= pmax[1]; y++) {
             if (level.collidables[vec2.fromValues(x, y)] == undefined) continue;
             for (let other of level.collidables[vec2.fromValues(x, y)]) {
+                if (other.type == "bubbles" && (obj == null || obj.type != "player")) {
+                    continue;
+                }
                 for (let line of other.shape) {
                     let intersection = intersectLineCircle(line[0], line[1], vec2.sub(vec2.create(), pos, other.getPosition()), halfSize[0])
                     if (intersection) {
                         if (other.type == "bubbles") {
-                            if (obj != null && obj.type == "player" && !other.collected) {
+                            if (!other.collected) {
                                 other.collect()
                             }
                         } else {
