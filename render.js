@@ -3,8 +3,7 @@ import * as Sprite from "./Sprite.js"
 import {Projection, View} from "./Transform.js"
 import {mat4, vec2, vec3, quat} from "./gl-matrix-min.js"
 import {gl, setGl, level, player, ui} from "./state.js"
-import {MAP_HEIGHT} from "./generation.js";
-import {GRID_SIZE} from "./walking_squares.js";
+import {MAP_HEIGHT, GRID_SIZE} from "./util.js";
 
 const CLEAR_COLOR_VEC = [22/255, 24/255, 29/255]
 
@@ -158,7 +157,8 @@ function drawBaseShader() {
 }
 
 function offscreen(obj) {
-    return Math.abs(obj.position[0] - player.position[0]) > 15 || Math.abs(obj.position[1] - player.position) > 15;
+    let pos = obj.getPosition();
+    return Math.abs(pos[0] - player.position[0]) > 15 || Math.abs(pos[1] - player.position) > 15;
 }
 
 function drawLightShader() {

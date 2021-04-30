@@ -1,7 +1,6 @@
 import {player } from './state.js';
 import { vec2 } from './gl-matrix-min.js'
-import { GRID_SIZE } from './walking_squares.js';
-import { MAP_WIDTH } from './generation.js';
+import { MAP_WIDTH, GRID_SIZE  } from './util.js';
 import { swimmingAccelerate, swimmingDown, swimmingUp, swimmingLeft, swimmingRight } from './input.js';
 
 //the global collection of sounds

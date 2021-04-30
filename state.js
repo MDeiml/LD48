@@ -1,7 +1,6 @@
 import { vec2 } from "./gl-matrix-min.js"
 import { Sprite } from "./Sprite.js"
-
-export const COLLIDABLE_GRID_SIZE = 4;
+import { GRID_SIZE } from "./util.js"
 
 export let gl = null;
 export function setGl(context) {
@@ -56,7 +55,7 @@ export let level = {
             this.objects[type] = [];
         }
         if (type == "collidable" || type == "bubbles") {
-            let coords = vec2.scale(vec2.create(), obj.getPosition(), 1/COLLIDABLE_GRID_SIZE);
+            let coords = vec2.scale(vec2.create(), obj.getPosition(), 1/GRID_SIZE);
             vec2.round(coords, coords);
             if (this.collidables[coords] === undefined) {
                 this.collidables[coords] = [obj]
@@ -70,7 +69,7 @@ export let level = {
     removeObject: function(obj) {
         let type = obj.type;
         if (type == "collidable" || type == "bubbles") {
-            let coords = vec2.scale(vec2.create(), obj.getPosition(), 1/COLLIDABLE_GRID_SIZE);
+            let coords = vec2.scale(vec2.create(), obj.getPosition(), 1/GRID_SIZE);
             vec2.round(coords, coords);
             let objPos = null
             for (let index in this.collidables[coords]) {
@@ -89,8 +88,14 @@ export let level = {
             }
         }
         this.objects[type].splice(objPos,1);
+    },
+    clear: function() {
+        for (let type in this.objects) {
+            this.objects[type] = [];
+        }
+        this.collidables = {};
+        this.time = 0;
     }
-
 };
 
 export let ui = {

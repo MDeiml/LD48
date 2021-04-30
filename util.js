@@ -1,7 +1,10 @@
 import {vec2} from "./gl-matrix-min.js";
-import {MAP_WIDTH} from "./generation.js";
 
 export const GRID_SIZE = 4;
+export const GEN_WIDTH = 8;
+export const GEN_HEIGHT = 64;
+export const MAP_WIDTH = GEN_WIDTH * 2 + 1;
+export const MAP_HEIGHT = GEN_HEIGHT * 2 + 1;
 
 export function mapToPixel(point) {
     let res = vec2.scale(vec2.create(), point, 1 / GRID_SIZE);
@@ -74,8 +77,14 @@ let random_state = {
     j: 0,
     k: 0,
 }
+let random_seed = 0;
+
+export function reset_random() {
+    set_seed(random_seed);
+}
 
 export function set_seed(seed) {
+    random_seed = seed;
     let seed_str = seed + "_salt"
     random_state.S = []
     random_state.i = 0

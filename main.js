@@ -4,20 +4,17 @@ import { init as initInput, update as updateInput} from "./input.js"
 import {Sprite} from "./Sprite.js";
 import {updateAudio, initAudio, playMusic} from "./audio.js"
 import {updateRegistry, player, setPlayer, level} from "./state.js"
-import {generateLevel, MAP_WIDTH, MAP_HEIGHT} from "./generation.js"
+import {reset} from "./generation.js"
 import {Player} from "./player.js"
-import {computeSquareMap, generateRopePath, generateTutorial, GRID_SIZE} from "./walking_squares.js"
 import {init as initResource} from "./resource.js"
 import {GameObject, AnimatedGameObject, ParallaxGameObject} from "./GameObject.js"
 import {updatePhysics} from "./physics.js"
 import {updateBubbles, initBubbles} from "./bubble.js"
 import {updateFish, initFish} from "./fish.js";
-import {set_seed} from "./util.js"
+import {set_seed, MAP_WIDTH, MAP_HEIGHT, GRID_SIZE} from "./util.js"
 import {updateRopes} from "./rope.js";
 import {createUI} from "./menu.js"
 
-
-const SPAWN_COORDS = vec2.fromValues(-(MAP_WIDTH + 14)/2 * GRID_SIZE, 0)
 
 //timekeeper
 var lastTick = null;
@@ -39,7 +36,8 @@ function setup() {
     document.getElementById("message").onclick = null
     document.getElementById("loadingAnimation").style.display = "unset"
 
-    set_seed(Math.floor(Math.random() * 256))
+    // set_seed(Math.floor(Math.random() * 256))
+    set_seed(0);
     initGraphics(document.getElementById('glCanvas'));
     initAudio();
     updateRegistry.registerUpdate("bubbles", updateBubbles);
@@ -65,14 +63,9 @@ function setup() {
         //     ));
         // }
         createUI()
-        let map_data = generateLevel();
-        level.map_data = map_data;
-        generateRopePath(map_data);
-        computeSquareMap(map_data);
-        generateTutorial();
-        // setPlayer(new Player(SPAWN_COORDS));
+        reset();
         // setPlayer(new Player(vec2.fromValues(-0.5 * GRID_SIZE, -MAP_HEIGHT * GRID_SIZE / 2)))
-        setPlayer(new Player(vec2.sub(vec2.create(), level.objects["target"][0].position, vec2.fromValues(4, 0))));
+        // setPlayer(new Player(vec2.sub(vec2.create(), level.objects["target"][0].position, vec2.fromValues(4, 0))));
         initFish();
         initBubbles();
 

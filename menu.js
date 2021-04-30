@@ -3,8 +3,7 @@ import {GameObject} from "./GameObject.js"
 import {ui, player, updateRegistry} from "./state.js"
 import {MAX_BREATH} from "./player.js";
 import {aspect} from "./render.js";
-import {MAP_HEIGHT, MAP_WIDTH} from "./generation.js"
-import {GRID_SIZE} from "./util.js"
+import {GRID_SIZE, MAP_HEIGHT, MAP_WIDTH} from "./util.js"
 
 
 const MIN_ORIENTATION = 112.5;//247.5

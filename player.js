@@ -3,12 +3,10 @@ import {Sprite} from "./Sprite.js"
 import {mat4, vec2, vec3, vec4, quat} from "./gl-matrix-min.js"
 import {swimmingLeft, swimmingRight, swimmingUp, swimmingDown, swimmingAccelerate} from "./input.js"
 import {level, updateRegistry} from "./state.js"
-import {heartbeat, showStartImage} from "./util.js"
+import {heartbeat, showStartImage, MAP_WIDTH, GRID_SIZE} from "./util.js"
 import {Rope, cutRopes} from "./rope.js";
 import {updateView, setFlicker} from "./render.js";
 import {stopMusic} from "./audio.js";
-import {MAP_WIDTH} from "./generation.js";
-import {GRID_SIZE} from "./walking_squares.js";
 import {setSigma, setMinDist} from "./render.js"
 
 const PLAYER_SPEED = 2;
@@ -26,11 +24,11 @@ export var Death = false;
 export let Player = function(spawn) {
     MobileGameObject.call(this, "./Assets/animationen/taucher-animation.png", spawn, vec2.fromValues(1, 1), "player", null, vec2.fromValues(1, 1), vec2.fromValues(0, 0));
 
-    this.idleState = new AnimatedGameObject("./Assets/animationen/idle_anim.png", vec2.fromValues( 0, 0), vec2.fromValues(2, 2), "rope", 2, 20, this);
+    this.idleState = new AnimatedGameObject("./Assets/animationen/idle_anim.png", vec2.fromValues( 0, 0), vec2.fromValues(2, 2), "player-idle", 2, 20, this);
     level.addObject(this.idleState)
     this.idleState.sprite.visible = false;
     this.sprite.texture.frames = 4;
-    this.deadguy = new GameObject("./Assets/Leichensack.png", vec2.fromValues( 0, 0), vec2.fromValues(2, 2), "rope", this);
+    this.deadguy = new GameObject("./Assets/Leichensack.png", vec2.fromValues( 0, 0), vec2.fromValues(2, 2), "player-idle", this);
     this.deadguy.sprite.visible = false;
     level.addObject(this.deadguy)
 
@@ -230,7 +228,7 @@ Player.prototype.handleInput = function(delta) {
 }
 
 Player.prototype.updateBreathing = function(delta) {
-    
+
     if (this.breath == 0)
         return
 
@@ -250,8 +248,8 @@ Player.prototype.updateBreathing = function(delta) {
         this.breath = this.breath - delta;
     }
     this.breath = Math.min(Math.max(this.breath, 0), MAX_BREATH);
-    
-    
+
+
     this.effect_strength = 1 - (this.breath / 100);
     setSigma(2 * this.effect_strength)
     setMinDist(this.breath / 100);

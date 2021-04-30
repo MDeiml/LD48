@@ -1,4 +1,4 @@
-import {level, player, COLLIDABLE_GRID_SIZE} from "./state.js";
+import {level, player} from "./state.js";
 import {MobileGameObject, AnimatedGameObject, GameObject} from "./GameObject.js";
 import {vec2} from "./gl-matrix-min.js";
 import {isInMap} from "./util.js"

@@ -1,7 +1,8 @@
-import {level, COLLIDABLE_GRID_SIZE, updateRegistry} from "./state.js";
+import {level, updateRegistry} from "./state.js";
 import {MobileGameObject, CollidableGameObject} from "./GameObject.js";
 import {vec2} from "./gl-matrix-min.js";
 import {Bubble} from "./interactable.js";
+import {GRID_SIZE} from "./util.js";
 
 export function updatePhysics(delta) {
     for (let obj of level.objects["player"]) {
@@ -23,10 +24,10 @@ export function handlePhysics(delta, pos, vel, halfSize, obj = null) {
     vec2.scaleAndAdd(pos, pos, vel, delta);
     if (obj && obj.type == "big_fish" && obj.depth == 1) return pos;
     let pmin = vec2.sub(vec2.create(), pos, halfSize);
-    vec2.scale(pmin, pmin, 1/COLLIDABLE_GRID_SIZE);
+    vec2.scale(pmin, pmin, 1/GRID_SIZE);
     vec2.round(pmin, pmin);
     let pmax = vec2.add(vec2.create(), pos, halfSize);
-    vec2.scale(pmax, pmax, 1/COLLIDABLE_GRID_SIZE);
+    vec2.scale(pmax, pmax, 1/GRID_SIZE);
     vec2.round(pmax, pmax);
     for (let x = pmin[0]; x <= pmax[0]; x++) {
         for (let y = pmin[1]; y <= pmax[1]; y++) {

@@ -1,6 +1,5 @@
-import {level, player, COLLIDABLE_GRID_SIZE} from "./state.js";
-import {GRID_SIZE} from "./walking_squares.js";
-import {MAP_WIDTH, MAP_HEIGHT} from "./generation.js";
+import {level, player} from "./state.js";
+import {MAP_WIDTH, MAP_HEIGHT, GRID_SIZE} from "./util.js";
 import { vec2 } from "./gl-matrix-min.js"
 import {AnimatedGameObject, GameObject} from "./GameObject.js";
 import {pixelToMap, mapToPixel} from "./util.js";
