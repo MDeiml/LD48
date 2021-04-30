@@ -46,6 +46,7 @@ export function readElements(id) {
 export function showStartImage(newsMessage, allowReset=false) {
     document.getElementById("glCanvas").style.display = "none"
     document.getElementById("reset").style.display = "unset"
+    document.getElementById("credits").style.display = "unset"
     document.getElementById("message").src = newsMessage
     document.getElementById("message").style.display = "unset"
 }

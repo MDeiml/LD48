@@ -4,3 +4,9 @@
     background-image: url(Assets/restart-button.png);
     background-repeat: no-repeat;
 }
+#credits {
+    width: 512px;
+    height: 512px;
+    background-image: url(Assets/exit.png);
+    background-repeat: no-repeat;
+}

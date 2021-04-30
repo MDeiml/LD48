@@ -50,6 +50,7 @@ export let Player = function(spawn) {
     this.lookDirection = vec2.fromValues(-1, 0);
     this.flickerTimer = -2;
     this.breathTimer = 0;
+    this.screenShake = 0;
 	this.breatheOutSounds = [
         new Audio("./Assets/audio/blubbles_breath1.wav"),
         new Audio("./Assets/audio/blubbles_breath2.wav"),
@@ -68,6 +69,7 @@ export let Player = function(spawn) {
     this.deathSound = new Audio("./Assets/audio/death_short1.wav");
     this.typewriterAudio = new Audio("./Assets/audio/typewriter.wav");
     this.returnPromptTimer = 0;
+    this.foundSafetyRope = false;
 }
 Player.prototype = Object.create(MobileGameObject.prototype);
 Object.defineProperty(Player.prototype, 'constructor', {
@@ -81,6 +83,7 @@ Player.prototype.isPlayer = function(){return true;}
 Player.prototype.hurt = function(){
     this.breath -= 5;
     this.damageSound.play();
+    this.screenShake = 0.1;
 }
 
 Player.prototype.handleInput = function(delta) {
@@ -188,8 +191,17 @@ Player.prototype.handleInput = function(delta) {
         this.breath = MAX_BREATH;
     }
     this.flickerTimer -= delta;
-    if (this.position[0] > - (MAP_WIDTH / 2 + 2)* GRID_SIZE && this.position[0] < -(MAP_WIDTH / 2 + 1) * GRID_SIZE) {
-        this.returnPromptTimer = 5;
+    this.screenShake -= delta;
+    if (this.screenShake < 0) {
+        this.screenShake = 0;
+    }
+    if (!this.foundSafetyRope) {
+        for (let segment of level.objects["rope"]) {
+            if (segment.sprite.texture.name == "./Assets/rope_g.png" && vec2.squaredDistance(segment.position, this.position) < 4 * 4) {
+                this.returnPromptTimer = 5;
+                this.foundSafetyRope = true;
+            }
+        }
     }
     this.returnPromptTimer -= delta;
     if (this.flickerTimer < 0 && this.flickerTimer + delta >= 0) {
@@ -240,7 +252,7 @@ Player.prototype.updateBreathing = function(delta) {
             console.log(this.position);
             stopMusic();
             this.typewriterAudio.play();
-            showStartImage("Assets/zeitung-happyend.png"); //implement fail screen
+            showStartImage("Assets/zeitung-happyend.png", true); //implement fail screen
         }
         this.breath = this.breath + delta * MAX_BREATH;
     }
@@ -270,7 +282,7 @@ Player.prototype.updateBreathing = function(delta) {
             setTimeout(function() {
                 stopMusic();
                 audio.play();
-                showStartImage("Assets/zeitung-tot.png", true); //implement fail screen
+                showStartImage("Assets/zeitung-tot.png"); //implement fail screen
             }, 4000); //implement fail screen
         this.deathSound.play();
     }

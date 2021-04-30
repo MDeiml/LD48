@@ -95,6 +95,7 @@ export function setFlicker(f) {
 
 export function updateView() {
     let pos = vec2.clone(player.position);
+    pos[0] += Math.sin(player.screenShake / 0.1 * 2 * Math.PI) * 0.1;
     camera.setPos(pos);
     camera.setUpsideDown(level.upsideDown);
     updateViewMat = true;
