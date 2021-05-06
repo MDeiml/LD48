@@ -48,12 +48,12 @@ export function init(c) {
     aspct = w/h;
 	projection = new Projection(w/h);
 	updateViewMat = true;
-    
-    
+
+
 	renderContainer = new Sprite.Sprite(null, mat4.create(), null)
 	renderContainer.texture = new Sprite.DynamicTexture2D() //hackery but static, don't judge me
-    
-    
+
+
     //handle window resizing
     window.addEventListener('resize', updateProjection);
     window.addEventListener('orientationchange', updateProjection);
@@ -149,7 +149,7 @@ function updateProjection() {
 export function update() {
     let multiplier = 0.8 - 0.799 * Math.min(1, 1 * -player.position[1] / MAP_HEIGHT * 2 / GRID_SIZE)
 	gl.clearColor(CLEAR_COLOR_VEC[0] * multiplier, CLEAR_COLOR_VEC[1] * multiplier, CLEAR_COLOR_VEC[2] * multiplier, 1);
-    
+
     gl.clear(gl.COLOR_BUFFER_BIT);
 
 	if (updateViewMat) {
@@ -160,14 +160,15 @@ export function update() {
     renderContainer.texture.bindFramebuffer()
     drawLightShader();
     renderContainer.texture.unbindFramebuffer()
-    
+
 	shaders["blurShader"].bind();
     //gl.uniformMatrix4fv(shaders["blurShader"].getUniform('VP'), false, mat4.create());
     gl.uniformMatrix4fv(shaders["blurShader"].getUniform('VP'), false, mat4.fromQuat(mat4.create(), quat.fromEuler(quat.create(), 180, 0, 0)));
-    gl.uniform1fv(shaders["blurShader"].getUniform('gaussian'), computeGauss())
-    gl.uniform1f(shaders["blurShader"].getUniform('threshhold'), minDist)
+    // gl.uniform1fv(shaders["blurShader"].getUniform('gaussian'), computeGauss())
+    // gl.uniform1f(shaders["blurShader"].getUniform('threshhold'), minDist)
+    gl.uniform1f(shaders["blurShader"].getUniform('time'), level.time)
     renderContainer.draw(shaders["blurShader"]);
-    
+
     drawUI();
 }
 
@@ -206,7 +207,7 @@ function drawLightShader() {
     let drawn = { background_surface: true };
 
 	shaders["lightShader"].bind();
-	gl.uniform1f(shaders["lightShader"].getUniform('lightCount'), level.lightCnt)
+	// gl.uniform1f(shaders["lightShader"].getUniform('lightCount'), level.lightCnt)
 	gl.uniform1fv(shaders["lightShader"].getUniform('lights'), level.lights)
 	gl.uniformMatrix4fv(shaders["lightShader"].getUniform('VP'), false, pvMatrix);
 
@@ -218,7 +219,7 @@ function drawLightShader() {
                 gl.uniform1f(shaders["lightShader"].getUniform('alpha'), 0.3)
             else
                 gl.uniform1f(shaders["lightShader"].getUniform('alpha'), 1.0)
-                
+
             for (let sprite of level.objects[type]) {
                 if (type != "background" && type != "background-parallax" && vec2.squaredDistance(sprite.getPosition(), player.position) > 15 * 15) continue;
                 sprite.draw(shaders["lightShader"]);

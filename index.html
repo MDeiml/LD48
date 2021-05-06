@@ -140,9 +140,10 @@ img{width:32.2%;}
 
 			uniform sampler2D texture;
 			uniform vec2 texRes;
+
+            const int LIGHT_COUNT = 4;
 			
-			uniform float lights[180];
-			uniform float lightCount;
+			uniform float lights[LIGHT_COUNT * 9];
             uniform float ambientLight;
             uniform float alpha;
 			
@@ -154,10 +155,8 @@ img{width:32.2%;}
 				
 				vec3 gamma = vec3(1.0/2.2);
 				
-				for (int i = 0; i < 20; i++)
+				for (int i = 0; i < LIGHT_COUNT; i++)
 				{
-					if (i >= int(lightCount))
-						break;
 					vec3 color = vec3(lights[i * 9], lights[i * 9 + 1], lights[i * 9 + 2]);
 					vec2 pos = vec2(lights[i * 9 + 3], lights[i * 9 + 4]);
 					vec2 dir = normalize(vec2(lights[i * 9 + 5], lights[i * 9 + 6]));
@@ -211,30 +210,35 @@ img{width:32.2%;}
 			uniform sampler2D texture;
 			uniform vec2 texRes;
             
-            uniform float threshhold;
+            uniform float time;
+
+            vec2 wave() {
+                float phase = length(vTexCoord - vec2(0.5, 0.5)) * 1.0;
+                phase = phase * phase * phase;
+                return vec2(
+                    pow(sin(time * 2.0 + phase * 50.0), 2.0) * 0.002,
+                    pow(sin(time * 3.0 + phase * 50.0), 2.0) * 0.003
+                );
+            }
             
-			vec4 getTexFromOffset(float x, float y) {
-				return texture2D(texture, vec2( (vTexCoord.x + (x * 2.0)/texRes.x), (vTexCoord.y + (y * 2.0)/texRes.y)));
+			vec4 getTexFromOffset(vec2 offset) {
+				return texture2D(texture, vTexCoord + offset/texRes + wave());
 			}
-			
-			uniform float gaussian[225];
 			
 			void main(void) {
 				
 				vec4 color = vec4(0, 0, 0, 0);
+                float sigma = max(0.5, 0.2 / (length(vTexCoord - vec2(0.5, 0.5)) + 0.01));
 				
-                float dist = length(vec2((vTexCoord.x - 0.5) * 2.0, (vTexCoord.y - 0.5) * 2.0));
-                
                 float divisor = 0.0;
-                float factor = min((dist - threshhold) / (1.0/threshhold), 1.0);
-                for (int i = -8; i <= 8; i++)
+                for (int i = -4; i <= 4; i++)
                 {
-                    for (int j = -8; j <= 8; j++)
+                    for (int j = -4; j <= 4; j++)
                     {
-                        float i1 = float(i);
-                        float j1 = float(j);
-                        color += (1.0 - factor) * getTexFromOffset(i1, j1) + factor * getTexFromOffset(i1, j1) * gaussian[(i + 8) * 15 + j + 8];
-                        divisor += (1.0 - factor) + factor * gaussian[(i + 8) * 15 + j + 8];
+                        vec2 offset = vec2(i, j);
+                        float gaussian = (1.0 / sqrt(3.141529 * 2.0) * sigma * sigma) * exp(-(dot(offset, offset) / 2.0 * sigma * sigma));
+                        color += getTexFromOffset(offset) * gaussian;
+                        divisor += gaussian;
                     }
                 }
                 color = color / divisor;
