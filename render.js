@@ -115,6 +115,7 @@ function computeGauss() {
     }
     
     gauss = kernel
+    sigmaChanged = false;
     
     return gauss
 }

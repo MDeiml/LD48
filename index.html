@@ -223,22 +223,21 @@ img{width:32.2%;}
 				
 				vec4 color = vec4(0, 0, 0, 0);
 				
-                if (length(vec2((vTexCoord.x - 0.5) * 2.0, (vTexCoord.y - 0.5) * 2.0)) > threshhold) {
-                    float divisor = 0.0;
-                    for (int i = -8; i <= 8; i++)
+                float dist = length(vec2((vTexCoord.x - 0.5) * 2.0, (vTexCoord.y - 0.5) * 2.0));
+                
+                float divisor = 0.0;
+                float factor = min((dist - threshhold) / (1.0/threshhold), 1.0);
+                for (int i = -8; i <= 8; i++)
+                {
+                    for (int j = -8; j <= 8; j++)
                     {
-                        for (int j = -8; j <= 8; j++)
-                        {
-                            float i1 = float(i);
-                            float j1 = float(j);
-                            color += getTexFromOffset(i1, j1) * gaussian[(i + 8) * 15 + j + 8];
-                            divisor += gaussian[(i + 8) * 15 + j + 8];
-                        }
+                        float i1 = float(i);
+                        float j1 = float(j);
+                        color += (1.0 - factor) * getTexFromOffset(i1, j1) + factor * getTexFromOffset(i1, j1) * gaussian[(i + 8) * 15 + j + 8];
+                        divisor += (1.0 - factor) + factor * gaussian[(i + 8) * 15 + j + 8];
                     }
-                    color = color / divisor;
                 }
-                else
-                    color = texture2D(texture, vTexCoord);
+                color = color / divisor;
 				
 				gl_FragColor = color;
 			}
